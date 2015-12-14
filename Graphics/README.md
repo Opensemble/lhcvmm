@@ -7,9 +7,9 @@ Large Hadron Collider Visual Music Machine - Graphics Engine
 
 * addons: openFrameworks addons (www.ofxaddons.com) used in this project with its modifications.
 
-*common classes: Classes for general purpose common tasks. 
+* common classes: classes for general purpose common tasks. 
 
-* example apps:
+* example apps: projects for testing, drafting, prototyping and designing purposes.
 
 # openFrameworks
 
