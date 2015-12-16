@@ -9,9 +9,76 @@
         s.boot;
 )
 
-
+// --------------------------------------------------
 // Bus allocation
-a = Bus.audio(s, 4); // allocate four channels for routing
+a = Bus.audio(s, 4); // allocate four channels for B-Format routing
+
+// --------------------------------------------------
+// Transform Function (example)
+//(user must define as many of these as needed)
+(
+~transform = {arg sig;
+
+	var transformer1, transformer2, transformern;
+    var angle, azim;            // angle and azimuth control
+    var freq;
+    // ir...
+    var gain = -18;
+    var freqs = [50.0, 7000.0], gains = [-24, 0], rtimes = [0.1, 2.0];
+    var frequencies, amplitudes, ringTimes;
+    var numModes = 20;
+    var density = 20;                  // grain/klank density
+    var rttFreq = 10 * density;
+
+	transformer1 = 'rtt';
+	transformer2 = 'push';
+
+	// display transformers
+    "Ambisonic transforming via % transformer".format(transformer1).postln;
+    "Ambisonic transforming via % transformer".format(transformer2).postln;
+
+    // calculate klank args
+    frequencies = Array.rand(numModes, freqs.at(0), freqs.at(1)).sort;
+    amplitudes = Array.rand(numModes, gains.at(0), gains.at(1)).sort.reverse.dbamp;
+    ringTimes = Array.rand(numModes, rtimes.at(0), rtimes.at(1)).sort.reverse;
+
+    // angle ---> top         = push to plane wave
+    //          bottom    = omni-directional
+    angle = MouseY.kr(pi/2, 0);
+
+    // azimuth -> hard left     = back
+    //          centre     = centre
+    //          hard right     = back
+    azim = MouseX.kr(pi, -pi);
+
+    // ------------------------------------------------------------
+    // test sig
+    //sig = Dust.ar(Array.fill(4, density / 4));
+
+    // ------------------------------------------------------------
+    // transform 1 (rtt)
+    sig = FoaTransform.ar(
+        sig,
+        transformer1,
+        LFSaw.ar(rttFreq, pi, add: pi),
+        LFSaw.ar(rttFreq**(1/3), pi, add: pi),
+        LFSaw.ar(rttFreq**(2/3), pi, add: pi)
+    );
+
+    // ------------------------------------------------------------
+    // Klank
+    sig = gain.dbamp * Klank.ar(
+        `[ frequencies, amplitudes, ringTimes ],
+        sig
+    );
+
+    // ------------------------------------------------------------
+    // transform 2 (push)
+    sig = FoaTransform.ar(sig, transformer2, angle, azim);
+}
+)
+// --------------------------------------------------
+
 
 // Encoder UGens
 // Mono encoder (omni)
@@ -26,7 +93,13 @@ SynthDef(\foaEncodeMono, {arg outBus, duration = 0.05, theta, phi;
 
     // Encode into our foa signal
 	encoderMatrix = FoaEncoderMatrix.newOmni;
+    "Ambisonic encoding via % encoder".format(encoderMatrix.kind).postln;
     foa = FoaEncode.ar(src, encoderMatrix);
+
+	// Ambisonics Transforming
+	foa = ~transform.value(foa);
+
+	// Write to Decoder bus
     Out.ar(outBus, foa);
 }).add;
 )
@@ -44,11 +117,16 @@ SynthDef(\foaEncodeStereo, {arg outBus, duration = 0.05, theta, phi;
             doneAction: 2);
 
 	// pan (encode) to stereo
-    sig = Pan2.ar(sig, 1.0);
+    sig = Pan2.ar(sig, 0); // center
 
     // encode
 	encoderMatrix = FoaEncoderMatrix.newStereo;
-    foa = FoaEncode.ar(sig, encoderMatrix);
+    "Ambisonic encoding via % encoder".format(encoderMatrix.kind).postln;
+	foa = FoaEncode.ar(sig, encoderMatrix);
+
+	// Ambisonics Transforming
+	foa = ~transform.value(foa);
+
 	Out.ar(outBus, foa);
 }).add;
 )
@@ -78,6 +156,8 @@ SynthDef(\foaEncodeStereo, {arg outBus, duration = 0.05, theta, phi;
     var fc, lo;
 
     kind = decoder.kind;
+    "Ambisonic decoding via % decoder".format(kind).postln;
+
     case
         { decoder.numChannels == 2 }
             {
@@ -122,7 +202,7 @@ b = Synth(\foaDecode, [\inBus, a], 1, \addToTail);
 // test mono encoding
 (
 Routine.run({
-    20.do({
+    200.do({
         Synth(\foaEncodeMono, [\outBus, a, \theta, pi.rand2, \phi, 0]);
         0.1.wait;
     })
@@ -132,7 +212,7 @@ Routine.run({
 // test stereo encoding
 (
 Routine.run({
-    20.do({
+    200.do({
         Synth(\foaEncodeStereo, [\outBus, a,  \duration, 0.05]);
         0.1.wait;
     })
