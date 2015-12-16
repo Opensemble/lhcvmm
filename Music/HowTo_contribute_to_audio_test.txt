@@ -1,0 +1,17 @@
+// How to contribute to the lhcvmm audio test for Buenos Aires Planetarium 5.1 setup
+
+// We use this UGen template for mono and stereo test SynthDefs
+
+    ------------------
+    UGen
+       Synth
+       +
+       ATK encoder
+       +
+       ATK transform
+    ------------------
+
+// All the UGens yields a B-Format signal which is routed to the Decoder Bus
+// Our Decoder UGen reads from that bus and delivers audio using the selected decoder
+// We need to create as much UGens as possible for testing the Planetarium Dome.
+// After a while, we should organize them in time (a 15 secs piece)
