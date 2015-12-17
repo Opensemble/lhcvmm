@@ -1,15 +1,6 @@
 
 
 
-(
-SynthDef(\monoOmniPush, {
-
-
-	}
-)
-)
-
-
 // ------------------------------------------------------------
 // omni encoder
 // mono pink noise source
@@ -123,10 +114,14 @@ SynthDef(\foaEncodeMono, {arg outBus, duration = 3, theta, phi;
     // comb filter
     sig = BPF.ar(sig, freq, mul: 18.dbamp);
     sig = CombL.ar(sig, freq.reciprocal, freq.reciprocal, mul: 9.neg.dbamp);
+	sig = sig * EnvGen.ar(Env.linen(0.1, 14, 0.7, 0.7), doneAction:2);
+
 
 	//sig = FoaEncode.ar(sig, ~encoder.at(0));
 	//sig = FoaEncode.ar(Synth("wow", [\freq, rrand(40, 70).midicps, \amp, rrand(0.1, 0.5)]), ~encoder.at(0));
 
+		// LA DUDA ES: COMO REEMPLAZAR UNA UGEN POR UN SYNTH Y QUE FUNCIONE CON ATK
+	// Y LUEGO PREGUNTARME, COMO USAR PATTERNS CON ATK ?
 	//sig = SinOsc.ar([440, 550, 660, 770],0 ,0.3);
 	//sig = Synth(\glitchbuff);
 	//sig = Array.fill(4, {Synth("wow", [\freq, rrand(40, 70).midicps, \amp, rrand(0.1, 0.5)])});
@@ -141,7 +136,7 @@ SynthDef(\foaEncodeMono, {arg outBus, duration = 3, theta, phi;
     // transform
     //sig = FoaTransform.ar(sig, ~transformer, angle);
 
-	sig = FoaTransform.ar(sig, 'rotate', Line.kr(0, 30 * pi, 30));
+	sig = FoaTransform.ar(sig, 'rotate', XLine.kr(1, 12 * pi, 15));
     // ------------------------------------------------------------
     // decode (via ~renderDecode)
     ~renderDecode.value(sig, ~decoder)
