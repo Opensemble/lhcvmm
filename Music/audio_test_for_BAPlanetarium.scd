@@ -96,7 +96,7 @@ SynthDef(\foaEncodeMono, {arg outBus, duration = 0.05, theta, phi;
     "Ambisonic encoding via % encoder".format(encoderMatrix.kind).postln;
     foa = FoaEncode.ar(src, encoderMatrix);
 
-	// Ambisonics Transforming
+	// Ambisonic Transforming
 	foa = ~transform.value(foa);
 
 	// Write to Decoder bus
@@ -124,12 +124,14 @@ SynthDef(\foaEncodeStereo, {arg outBus, duration = 0.05, theta, phi;
     "Ambisonic encoding via % encoder".format(encoderMatrix.kind).postln;
 	foa = FoaEncode.ar(sig, encoderMatrix);
 
-	// Ambisonics Transforming
+	// Ambisonic Transforming
 	foa = ~transform.value(foa);
 
 	Out.ar(outBus, foa);
 }).add;
 )
+
+
 
 // ----- DECODER KIND, FUNCTION AND UGEN ------
 // choose a decoder (just one)
