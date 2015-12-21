@@ -1,0 +1,71 @@
+// How to contribute to the lhcvmm audio test for Buenos Aires Planetarium 5.1 setup
+
+// We use this UGen template for mono and stereo test SynthDefs
+
+    ------------------
+    UGen
+       Synth
+       +
+       ATK encoder
+       +
+       ATK transform
+    ------------------
+
+// The UGens return a B-Format signal which is routed to the Decoder Bus
+// Our Decoder UGen reads from that bus and delivers audio using the selected decoder
+// We need to create as much UGens as possible for testing the Planetarium Dome.
+// After a while, we should organize them in time (a 15 secs piece)
+
+
+// Start with "Introducing the Ambisonic Toolkit" to catch the ATK paradigm
+// We should encode mono and stereo synthetic signals as well as the pseudoinverse mic array since it
+//  is usually regarded as the method of choice to generate spatially complex synthetic Ambisonic images. In combination with the ATK's imaging tools these can then be compositionally controlled as required.
+
+// Then we can write one example for every transform avilable in ATK..
+// We will try the dynamic flavours. ATK doc suggests to use FoaTransform instead of individuals UGens
+
+
+// Transforms
+
+The ATK provides a much wider and comprehensive toolset, including:
+
+rotation: soundfield rotation about an axis
+mirror: soundfield reflection across an axis
+directivity: soundfield directivity
+dominance: adjust directional gain of soundfield
+focus: focus on a region of a soundfield
+push: push a soundfield in a direction
+
+// definitions and conventions:
+/ http://www.york.ac.uk/inst/mustech/3d_audio/ambis2.htm
+
+// Rotation
+Definition (1) Positive angles of rotation are anti-clockwise or by convention rotation to the left.
+Definition (2) A rotation is defined as a circular movement about a pre- defined axis, normally taken as the Z-axis, this being the same as an anti-clockwise movement in the horizontal plane.
+
+
+                           0
+                           |
+ambisonic             -----+-----
+                           |
+						 pi/-pi
+
+
+mouse    pi ---- -pi (will rotate from back to back, clockwise, while the cursor goes from left to right)
+
+
+    // azimuth -> hard left     = back
+    //            centre        = centre
+    //            hard right    = back
+    azim = MouseX.kr(pi, -pi);
+
+    // ------------------------------------------------------------
+    // transform
+    sig = FoaTransform.ar(sig, 'rotate', azim);
+
+
+
+
+
+
+
