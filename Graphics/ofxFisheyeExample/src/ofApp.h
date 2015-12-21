@@ -24,7 +24,6 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		
         ofxFisheye fisheye;
-    
 		bool doShader;
     
         ofFbo   fbo;

@@ -3,8 +3,6 @@
 #include "ofMain.h"
 #include "VideoRenderer.h"
 
-
-
 #define FRAME_RATE 30
 
 class ofApp : public ofBaseApp{
