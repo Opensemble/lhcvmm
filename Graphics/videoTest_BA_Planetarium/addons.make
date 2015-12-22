@@ -1,3 +1,0 @@
-ofxFisheye
-ofxVideoRecorder
-common_classes
