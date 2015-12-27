@@ -3,11 +3,11 @@ Large Hadron Collider Visual Music Machine - Graphics Engine
 
 # Directory structure
 
-* addons: openFrameworks addons (www.ofxaddons.com) used in this project. Some are addons developed by Opensemble specifically for the LHCVMM, and some were forked from their original repositories. 
+* addons: openFrameworks addons (www.ofxaddons.com) used in this project. Some are addons developed by Opensemble specifically for the LHCVMM, and some were forked from their original repositories.
 
-* common_classes: Classes for general purpose common tasks. 
+* common_classes: Classes for general purpose common tasks.
 
-* examples: Simple projects for testing and exemplify the use of the tools developed for the LHCVMM’s Graphics Engine. 
+* examples: Simple projects for testing and exemplify the use of the tools developed for the LHCVMM’s Graphics Engine.
 
 * apps: Complex apps that are part of the LHCVMM’s Graphics Engine.
 
@@ -15,38 +15,34 @@ Large Hadron Collider Visual Music Machine - Graphics Engine
 
 The Graphics Engine of the LHCVMM is developed using openFrameworks v0.9.0 (www.openFrameworks.com). To compile the examples in this repository you need to clone lhcvmm main directory into OF root dir (OF_ROOT_DIR/lhcvmm).
 
-###OSX 
+### OSX
 In OS X projects can be compiled using the Xcode projects or using the Makefiles by Terminal.
 
-###Linux
+### Linux
 Projects can be compiled using the Makefiles by Terminal.
 
 # Creating a New Project
-###Path
+### Path
 The project must be placed either into examples/ or apps/ directories.
 
-###Makefile
+### Makefile
 The OF root directory must be: OF_ROOT=$(realpath ../../../..)
 
-###config.make
+### config.make
 You need to add these lines to link the local addons and common_classes folders:
 PROJECT_EXTERNAL_SOURCE_PATHS = ../../common_classes
 PROJECT_EXTERNAL_SOURCE_PATHS += ../../addons
 
-###emptyExample
+### emptyExample
 The simplest way to create a new project is to copy the examples/emptyExample project. This project has a ready to compile Xcode project and the Makefile and config.make already configured.
 
-###addons
-All addons used in the LHCVMM must be placed into lhcvmm/Graphics/addons. Apps and examples projects must link the addons to this path. 
+### addons
+All addons used in the LHCVMM must be placed into lhcvmm/Graphics/addons. Apps and examples projects must link the addons to this path.
 addons.make file must always be blank to avoid references to OF_ROOT/addons.
 
-###Documentation
+### Documentation
 All projects must include a README.md file with the following info:
 * TITLE
 * Description
 * Dependencies (all dependencies must be included in the lhcvmm/Graphics repository)
 * Compilation instructions.
-
-
-
-
