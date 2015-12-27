@@ -1,9 +1,9 @@
-#ofxFisheye	
+# ofxFisheye	
 
-###Description
+### Description
 Example app of the ofxFisheye addon. It applies different types of Fisheye Lens filters to an image using GLSL shaders.
 
-###Dependencies
+### Dependencies
 * addons: ofxFisheye.
 
 ### Compilation
