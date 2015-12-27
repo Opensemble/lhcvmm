@@ -22,6 +22,6 @@ class ofApp : public ofBaseApp{
         void drawScene();
 
         ofxDomemaster domemaster;
-        ofSpherePrimitive sphere;
-    
+				ofSpherePrimitive sphere;
+
 };

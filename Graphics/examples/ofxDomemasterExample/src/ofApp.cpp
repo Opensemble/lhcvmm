@@ -31,7 +31,7 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::drawScene(){
-    sphere.drawWireframe();
+  sphere.drawWireframe();
 }
 
 
