@@ -1,3 +1,5 @@
+Quarks.gui
+
 // Allocate four channels for B-Format routing
 ~decoderBus = Bus.audio(s, 4);
 ~transformBus = Bus.audio(s, 4);
@@ -6,18 +8,18 @@
 // choose a decoder (just one)
 
 // stereophonic / binaural
-~decoder = FoaDecoderMatrix.newStereo(131/2 * pi/180, 0.5) // Cardioids at 131 deg
-~decoder = FoaDecoderKernel.newUHJ                         // UHJ (kernel)
-~decoder = FoaDecoderKernel.newSpherical                   // synthetic binaural (kernel)
+~decoder = FoaDecoderMatrix.newStereo(131/2 * pi/180, 0.5); // Cardioids at 131 deg
+~decoder = FoaDecoderKernel.newUHJ;                         // UHJ (kernel)
+~decoder = FoaDecoderKernel.newSpherical;                   // synthetic binaural (kernel)
 //~decoder = FoaDecoderKernel.newCIPIC                       // KEMAR binaural (kernel)
 
 // pantophonic (2D)
-~decoder = FoaDecoderMatrix.newQuad(k: 'dual')             // psycho optimised quad
-~decoder = FoaDecoderMatrix.newQuad(pi/6, 'dual')          // psycho optimised narrow quad
-~decoder = FoaDecoderMatrix.new5_0                         // 5.0
+~decoder = FoaDecoderMatrix.newQuad(k: 'dual');             // psycho optimised quad
+~decoder = FoaDecoderMatrix.newQuad(pi/6, 'dual');          // psycho optimised narrow quad
+~decoder = FoaDecoderMatrix.new5_0;                         // 5.0
 
 // inspect you choice
-~decoder.kind
+~decoder.kind;
 
 // ------------------------------------------------------------
 // define ~renderDecode function for generic audio output code

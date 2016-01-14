@@ -1,6 +1,6 @@
 // How to contribute to the lhcvmm audio test for Buenos Aires Planetarium 5.1 setup
 
-// We use the UGen+Bus infrastructure for mono and stereo tests illustrated in lhcvmm_ATK_infrastructure.png file.
+// We use the UGen+Bus infrastructure for mono and stereo tests illustrated in lhcvmm_atk_infrastructure.png file.
 
 // The UGens return a B-Format signal which is routed to the Decoder Bus
 // Our Decoder UGen reads from that bus and delivers audio using the selected decoder
@@ -9,7 +9,8 @@
 
 // Start with "Introducing the Ambisonic Toolkit" to catch the ATK paradigm
 // We should encode mono and stereo synthetic signals as well as the pseudoinverse mic array since it
-//  is usually regarded as the method of choice to generate spatially complex synthetic Ambisonic images. In combination with the ATK's imaging tools these can then be compositionally controlled as required.
+// is usually regarded as the method of choice to generate spatially complex synthetic Ambisonic images.
+// In combination with the ATK's imaging tools these can then be compositionally controlled as required.
 
 // Then we can write one example for every transform avilable in ATK.
 // We will try the dynamic flavours. ATK doc suggests to use FoaTransform instead of individuals UGens
