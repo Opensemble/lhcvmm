@@ -5,42 +5,37 @@
 class ofxDomemaster{
 
 	public:
-        ofxDomemaster();
+		static const int renderCount = 5;
+    ofxDomemaster();
 		void setup();
 		void draw();
-        void begin(int i);
-        void end(int i);
-        void resize(int w, int h);
-        void setCameraPosition(float x, float y, float z);
-        void setMeshScale(float s);
-    
-    static const int renderCount = 5;
+		void drawMask();
+    void begin(int i);
+    void end(int i);
+    void resize(int w, int h);
+    void setCameraPosition(float x, float y, float z);
+    void setMeshScale(float s);
+		int width;
+    int height;
 
-    private:
-        ofRectangle view;
-        vector<ofCamera> renderCamera;
-        vector<ofFbo> renderFbo;
-        vector<ofVboMesh> renderMesh;
+  private:
+    ofRectangle view;
+    vector<ofCamera> renderCamera;
+    vector<ofFbo> renderFbo;
+    vector<ofVboMesh> renderMesh;
+    ofCamera fisheyeCamera;
+    ofRectangle fisheyeView;
+    ofImage mask;
 
-        ofCamera fisheyeCamera;
-        ofRectangle fisheyeView;
-
-        ofImage mask;
-    
-        int width;
-        int height;
-    
-        float meshScale;
-        float meshScaleExt;
-    
-        ofNode cameraNode;  
-    
-        enum positions{
-            bottom,
-            front,
-            left,
-            right,
-            top
-        };
+    float meshScale;
+    float meshScaleExt;
+    ofNode cameraNode;
+    enum positions{
+        bottom,
+        front,
+        left,
+        right,
+        top
+    };
 
 };
