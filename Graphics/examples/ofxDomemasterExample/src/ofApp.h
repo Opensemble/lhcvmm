@@ -3,6 +3,11 @@
 #include "ofMain.h"
 #include "ofxDomemaster.h"
 
+#include "VideoRenderer.h"
+
+#define FRAME_RATE 30
+#define DURATION 8.0
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -19,9 +24,21 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-        void drawScene();
+		void drawScene(int i , int width, int height);
 
-        ofxDomemaster domemaster;
-				ofSpherePrimitive sphere;
+		ofxDomemaster domemaster;
+		ofSpherePrimitive sphere;
+		ofBoxPrimitive box;
+
+		//animation data variables----------------
+		bool    isAnimating;
+		bool    isPlayingForward;
+    int     frameCounter;//animation Frame Counter
+    float   frameDuration;//Duration in seconds of each frame
+    int     framesMaxNumber;//Number of frames of the entire animation
+    float   animValue;//Current frame in relationship with the duration of the entire animation (0.0 - 1.0)
+    float   animationTime;
+
+		VideoRenderer renderer;
 
 };
