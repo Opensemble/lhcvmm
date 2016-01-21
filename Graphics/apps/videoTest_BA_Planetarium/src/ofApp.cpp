@@ -2,40 +2,40 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
+
     ofSetBackgroundColor(50);
     ofSetFrameRate(FRAME_RATE);
-    
+
     frameDuration = 1.0 / FRAME_RATE;
     framesMaxNumber = DURATION * FRAME_RATE;
     frameCounter = 0;
     isAnimating = false;
-    
+
     fisheye.setup(tVariableFisheye);
     fisheyeAmount = 0.0;
-    
+
     renderer.setup(FRAME_RATE, PNG_SEQUENCE, r1024);
-    
+
     drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
-   
+
     verdana.load("fonts/verdana.ttf", renderer.getFboWidth()*0.04, true, true);
-    
+
     ofSetCircleResolution(60);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
+
     //display frame rate as window title
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
-    
+
     //animation data update
     if(isAnimating){
         frameCounter++;
         animationTime = frameCounter * frameDuration;
         animValue = animationTime/DURATION;
-        
+
         //end recording and animation at 15"
         if (frameCounter>=framesMaxNumber){
             stopAnimation();
@@ -43,16 +43,16 @@ void ofApp::update(){
         }
     }
     //-----------------------------------
-    
+
     int rw = renderer.getFboWidth();
     int rh =  renderer.getFboHeight();
-    
+
     //draw openGL scene in drawFbo
     drawFbo.begin();
         ofClear(0);
         drawScene(rw, rh);
     drawFbo.end();
-    
+
     //draw drawFbo into Renderer's FBO with Fisheye FX
     fisheyeAmount = animValue * 0.35 + 0.5; //animated from 0.5 to 0.85
     renderer.getFbo()->begin();
@@ -66,18 +66,18 @@ void ofApp::update(){
             glEnd();
         fisheye.end();
     renderer.getFbo()->end();
-    
+
     //Record Renderer's FBO into a .mov file or png sequence
     renderer.update();
-    
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+
     //Scaled Renderer's FBO preview----------
     renderer.draw(250, 0, 512, 512);
-    
+
     //Recording indicator-------------------
     if(renderer.getIsRecording()){
         ofPushStyle();
@@ -90,7 +90,7 @@ void ofApp::draw(){
         ofPopMatrix();
         ofPopStyle();
     }
-    
+
     //Display Key commands-----------------
     ofPushStyle();
     string keys = "KEY COMMANDS:";
@@ -106,7 +106,7 @@ void ofApp::draw(){
     ofSetColor(ofColor::white);
     ofDrawBitmapString(keys, 10, 20);
     ofPopStyle();
-    
+
     //Display Info-----------------
     ofPushStyle();
     string info = "INFO: ";
@@ -121,7 +121,7 @@ void ofApp::draw(){
     ofPopStyle();
 
 
-    
+
 }
 //--------------------------------------------------------------
 void ofApp::exit(){
@@ -129,7 +129,7 @@ void ofApp::exit(){
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    
+
     switch (key) {
         //start-stop Animation--------------------
         case ' ':
@@ -140,7 +140,7 @@ void ofApp::keyPressed(int key){
         case 'r':
             if(!renderer.getIsRecording())renderer.startRecording();
             else renderer.stopRecording();
-           
+
             if(!isAnimating)startAnimation();
             else stopAnimation();
             break;
@@ -185,7 +185,7 @@ void ofApp::keyPressed(int key){
                 drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
             }
             break;
-            
+
         //change recording mode---------------
         case 'p':
             if(renderer.getRecordingMode()!=PNG_SEQUENCE) renderer.setRecordingMode(PNG_SEQUENCE);
@@ -193,14 +193,14 @@ void ofApp::keyPressed(int key){
         case 'm':
             if(renderer.getRecordingMode()!=MOV_FILE) renderer.setRecordingMode(MOV_FILE);
             break;
-            
+
         default:
             break;
     }
 }
 //--------------------------------------------------------------
 void ofApp::drawScene(int w, int h){
-    
+
     //LINEAR MOTION------------
     ofPushStyle();
     ofFill();
@@ -211,7 +211,7 @@ void ofApp::drawScene(int w, int h){
     ofSetColor(ofColor::violet);
     ofDrawCircle(w*.5, animValue*h, w*0.05);
     ofPopStyle();
-    
+
     //CONCENTRIC MOTION------------------
     int circlesNum = 5;
     float speed = 2;
@@ -231,7 +231,7 @@ void ofApp::drawScene(int w, int h){
     }
     ofPopMatrix();
     ofPopStyle();
-    
+
     //ROTATION----------------------
     int linesNum = 8;
     ofPushStyle();
@@ -249,7 +249,7 @@ void ofApp::drawScene(int w, int h){
     }
     ofPopMatrix();
     ofPopStyle();
-    
+
     //DOME CIRCLE PROJECTION LIMIT DISPLAY-----------------
     ofPushStyle();
     ofSetColor(ofColor::red);
@@ -257,7 +257,7 @@ void ofApp::drawScene(int w, int h){
     ofSetLineWidth( w*0.004);
     ofDrawCircle(w*.5, h*.5, w*.5);
     ofPopStyle();
-    
+
     //INFO DISPLAY--------------------------------
     ofPushStyle();
     ofSetColor(ofColor::yellow);
@@ -324,6 +324,6 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }

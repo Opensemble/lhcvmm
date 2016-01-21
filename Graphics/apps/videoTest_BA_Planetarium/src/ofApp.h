@@ -26,28 +26,28 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-    
-        void drawScene(int w, int h);
-    
-        void startAnimation();
-        void stopAnimation();
-		
-        //animation data variables----------------
-        bool    isAnimating;
-        int     frameCounter;//animation Frame Counter
-        float   frameDuration;//Duration in seconds of each frame
-        int     framesMaxNumber;//Number of frames of the entire animation
-        float   animValue;//Current frame in relationship with the duration of the entire animation (0.0 - 1.0)
-        float   animationTime;
-    
-        //----------------------------
-        ofxFisheye fisheye;
-        float fisheyeAmount;
-    
-        VideoRenderer renderer;
-    
-        ofFbo drawFbo; //FBO for drawing scene, wihtout fisheye
-    
-        ofTrueTypeFont	verdana;
-    
+
+    void drawScene(int w, int h);
+
+    void startAnimation();
+    void stopAnimation();
+
+    //animation data variables----------------
+    bool    isAnimating;
+    int     frameCounter;//animation Frame Counter
+    float   frameDuration;//Duration in seconds of each frame
+    int     framesMaxNumber;//Number of frames of the entire animation
+    float   animValue;//Current frame in relationship with the duration of the entire animation (0.0 - 1.0)
+    float   animationTime;
+
+    //----------------------------
+    ofxFisheye fisheye;
+    float fisheyeAmount;
+
+    VideoRenderer renderer;
+
+    ofFbo drawFbo; //FBO for drawing scene, wihtout fisheye
+
+    ofTrueTypeFont	verdana;
+
 };
