@@ -6,9 +6,13 @@
 #include "VideoRenderer.h"
 
 #define FRAME_RATE 30
-#define DURATION 8.0
+#define DURATION 4.0
 
 class ofApp : public ofBaseApp{
+	private:
+		float meshScale = 0.66f;
+		bool showCubemap = false;
+		bool showMask = true;
 
 	public:
 		void setup();
@@ -39,6 +43,6 @@ class ofApp : public ofBaseApp{
     float   animValue;//Current frame in relationship with the duration of the entire animation (0.0 - 1.0)
     float   animationTime;
 
-		VideoRenderer renderer;
+		ofFbo sceneFbo; //FBO for drawing scene
 
 };
