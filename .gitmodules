@@ -1,0 +1,3 @@
+[submodule "Music/Barrel"]
+	path = Music/Barrel
+	url = https://github.com/smrg-lm/Barrel.git
