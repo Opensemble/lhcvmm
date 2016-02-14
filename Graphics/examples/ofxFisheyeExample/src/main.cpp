@@ -9,10 +9,10 @@ int main( ){
 	int windowHeight = 768;
     
 	#ifdef TARGET_OPENGLES
-    	ofGLESWindowSettings settings;
+    ofGLESWindowSettings settings;
 	settings.width = windowWidth;
 	settings.height = windowHeight;
-	settings.setGLESVersion(2);
+	settings.setGLESVersion(3);
 	ofCreateWindow(settings);
 	#else
 	ofSetupOpenGL(windowWidth, windowHeight, OF_WINDOW);

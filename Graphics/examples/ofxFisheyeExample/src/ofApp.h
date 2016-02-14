@@ -28,5 +28,7 @@ class ofApp : public ofBaseApp{
     
         ofFbo   fbo;
         int w, h;
+        ofShader shader;
+
 };
 

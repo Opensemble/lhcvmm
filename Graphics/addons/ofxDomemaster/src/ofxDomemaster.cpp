@@ -26,9 +26,32 @@ void ofxDomemaster::setup(){
     renderMesh[right].load("domemaster/right.ply");
     renderMesh[top].load("domemaster/top.ply");
 
+    // cube camera
+    renderCamera[bottom].setOrientation(ofVec3f(-90,0,0));
+    renderCamera[bottom].setFov(90);
+    
+    renderCamera[front].setOrientation(ofVec3f(0,0,0));
+    renderCamera[front].setFov(90);
+    
+    renderCamera[left].setOrientation(ofVec3f(0,90,0));
+    renderCamera[left].setFov(90);
+    
+    renderCamera[right].setOrientation(ofVec3f(0,-90,0));
+    renderCamera[right].setFov(90);
+    
+    renderCamera[top].setOrientation(ofVec3f(90,0,0));
+    renderCamera[top].setFov(90);
+
+    
     // mask
     mask.load("domemaster/mask.png");
     mask.setUseTexture(true);
+    
+    fisheyeCamera.enableOrtho();
+    fisheyeCamera.setPosition(0, 0, 10);
+    //fisheyeCamera.setPosition(-width/2, -height/2, 10);
+    meshScale = width*meshScaleExt;
+    
 }
 
 void ofxDomemaster::begin(int i){
@@ -43,7 +66,7 @@ void ofxDomemaster::end(int i){
 }
 
 void ofxDomemaster::draw(){
-    fisheyeCamera.enableOrtho();
+    
     fisheyeCamera.begin(fisheyeView);
     ofEnableNormalizedTexCoords();
 
@@ -76,25 +99,10 @@ void ofxDomemaster::resize(int w, int h){
     view.setWidth(width);
     view.setHeight(height);
 
-    // cube camera
-    renderCamera[bottom].setOrientation(ofVec3f(-90,0,0));
-    renderCamera[bottom].setFov(90);
-
-    renderCamera[front].setOrientation(ofVec3f(0,0,0));
-    renderCamera[front].setFov(90);
-
-    renderCamera[left].setOrientation(ofVec3f(0,90,0));
-    renderCamera[left].setFov(90);
-
-    renderCamera[right].setOrientation(ofVec3f(0,-90,0));
-    renderCamera[right].setFov(90);
-
-    renderCamera[top].setOrientation(ofVec3f(90,0,0));
-    renderCamera[top].setFov(90);
 
     // cube camera fbos
     for (int i=0; i<renderCount; i++){
-        renderFbo[i].setUseTexture(true);
+        //renderFbo[i].setUseTexture(true);
         renderFbo[i].allocate(width, height);
         renderFbo[i].begin();
         ofClear(0);
@@ -104,9 +112,6 @@ void ofxDomemaster::resize(int w, int h){
     // fisheye domemaster
     fisheyeView.setWidth(width);
     fisheyeView.setHeight(height);
-    fisheyeCamera.setPosition(0, 0, 10);
-    //fisheyeCamera.setPosition(-width/2, -height/2, 10);
-    meshScale = width*meshScaleExt;
 }
 
 void ofxDomemaster::setCameraPosition(float x, float y, float z){

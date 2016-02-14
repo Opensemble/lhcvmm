@@ -8,33 +8,61 @@ void ofApp::setup(){
     w = ofGetWidth();
     h = ofGetHeight();
 
+#ifdef TARGET_OPENGLES
+	shader.load("shaders_gles/noise.vert","shaders_gles/noise.frag");
+#else
+	if(ofIsGLProgrammableRenderer()){
+		shader.load("shaders_gl3/noise.vert", "shaders_gl3/noise.frag");
+	}else{
+		shader.load("shaders/noise.vert", "shaders/noise.frag");
+	}
+#endif
+    
     fbo.allocate(w, h);
-    fbo.begin();
-        ofClear(255);
-        ofSetColor(ofColor::white);
-        ofPlanePrimitive plane;
-        plane.set(ofGetWidth(), ofGetHeight(), 20, 20);
-        plane.setPosition(ofGetWidth()*.5, ofGetHeight()*.5, 0);
-        plane.drawWireframe();
-        ofSetColor(ofColor::yellow);
-        ofDrawCircle(ofGetWidth()*0.5, ofGetHeight()*0.5, 10);
-    fbo.end();
 
-    fisheye.setup(tVariableFisheye);
+    fisheye.setup(tFixFisheye);
 
 	doShader = true;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    static float lastElapsedTime=0;
+    static float growingRadius=0;
+    float cell = w/16.;
+    float deltaTime = ofGetElapsedTimef() - lastElapsedTime;
+    lastElapsedTime += deltaTime;
 
+    fbo.begin();
+    ofClear(255);
+    ofSetColor(ofColor::white);
+    ofPlanePrimitive plane;
+    plane.set(w, h, 16+1, 16+1);
+    plane.setPosition(w*.5, h*.5, 0);
+    plane.drawWireframe();
     
+    ofTranslate(w*0.5, h*0.5, 10);
+    
+    ofSetColor(ofColor::cyan);
+    ofNoFill();
+    ofSetLineWidth(3);
+
+    growingRadius += deltaTime * cell * 2 * 0.5;
+    if (growingRadius> cell*2)
+        growingRadius = 0;
+    for(int i=0;i<4;i++){
+        float r = i*cell*2 + growingRadius;
+        ofDrawCircle(0, 0, r);
+        //ofDrawRectangle(-r,-r,r*2,r*2);
+    }
+    
+    fbo.end();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    float amount = ofClamp(ofGetMouseX() / (float)ofGetWidth(), 0.0, 1.0);//0.0-1.0
+    float amount = 1;//ofClamp(ofGetMouseX() / (float)ofGetWidth(), 0.0, 1.0);//0.0-1.0
     
 	if( doShader ){
         fisheye.begin(fbo.getTexture(), fbo.getWidth(), fbo.getHeight(), amount);

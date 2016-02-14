@@ -49,12 +49,15 @@ public:
                            uv.y = r * sin(phi) + 0.5;
                            
                        }else{
-                           uv = texCoordNorm;
+                           discard;
+
+                           //uv = texCoordNorm;
                        }
                        
                        vec2 texCoordRescaled= vec2(uv.x * width, uv.y*height);
                        vec4 color = texture2DRect(tex0, texCoordRescaled);
                        gl_FragColor = color;
+                       
                        
                    }
                 

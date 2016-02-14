@@ -44,5 +44,7 @@ class ofApp : public ofBaseApp{
     float   animationTime;
 
 		ofFbo sceneFbo; //FBO for drawing scene
+    ofTrueTypeFont font;
+    ofShader shader;
 
 };
