@@ -5,4 +5,4 @@ __pycache__/
 *$py.class
 
 # ROOT data files
-data_files/*
+data_files/*.root
