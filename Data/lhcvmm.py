@@ -43,7 +43,7 @@ def get_ttree():
         return None
 
 
-def send_event(tree):
+def send_event(tree=None):
     try:
         bundle = OSCBundle()
         msg = OSCMessage("/entry")
