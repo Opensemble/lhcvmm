@@ -1,4 +1,5 @@
 (
+//creates a simple synth and attachs an OSC listener
 
 SynthDef.new(\tone, {
   arg freq=400, amp=0.3, gate = 1, bend=0;
@@ -9,25 +10,11 @@ SynthDef.new(\tone, {
   Out.ar(0,sig);
 }).add;
 
-o.remove;
 o = OSCresponderNode(nil, '/entry', {
   |t, r, msg|
   msg.postln ;
-  msg[3].postln;
   Synth(\tone,[
       \freq, msg[1]*10,
-    \amp, msg[3]
-    ]);
-}).add;
-
-o2.remove;
-o2 = OSCresponderNode(nil, '/entry2', {
-  |t, r, msg|
-  msg.postln ;
-  msg[3].postln;
-  Synth(\tone,[
-      \freq, msg[1]*5,
-    \amp, msg[3]
     ]);
 }).add;
 
@@ -35,8 +22,5 @@ o2 = OSCresponderNode(nil, '/entry2', {
 )
 
 
-
-
-
-
-
+//to remove listener
+o.remove;
