@@ -1,7 +1,7 @@
 # lhcvmm
 Large Hadron Collider Visual Music Machine - Data layer
 
-This python driven program is meant to drive ATLAS collisions data through OSC to both openFrameworks and SuperCollider.
+This python program drives ATLAS collisions data through OSC to both openFrameworks and SuperCollider.
 It could also be posible to have other "interpreters" in the future listening to the same messages (like some arduino based machine)
 
 ## Directory Structure
