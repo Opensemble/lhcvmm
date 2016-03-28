@@ -40,19 +40,43 @@ SynthDef.new(\saturated, {
   Out.ar(0,sig);
 }).add;
 
-o = OSCresponderNode(nil, '/entry', {
+o = OSCresponderNode(nil, '/sound_unit', {
   |t, r, msg|
 	var onset, continuant, termination;
-	onset = msg[1..3] ;
-	continuant = msg[4..6] ;
-	termination = msg[7..9] ;
+	onset = msg[1..17] ;
+	continuant = msg[18..34] ;
+	termination = msg[35..51] ;
+
+	// onset, continuant, termination
+	// duration
+	// unidirectional_motion
+	// reciprocal_motion
+	// cyclic_motion
+	// characteristic_motion
+	// texture motion relationship
+	// texture motion: continuity-discontinuity (sustained -> granular -> iterative)
+	// texture motion movement:  periodic - aperiodic erratic
+	// texture motion movement:  accelerating - decelerating - flux
+	// spectrum type
+	// spectral occupation type
+	// spectral qualifiers: emptiness - plenitude
+	// spectral qualifiers: diffuseness - concentration
+	// spectral qualifiers: streams - interstices
+	// spectral qualifiers: overlap - crossover
+	// spectral density
+
+
 
 	fork{
-		Synth(onset[2], [\attack, onset[1]]);
+		onset.postln;
+		//Synth(onset[2], [\attack, onset[1]]);
 		onset[1].wait;
-		Synth(continuant[2], [\sustain, continuant[1]]);
+		continuant.postln;
+		//Synth(continuant[2], [\sustain, continuant[1]]);
 		continuant[1].wait;
-		Synth(termination[2],[\release, termination[1]]);
+		termination.postln;
+		termination[1].wait;
+		//Synth(termination[2],[\release, termination[1]]);
 	}
 
 
