@@ -3,6 +3,16 @@ import sys
 from thread import start_new_thread
 from OSC import  OSCClient, OSCClientError, OSCBundle, OSCMessage
 from random import random, choice, uniform
+import argparse
+
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('-s','--simulate', help='Simulate events.', action='store_true')
+parser.add_argument('-r','--random', help='Send random events. (will use a list otherwise)', action='store_true')
+
+args = parser.parse_args()
+
+
+
 
 osc_port = 57120 #default SuperCollider port (must be open before executing this program)
 interval = 1.12 # time between events, in seconds
@@ -15,9 +25,6 @@ continuants = ['','passage','transition','prolongation','maintenance','statement
 terminations = ['','arrival','disappearence','closure','release','resolution','plane']
 morfological_functions = [onsets,continuants,terminations]
 duration_ranges = [ [0.01, 0.3], [0.4, 2], [0.2, 0.5]]
-spectrums = ['harmonic', 'inharmonic','granular','saturated']
-spectral_occupation_types = ['canopy', 'centre', 'root']
-spectral_densities = ['filled', 'packed', 'opaque','translucent','transparent','empty']
 
 unidirectional_motions = ['','ascent','plane','descent']
 reciprocal_motions = ['','parabola','oscilation','ondulation']
@@ -26,10 +33,42 @@ characteristic_motions = ['','push','flow','rise','throw','drift','float','fly',
 
 texture_motion_relationships = ['','streaming', 'flocking', 'convolution','turbulence']
 
+spectrums = ['harmonic', 'inharmonic','granular','saturated']
+spectral_occupation_types = ['canopy', 'centre', 'root']
+spectral_densities = ['filled', 'packed', 'opaque','translucent','transparent','empty']
 
 
 
-def send_event():
+
+# test osc messages:
+
+# onset, continuant, termination
+# duration
+# unidirectional_motions
+# reciprocal_motions
+# cyclic_motions
+# characteristic_motions
+# texture motion
+# continuity-discontinuity (sustained -> granular -> iterative)
+# movement:  periodic - aperiodic erratic
+# movement:  accelerating - decelerating - flux
+# spectrum type
+# spectral occupation type
+# emptiness - plenitude
+# diffuseness - concentration
+# streams - interstices
+# overlap - crossover
+# spectral density
+'departure', 0.2, 'ascent','parabola','rotation','push', 'flocking', 0.5, 0.5, 0.5, 'harmonic', 'canopy', 0.5, 0.5, 0.5, 0.5, 'filled'
+
+
+
+msg.append(choice(spectral_densities))
+
+
+
+
+def send_random_event():
     try:
         bundle = OSCBundle()
         msg = OSCMessage("/sound_unit")
@@ -87,8 +126,14 @@ def send_events_periodically():
         # restart * printing every 10 events
         sys.stdout.write('\r----------\r')
         for i in range(0, 10):
-            send_event()
-            time_to_sleep = interval - ((time.time() - starttime) % interval)
+            if args.simulate:
+                if args.random:
+                    send_random_event()
+                    time_to_sleep = interval - ((time.time() - starttime) % interval)
+                else:
+                    send_random_event()
+                    time_to_sleep = interval - ((time.time() - starttime) % interval)
+
             sys.stdout.write('*')
             sys.stdout.flush()
             time.sleep(time_to_sleep)
@@ -98,7 +143,9 @@ try:
     #initialize osc client
     client = OSCClient()
     client.connect(('127.0.0.1', osc_port))   # connect to SuperCollider
+
     start_new_thread( send_events_periodically, ())
+
     while 1:
         pass
 
