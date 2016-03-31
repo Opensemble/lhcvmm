@@ -16,7 +16,6 @@
 	pick:  {
 		|self, event|
 		var wordsCount,bestIndex, sof=nil;
-		event.postln;
 
 		if(self.table.isEmpty,{"No function has been registered yet!".postln;},{
 			// pick best matching descriptor
@@ -39,7 +38,23 @@
 			// fill raw osc data
 			sof.fill(event);
 			// now play the event
-			sof.playEvent();
+			sof.playEvent( sof.function,
+				sof.duration,
+				sof.unidirectional_motion,
+				sof.reciprocal_motion,
+				sof.cyclic_motion,
+				sof.characteristic_motion,
+				sof.texture_motion_relationship,
+				sof.texture_motion_continuity,
+				sof.texture_motion_periodic,
+				sof.texture_motion_acceleration,
+				sof.spectrum_type,
+				sof.spectrum_occupation,
+				sof.spectrum_plenitude,
+				sof.spectrum_concentration,
+				sof.spectrum_interstices,
+				sof.spectrum_crossover,
+				sof.spectrum_density);
 		});
 	},
 	clearTable: {
