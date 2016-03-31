@@ -3,32 +3,44 @@
 // FRAMEWORK: INIT STAGE
 //-----------------------------------
 
+// taken from: Faking Objected-Oriented Programing in Supercollider with Events
+// http://www.tmroyal.com/supercollider-pseudoclasses-with-events.html
+
 ~interpreter = (
 	table: List.new,
 	register:  {
 		|self, descriptor, sound_unit_fase|
+		//todo: validate words
 		self.table.add([descriptor,sound_unit_fase]);
 	},
 	pick:  {
 		|self, event|
-		var bestIndex;
+		var wordsCount,bestIndex, sof=nil;
+		event.postln;
 
-		// pick best matching descriptor
-		// wich will be by now the one
-		// that matches more descriptive words
-		bestIndex = self.table.maxIndex({ | item, i |
-			item[0].count({ arg word; event.includes(word) });
+		if(self.table.isEmpty,{"No function has been registered yet!".postln;},{
+			// pick best matching descriptor
+			// wich will be by now the one
+			// that matches more descriptive words
+			wordsCount = self.table.collect({ | item, i |
+				item[0].count({ arg word; event.includes(word) });
+			});
+			bestIndex = wordsCount.maxIndex;
+			if(wordsCount[bestIndex]>0,{sof = self.table[bestIndex][1];});
+			if(sof.isNil,{"No function matched the requirements!".postln;});
 		});
 
-		self.table[bestIndex][1];
+		sof; //can return nil
 	},
 	playEvent:  {
 		|self, event|
 		var sof = self.pick(event);
-		// fill raw osc data
-		sof.fill(event);
-		// now play the event
-		sof.playEvent();
+		if(sof.notNil,{
+			// fill raw osc data
+			sof.fill(event);
+			// now play the event
+			sof.playEvent();
+		});
 	},
 	clearTable: {
 		| self|
@@ -41,9 +53,21 @@
 // BASE SOUND UNIT FASE TO EXTEND
 //-----------------------------------
 ~sound_unit_fase = (
+	isOnset:	{
+		|self|
+		['departure','emergence','anacrusis','attack','upbeat','downbeat'].includes(self.function)
+	},
+	isContinuant:	{
+		|self|
+		['passage','transition','prolongation','maintenance','statement'].includes(self.function)
+	},
+	isTermination:	{
+		|self|
+		['arrival','disappearence','closure','release','resolution','plane'].includes(self.function)
+	},
+	// fills object with incoming OSC data
 	fill:	{
 		|self, data|
-		data[1].postln;
 		self.function = data[0];
 		self.duration = data[1];
 		self.unidirectional_motion = data[2];
@@ -68,55 +92,37 @@
 	},
 	playEvent:  {
 		|self|
-		"play function not implemented!".postln;
+		"Play function not implemented!".postln;
 	}
 
 );
 
-)
 
-(
+// remove listener, just in case
+o.remove;
 
-~interpreter.clearTable;
+o = OSCresponderNode(nil, '/sound_unit', {
+	|x, r, msg|
+	var onset, continuant, termination, event;
+	onset = msg[1..17] ;
+	continuant = msg[18..34] ;
+	termination = msg[35..51] ;
+	fork{
+		~interpreter.playEvent(onset);
+  		onset[1].wait;
+		~interpreter.playEvent(continuant);
+  		continuant[1].wait;
+		~interpreter.playEvent(termination);
+		//termination[1].wait;
+  	}
 
-SynthDef(\smooth, { |freq = 440, sustain = 1, amp = 0.5|
-    var sig;
-    sig = SinOsc.ar(freq, 0, amp) * EnvGen.kr(Env.linen(0.05, sustain, 0.1), doneAction: 2);
-    Out.ar(0, sig ! 2)
+
 }).add;
 
-
-// this way you define and register a particular sound unit fase
-(
-	parent: ~sound_unit_fase,
-	playEvent:  {
-		|self|
-
-		Synth(\smooth, [freq: 330, sustain: self.duration]);
-	}
-
-).register( [\harmonic, \inharmonic, \canopy, \centre] );
-
-(
-	parent: ~sound_unit_fase,
-	playEvent:  {
-		|self|
-		Synth(\smooth, [freq: 440, sustain: self.duration]);
-	}
-
-).register( [\root] );
-
-
-
-)
-
-(
-// test area: make the interpreter play some events
-//~interpreter.playEvent(['root', 'harmonic']);
-~interpreter.playEvent(['harmonic',0.8]);
-
 )
 
 
-
-
+(
+// remove listener
+o.remove;
+)
