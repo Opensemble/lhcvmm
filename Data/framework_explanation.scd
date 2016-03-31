@@ -4,16 +4,19 @@ HOW THIS WORKS
 ==============
 
 The file framework.scd contains a global ~interpreter object and a ~sound_unit_fase object to be extended by users.
-Besides, there is an OSCresponderNode object that takes care of arriving OSC messages ( and will be soon included as a member of ~interpreter object)
+Besides, there is an OSCdef object that takes care of arriving OSC messages, included as a member of ~interpreter object.
 
 The workflow is the following:
 
 1) execute the main block of framework.scd to get env vars defined and OSC listener ready.
 2) in a separeted file, define your SynthDefs and register your playable functions matching spectromorfological keywords (see how to register your playable functions).
 
-You can stop OSC messages by executing o.remove;
-You can start over by executing the main block of framework.scd again.
+You can start/stop OSC messages by executing:
+  ~interpreter.startListener;
+  ~interpreter.stopListener;
 
+You can start over by executing the main block of framework.scd again or by calling:
+  ~interpreter.clearTable();
 
 
 HOW TO REGISTER YOUR PLAYABLE FUNCTIONS
@@ -113,9 +116,12 @@ dense_inharmonic.playEvent = {
 // based on the number of keywords occurences on message parameters
 dense_inharmonic.register( [\harmonic, \inharmonic, \canopy, \centre] );
 
-// That's it.
+)
 
+// That's it.
 // And now that it is explained, just use this shorcut:
+(
+~interpreter.clearTable;
 (
 	parent: ~sound_unit_fase,
 	playEvent:  {
@@ -124,25 +130,7 @@ dense_inharmonic.register( [\harmonic, \inharmonic, \canopy, \centre] );
 	}
 
 ).register( [\harmonic, \inharmonic, \canopy, \centre] );
-
-
-
+~interpreter.startListener;
 )
-
-
-(
-// And now that it is explained, just use this shorcut:
-~interpreter.clearTable();
-
-(
-	parent: ~sound_unit_fase,
-	playEvent:  {
-		|self, function,duration,unidirectional_motion|
-
-	duration.postln;
-		Synth(\smooth, [freq: 440, sustain: self.duration]);
-	}
-
-).register( [\centre] );
-
-)
+//~interpreter.stopListener;
+//~interpreter.startListener;

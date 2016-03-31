@@ -1,6 +1,7 @@
 (
 //clear registered functions
 ~interpreter.clearTable();
+~interpreter.startListener;
 )
 
 //-----------------------------------------------------------------

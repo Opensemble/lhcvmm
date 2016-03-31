@@ -7,7 +7,29 @@
 // http://www.tmroyal.com/supercollider-pseudoclasses-with-events.html
 
 ~interpreter = (
+	osc: OSCdef(\sound_unit, { |msg, time, addr, recvPort|
+		var onset, continuant, termination;
+		onset = msg[1..17] ;
+		continuant = msg[18..34] ;
+		termination = msg[35..51] ;
+		fork{
+			~interpreter.playEvent(onset);
+			onset[1].wait;
+			~interpreter.playEvent(continuant);
+			continuant[1].wait;
+			~interpreter.playEvent(termination);
+			//termination[1].wait;
+		};
+	}, '/sound_unit').disable, //starts disabled
 	table: List.new,
+	startListener:  {
+		|self|
+		self.osc.enable;
+	},
+	stopListener:  {
+		|self|
+		self.osc.disable;
+	},
 	register:  {
 		|self, descriptor, sound_unit_fase|
 		//todo: validate words
@@ -112,32 +134,4 @@
 
 );
 
-
-// remove listener, just in case
-o.remove;
-
-o = OSCresponderNode(nil, '/sound_unit', {
-	|x, r, msg|
-	var onset, continuant, termination, event;
-	onset = msg[1..17] ;
-	continuant = msg[18..34] ;
-	termination = msg[35..51] ;
-	fork{
-		~interpreter.playEvent(onset);
-  		onset[1].wait;
-		~interpreter.playEvent(continuant);
-  		continuant[1].wait;
-		~interpreter.playEvent(termination);
-		//termination[1].wait;
-  	}
-
-
-}).add;
-
-)
-
-
-(
-// remove listener
-o.remove;
 )
