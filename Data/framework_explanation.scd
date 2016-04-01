@@ -55,36 +55,14 @@ dense_inharmonic.parent = ~sound_unit_fase;
 
 // Implement the playEvent function
 dense_inharmonic.playEvent = {
-	|self,
-	function,
-	duration,
-	unidirectional_motion,
-	reciprocal_motion,
-	cyclic_motion,
-	characteristic_motion,
-	texture_motion_relationship,
-	texture_motion_continuity,
-	texture_motion_periodic,
-	texture_motion_acceleration,
-	spectrum_type,
-	spectrum_occupation,
-	spectrum_plenitude,
-	spectrum_concentration,
-	spectrum_interstices,
-	spectrum_crossover,
-	spectrum_density |
-
+	|self|
 	/*
-	First argument ('self') is the Event itself, and since its parent was set to
+	Argument ('self') is the Event itself, and since its parent was set to
 	~sound_unit_fase you have access to all its members which were filled with incoming OSC data.
 
-	You can choose to receive only 'self' argument and access members
-	through dot notation (ex.: self.duration ), or to receive all arguments
-	and use them directly with the arg name you prefer (but respecting args order)
-	It is just a matter of taste.
+	You can access members through dot notation (ex.: self.duration ).
 
-
-	here's a list of all members:
+	Here's a list of all members, so far:
 
 	self.function
 	self.duration
@@ -107,30 +85,38 @@ dense_inharmonic.playEvent = {
 	*/
 
 
-	Synth(\smooth, [freq: 330, sustain: duration]); // or self.duration
+	Synth(\smooth, [freq: 330, sustain: self.duration]);
 };
 
-// Finally, register it passing an array of spectromorfological keywords
+// Finally, register it passing a key and an array of spectromorfological keywords
 // Whenever the ~interpreter receives and OSC message, it will look
 // through all registered function and guess which one fits better
 // based on the number of keywords occurences on message parameters
-dense_inharmonic.register( [\harmonic, \inharmonic, \canopy, \centre] );
+dense_inharmonic.register(\dense_inharmonic, [\harmonic, \inharmonic, \canopy, \centre] );
+
+// if you wish to unregister this function, then call ~interpreter.unregister
+// passing its key
+// ~interpreter.unregister(\dense_inharmonic);
+
 
 )
+
+
+
 
 // That's it.
 // And now that it is explained, just use this shorcut:
 (
-~interpreter.clearTable;
+
 (
 	parent: ~sound_unit_fase,
 	playEvent:  {
 		|self|
-		Synth(\smooth, [freq: 440, sustain: self.duration]);
+		Synth(\smooth, [freq: 400, sustain: self.duration]);
 	}
+).register(\dense_inharmonic, [\inharmonic, \canopy, \centre] );
 
-).register( [\harmonic, \inharmonic, \canopy, \centre] );
-~interpreter.startListener;
 )
-//~interpreter.stopListener;
-//~interpreter.startListener;
+~interpreter.startListener;
+~interpreter.stopListener;
+~interpreter.unregister(\dense_inharmonic);

@@ -1,8 +1,5 @@
-(
-//clear registered functions
-~interpreter.clearTable();
 ~interpreter.startListener;
-)
+
 
 //-----------------------------------------------------------------
 // EJEMPLO
@@ -70,7 +67,7 @@ SynthDef.new(\harmonic2, {
 x = Synth(\harmonic2, [\freq, occ, \attack, self.duration, \curve, func] );
 }
 
-).register( [\harmonic, \inharmonic, \root, \canopy, \centre] );
+).register(\harmonic2, [\harmonic, \inharmonic, \root, \canopy, \centre] );
 
 
 )
@@ -142,7 +139,7 @@ SynthDef.new(\saturated, {
 	x = Synth(self.spectrum_type.asSymbol, [\freq, occ, \attack, self.duration, \curve, func] );
 }
 
-).register( [\saturated, \granular] );
+).register(\saturated_granular,  [\saturated, \granular] );
 
 
 )

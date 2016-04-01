@@ -21,7 +21,7 @@
 			//termination[1].wait;
 		};
 	}, '/sound_unit').disable, //starts disabled
-	table: List.new,
+	dict: Dictionary.new,
 	startListener:  {
 		|self|
 		self.osc.enable;
@@ -31,23 +31,29 @@
 		self.osc.disable;
 	},
 	register:  {
-		|self, descriptor, sound_unit_fase|
+		|self, key, keywords, sof|
 		//todo: validate words
-		self.table.add([descriptor,sound_unit_fase]);
+		self.dict.add(key -> [keywords,sof]);
+	},
+	unregister:  {
+		|self, key|
+		//todo: validate words
+		self.dict.removeAt(key);
 	},
 	pick:  {
 		|self, event|
-		var wordsCount,bestIndex, sof=nil;
+		var wordsCount,best, sof=nil;
 
-		if(self.table.isEmpty,{"No function has been registered yet!".postln;},{
+		if(self.dict.isEmpty,{"No function has been registered yet!".postln;},{
 			// pick best matching descriptor
 			// wich will be by now the one
 			// that matches more descriptive words
-			wordsCount = self.table.collect({ | item, i |
+			wordsCount = self.dict.collect({ | item, key |
 				item[0].count({ arg word; event.includes(word) });
 			});
-			bestIndex = wordsCount.maxIndex;
-			if(wordsCount[bestIndex]>0,{sof = self.table[bestIndex][1];});
+			//cant find a better way...
+			best = wordsCount.findKeyForValue(wordsCount.maxItem);
+			if(wordsCount[best]>0,{sof = self.dict[best][1];});
 			if(sof.isNil,{"No function matched the requirements!".postln;});
 		});
 
@@ -60,28 +66,12 @@
 			// fill raw osc data
 			sof.fill(event);
 			// now play the event
-			sof.playEvent( sof.function,
-				sof.duration,
-				sof.unidirectional_motion,
-				sof.reciprocal_motion,
-				sof.cyclic_motion,
-				sof.characteristic_motion,
-				sof.texture_motion_relationship,
-				sof.texture_motion_continuity,
-				sof.texture_motion_periodic,
-				sof.texture_motion_acceleration,
-				sof.spectrum_type,
-				sof.spectrum_occupation,
-				sof.spectrum_plenitude,
-				sof.spectrum_concentration,
-				sof.spectrum_interstices,
-				sof.spectrum_crossover,
-				sof.spectrum_density);
+			sof.playEvent;
 		});
 	},
 	clearTable: {
 		| self|
-		self.table.clear();
+		self.dict.clear();
 	}
 
 );
@@ -124,8 +114,8 @@
 		self.spectrum_density = data[16];
 	},
 	register:  {
-		|self, descriptor|
-		~interpreter.register(descriptor,self);
+		|self, key, keywords|
+		~interpreter.register(key, keywords,self);
 	},
 	playEvent:  {
 		|self|
