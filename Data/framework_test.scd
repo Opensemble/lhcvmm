@@ -1,6 +1,3 @@
-~interpreter.startListener;
-
-
 //-----------------------------------------------------------------
 // EJEMPLO
 // Descripción:
@@ -28,22 +25,16 @@ SynthDef.new(\harmonic2, {
     sig = sig * env * amp;
   Out.ar(0,sig);
 }).add;
-)
 
 
-// Funcion - Interface
-// this way you define and register a particular sound unit fase
-(
-
-(
-	parent: ~sound_unit_fase,
-	playEvent:  { arg self;
+~opensemble.register(\harmonic2, [\harmonic, \inharmonic, \root, \canopy, \centre],
+	{ arg suf;
 
 	var att, occ, den, func;
 
 	//simple example
 
-	func = switch (self.function)
+	func = switch (suf.function)
 	{\departure} {5}
 	{\emergence} {4}
 	{\anacrusis} {3}
@@ -51,12 +42,12 @@ SynthDef.new(\harmonic2, {
 	{\upbeat} {1}
 	{\downbeat} {-1};
 
-	occ = switch (self.spectrum_occupation)
+	occ = switch (suf.spectrum_occupation)
 	{\root} {100}
 	{\centre} {500}
 	{\canopy} {2000};
 
-	den = switch (self.spectrum_density)
+	den = switch (suf.spectrum_density)
 	{\filled} {1}
 	{\packed} {0.8}
 	{\opaque} {0.6}
@@ -64,11 +55,8 @@ SynthDef.new(\harmonic2, {
 	{\transparent} {0.2}
 	{\empty} {0.1};
 
-x = Synth(\harmonic2, [\freq, occ, \attack, self.duration, \curve, func] );
-}
-
-).register(\harmonic2, [\harmonic, \inharmonic, \root, \canopy, \centre] );
-
+x = Synth(\harmonic2, [\freq, occ, \attack, suf.duration, \curve, func] );
+} );
 
 )
 
@@ -104,22 +92,17 @@ SynthDef.new(\saturated, {
 	sig = sig * env * amp;
 	Out.ar(0,sig);
 }).add;
-)
-
-
 
 
 // this way you define and register a particular sound unit fase
-(
 
-(
-	parent: ~sound_unit_fase,
-	playEvent:  { arg self;
+~opensemble.register(\saturated_granular,  [\saturated, \granular],
+	{ arg suf;
 	var att, occ, den, func, spectrum;
 
 	//simple example
 
-	func = switch (self.function)
+	func = switch (suf.function)
 	{\departure} {5}
 	{\emergence} {4}
 	{\anacrusis} {3}
@@ -127,7 +110,7 @@ SynthDef.new(\saturated, {
 	{\upbeat} {1}
 	{\downbeat} {-1};
 
-	den = switch (self.spectrum_density)
+	den = switch (suf.spectrum_density)
 	{\filled} {1}
 	{\packed} {0.8}
 	{\opaque} {0.6}
@@ -136,10 +119,8 @@ SynthDef.new(\saturated, {
 	{\empty} {0.1};
 
 
-	x = Synth(self.spectrum_type.asSymbol, [\freq, occ, \attack, self.duration, \curve, func] );
-}
-
-).register(\saturated_granular,  [\saturated, \granular] );
+	x = Synth(suf.spectrum_type.asSymbol, [\freq, occ, \attack, suf.duration, \curve, func] );
+});
 
 
 )
