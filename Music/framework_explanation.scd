@@ -17,16 +17,24 @@ SynthDef(\pulse, { |freq = 440, sustain = 1|
 HOW THIS WORKS
 ==============
 
-The file framework.scd contains a global ~opensemble that takes care of
+The file framework.scd contains a global ~opensemble var that takes care of
 registering/unregistering functions, and selecting the best match for
 arriving OSC messages.
 
 The workflow is the following:
 
-1) execute the main block of framework.scd to get opensemble env ready.
+1) Execute the main block of framework.scd to get opensemble env ready.
+   Files under contributions folder will be loaded.
    You'll notice a smal GUI at bottom right
-2) in a separated file, define your SynthDefs and register your playable functions
+2) Define your SynthDefs and register your playable functions
    matching spectromorfological keywords (see how to register your playable functions).
+
+Each contribution must live in a separated file inside contributions folder, as
+files inside this folder will be loaded at the end of framework.scd main block.
+
+Nevertheless, you can reevaluate your single contribution file without reloading
+the framework when prototyping without worryng if your function key remains the same
+since it will be replaced upon reevaluation.
 
 
 HOW TO REGISTER YOUR PLAYABLE FUNCTIONS
@@ -97,6 +105,6 @@ For example:
 
 That's it.
 
-If you wish to unregister this function, then call ~opensemble.unregister(key)
+If you wish, for testing purposes, to unregister this function, then call ~opensemble.unregister(key)
 */
 ~opensemble.unregister(\dense_inharmonic);

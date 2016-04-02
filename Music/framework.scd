@@ -8,6 +8,7 @@
 //-----------------------------------
 // FRAMEWORK: INIT STAGE
 //-----------------------------------
+Server.default.boot;
 
 ~opensemble = {
 	var window;
@@ -178,17 +179,15 @@
 		self.createGui;
 		self.showGui;
 		self.initListener;
-		self; // method chaining
-
+		self; // needed for method chaining
 	}
 
 ).init; // call init upon creation
 }.value;
 
-
-//print this message instead of the ~opensemble object to the console
-"Opensemble env loaded.".underlined;
-
+"~opensemble is now defined.".underlined.postln;
+"Loading contributions.".underlined.postln;
+(thisProcess.nowExecutingPath.dirname +/+ "/contributions/*.scd").loadPaths(warn:false);
 )
 
 
