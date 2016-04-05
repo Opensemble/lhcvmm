@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "3C97A515599D3FF8B02338970AA5DBED7A033471",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "2DE9C8846D9375EAACFABA8963120E8E7719BAF5" : 0,
+    "3C97A515599D3FF8B02338970AA5DBED7A033471" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0526DE4A-0BE3-4514-A04C-826C419AA673",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "2DE9C8846D9375EAACFABA8963120E8E7719BAF5" : "",
+    "3C97A515599D3FF8B02338970AA5DBED7A033471" : "lhcvmm\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "videoTest_2",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Graphics\/apps\/videoTest_2\/videoTest_2.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/leozimmerman\/openFrameworks.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2DE9C8846D9375EAACFABA8963120E8E7719BAF5"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Opensemble\/lhcvmm.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3C97A515599D3FF8B02338970AA5DBED7A033471"
+    }
+  ]
+}
