@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------
-// EJEMPLO
+// EJEMPLO: \inharmonic1
 // Descripción:
 //     Colaborador kurt kobain
 //     Contribución: Espectro Armónico/Inarmónico, implementa distintos Onsets
@@ -8,7 +8,7 @@
 // SynthDefs
 
 (
-SynthDef.new(\harmonic2, {
+SynthDef.new(\inharmonic1, {
   arg freq=400, amp=0.3, gate = 1, bend=0, attack = 0.01, sustain = 0,release = 0.01, curve = 0,
 	spectrum_plenitude = 1,
 	spectrum_concentration = 1,
@@ -27,7 +27,7 @@ SynthDef.new(\harmonic2, {
 }).add;
 
 
-~opensemble.register(\harmonic2, [\harmonic, \inharmonic, \root, \canopy, \centre],
+~opensemble.register(\inharmonic1, [\inharmonic, \root, \canopy, \centre],
 	{ arg suf;
 
 	var att, occ, den, func;
@@ -55,7 +55,7 @@ SynthDef.new(\harmonic2, {
 	{\transparent} {0.2}
 	{\empty} {0.1};
 
-x = Synth(\harmonic2, [\freq, occ, \attack, suf.duration, \curve, func] );
+x = Synth(\inharmonic1, [\freq, occ, \attack, suf.duration, \curve, func] );
 } );
 
 )
