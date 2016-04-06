@@ -3,6 +3,8 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 
+#include "instancedManager.h"
+
 
 class ofApp : public ofBaseApp{
 	public:
@@ -25,13 +27,22 @@ class ofApp : public ofBaseApp{
     ofPlanePrimitive plane;
     
     //gui
-    ofxFloatSlider sScale, s2, s3;
-    ofxFloatSlider sNzAmp, sNzRug, sNzFreq;
-    ofxFloatSlider sTrHres, sTrWidth, sTrVspacing;
-    ofxIntSlider sResolution;
-    ofxToggle tWireframe;
+    ofxFloatSlider sWidth, sHeight, sCubeSize, sHres,
+                    sVres, sVelocity, sYpos;
+    
+    ofxFloatSlider sNzTime;
+    ofxFloatSlider sNzXAmp, sNzXRug, sNzXFreq;
+    ofxFloatSlider sNzYAmp, sNzYRug, sNzYFreq;
+    ofxFloatSlider sNzZAmp, sNzZRug, sNzZFreq;
+    
+   
+
     ofxToggle tRotate;
     ofxButton b1, b2;
     
     ofxPanel gui;
+    bool bShowGui = true;
+    //----
+    InstancedManager instanced;
+    
 };

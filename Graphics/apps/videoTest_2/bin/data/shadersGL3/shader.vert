@@ -14,6 +14,11 @@ uniform float uHres;
 uniform float uWidth;
 uniform float uVspacing;
 
+in vec4  position;
+in vec2  texcoord;
+in vec4  color_coord;
+in vec3  normal;
+
 //---------------------------------
 
 //noise funcs

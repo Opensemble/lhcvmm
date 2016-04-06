@@ -27,23 +27,32 @@ void ofApp::setup(){
 #endif
     
     //gui-------------
-    gui.setup(); // most of the time you don't need a name
-    gui.add(tWireframe.setup("wireframe", false));
-    gui.add(tRotate.setup("rotate", true));
-    gui.add(sScale.setup("scale", 0.5, 0., 1.0));
-    gui.add(sResolution.setup("resolution", 80, 20, 95));
+    gui.setup();
+    gui.add(sWidth.setup("width", 1.0, 0., 1.0));
+    gui.add(sHeight.setup("height", 0.25, 0., 1.0));
+    gui.add(sCubeSize.setup("cubesize", 0.5, 0., 1.0));
+    gui.add(sHres.setup("Hres", 0.3, 0., 1.0));
+    gui.add(sVres.setup("Vres", 0.3, 0., 1.0));
+    gui.add(sVelocity.setup("velocity", 0.0, 0., 1.0));
+    gui.add(sYpos.setup("Ypos", 0.5, 0., 1.0));
+    //nz
+    gui.add(tRotate.setup("rotate", false));
     //-
-    gui.add(sNzAmp.setup("nzAmp", 100.0, 0.0, 500.0));
-    gui.add(sNzRug.setup("nzRug", 100.0, 0.01, 500.0));
-    gui.add(sNzFreq.setup("nzFreq", 2.0, 0.0, 8.0));
-    //-
-    gui.add(sTrHres.setup("TrHres", 100.0, 1.0, 500.0));
-    gui.add(sTrWidth.setup("TrWidth", 600.0, 1.0, 1000.0));
-    gui.add(sTrVspacing.setup("TrVspacing", 5.0, 1.0, 10.0));
+    gui.add(sNzTime.setup("nzTime", 1.0, 0.0, 50.0));
     
+    gui.add(sNzXAmp.setup("nzXAmp", 0.0, 0.0, 500.0));
+    gui.add(sNzXFreq.setup("nzXFreq", 0.05, 0.0, 0.1));
+    gui.add(sNzXRug.setup("nzXRug", 2.0, 0.01, 30.0));
     
-    gui.add(s2.setup("s2", 0.5, 0., 1.0));
-    gui.add(s3.setup("s3", 0.5, 0., 1.0));
+    gui.add(sNzYAmp.setup("nzYAmp", 0.0, 0.0, 500.0));
+    gui.add(sNzYFreq.setup("nzYFreq", 0.05, 0.0, 0.1));
+    gui.add(sNzYRug.setup("nzYRug", 2.0, 0.01, 30.0));
+    
+    gui.add(sNzZAmp.setup("nzZAmp", 0.0, 0.0, 500.0));
+    gui.add(sNzZFreq.setup("nzZFreq", 0.05, 0.0, 0.1));
+    gui.add(sNzZRug.setup("nzZRug", 2.0, 0.01, 30.0));
+    
+    //
     
     gui.add(b1.setup("b1"));
     gui.add(b2.setup("b2"));
@@ -51,6 +60,7 @@ void ofApp::setup(){
     
     ofSetBackgroundColor(ofColor::black);
 
+    //plane----------
     float planeScale = 1.0;
     int planeGridSize = 10;
     int planeWidth = ofGetWidth() * planeScale;
@@ -60,6 +70,20 @@ void ofApp::setup(){
     
     plane.set(planeWidth, planeHeight, planeColums, planeRows, OF_PRIMITIVE_TRIANGLES);
     
+    //instanced
+   
+    
+    ofVec3f sceneLimits;
+    sceneLimits.set(ofGetWidth(), ofGetHeight(), 100);
+    
+    instanced.setup();
+    instanced.setLimits(sceneLimits);
+    instanced.setOrientation(ofVec3f(1,1,1));
+    instanced.setColor(ofColor::white);
+    
+   
+    //instanced.setYPos(ofGetHeight()*.5);
+    
 
 }
 
@@ -67,7 +91,7 @@ void ofApp::setup(){
 void ofApp::update(){
     
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
-    
+    /*
     float planeScale = sScale;
     int planeGridSize = 100-sResolution;
     int planeWidth = ofGetWidth() * planeScale;
@@ -76,8 +100,32 @@ void ofApp::update(){
     int planeRows = planeHeight / planeGridSize;
     
     plane.set(planeWidth, planeHeight, planeColums, planeRows);
+    */
     
-
+    instanced.setWidth(sWidth);
+    instanced.setHeight(sHeight);
+    instanced.setCubeSize(sCubeSize*10);
+    instanced.setHres(sHres*200);
+    instanced.setVres(sVres*100);
+    instanced.setVelocity(sVelocity*10);
+    instanced.setYPos(sYpos);
+    //nz
+    instanced.setNzTime(sNzTime);
+    
+    instanced.setXnzAmp(sNzXAmp);
+    instanced.setXnzFreq(sNzXFreq);
+    instanced.setXnzRug(sNzXRug);
+    instanced.setYnzAmp(sNzYAmp);
+    
+    instanced.setYnzFreq(sNzYFreq);
+    instanced.setYnzRug(sNzYRug);
+    
+    instanced.setZnzAmp(sNzZAmp);
+    instanced.setZnzFreq(sNzZFreq);
+    instanced.setZnzRug(sNzZRug);
+    
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -94,38 +142,45 @@ void ofApp::draw(){
     ofPushMatrix();
     
     // translate plane into center screen.
-    float tx = ofGetWidth() / 2;
-    float ty = ofGetHeight() / 2;
-    ofTranslate(tx, ty);
+//    float tx = ofGetWidth() / 2;
+//    float ty = ofGetHeight() / 2;
+//    ofTranslate(tx, ty);
     
     if(tRotate){
         float percentY = mouseY / (float)ofGetHeight();
         float rotation = ofMap(percentY, 0, 1, -60, 60, true) + 60;
         ofRotate(rotation, 1, 0, 0);
     }
+
+    ///Plane
+//    shader.begin();
+//    shader.setUniform1f("uTime", ofGetElapsedTimef());
+//    //nz
+//    shader.setUniform1f("uDispAmp", sNzAmp);
+//    shader.setUniform1f("uDispRug", sNzRug);
+//    shader.setUniform1f("uDispFreq", sNzFreq);
+//    //tr
+//    shader.setUniform1f("uHres", sTrHres);
+//    shader.setUniform1f("uWidth", sTrWidth);
+//    shader.setUniform1f("uVspacing", sTrVspacing);
+//  
+//    
+//    if(tWireframe)plane.drawWireframe();
+//    else plane.drawVertices();
+//    
+//    shader.end();
     
-    shader.begin();
-    shader.setUniform1f("uTime", ofGetElapsedTimef());
-    //nz
-    shader.setUniform1f("uDispAmp", sNzAmp);
-    shader.setUniform1f("uDispRug", sNzRug);
-    shader.setUniform1f("uDispFreq", sNzFreq);
-    //tr
-    shader.setUniform1f("uHres", sTrHres);
-    shader.setUniform1f("uWidth", sTrWidth);
-    shader.setUniform1f("uVspacing", sTrVspacing);
-  
+    ///Instanced
+   
     
-    if(tWireframe)plane.drawWireframe();
-    else plane.drawVertices();
-    
-    shader.end();
+   
+    instanced.draw();
     
     ofDrawAxis(200);
     
     ofPopMatrix();
     
-    gui.draw();
+    if (bShowGui) gui.draw();
     
     
     string info = "Verts Num: " + ofToString(plane.getMeshPtr()->getNumVertices()) +
@@ -136,6 +191,15 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    
+    switch (key){
+        case 'g':
+            bShowGui = !bShowGui;
+            break;
+        default:
+            break;
+    
+    }
     
 }
 

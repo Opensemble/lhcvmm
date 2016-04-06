@@ -15,6 +15,7 @@
 		B331BA571CB4120B0080AE00 /* ofxSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B331BA4C1CB4120B0080AE00 /* ofxSlider.cpp */; };
 		B331BA581CB4120B0080AE00 /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B331BA4E1CB4120B0080AE00 /* ofxSliderGroup.cpp */; };
 		B331BA591CB4120B0080AE00 /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B331BA501CB4120B0080AE00 /* ofxToggle.cpp */; };
+		B3B2F0701CB54A1500FF25C3 /* instancedManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B2F06E1CB54A1500FF25C3 /* instancedManager.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
@@ -68,6 +69,12 @@
 		B331BA501CB4120B0080AE00 /* ofxToggle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxToggle.cpp; sourceTree = "<group>"; };
 		B331BA511CB4120B0080AE00 /* ofxToggle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxToggle.h; sourceTree = "<group>"; };
 		B3B0EE031CB40C7A002F2B61 /* shadersGL3 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shadersGL3; path = bin/data/shadersGL3; sourceTree = "<group>"; };
+		B3B2F06E1CB54A1500FF25C3 /* instancedManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = instancedManager.cpp; sourceTree = "<group>"; };
+		B3B2F06F1CB54A1500FF25C3 /* instancedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = instancedManager.h; sourceTree = "<group>"; };
+		B3B2F0721CB54D0900FF25C3 /* instanced.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced.frag; path = bin/data/shadersGL2/instanced.frag; sourceTree = "<group>"; };
+		B3B2F0731CB54D0900FF25C3 /* instanced.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced.vert; path = bin/data/shadersGL2/instanced.vert; sourceTree = "<group>"; };
+		B3B2F0761CB5753500FF25C3 /* instancedRad.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instancedRad.frag; path = bin/data/shadersGL2/instancedRad.frag; sourceTree = "<group>"; };
+		B3B2F0771CB5753500FF25C3 /* instancedRad.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instancedRad.vert; path = bin/data/shadersGL2/instancedRad.vert; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E4B69B5B0A3A1756003C02F2 /* videoTest_2Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = videoTest_2Debug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
@@ -133,6 +140,10 @@
 		B3B0EE021CB40C6C002F2B61 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				B3B2F0761CB5753500FF25C3 /* instancedRad.frag */,
+				B3B2F0771CB5753500FF25C3 /* instancedRad.vert */,
+				B3B2F0721CB54D0900FF25C3 /* instanced.frag */,
+				B3B2F0731CB54D0900FF25C3 /* instanced.vert */,
 				B3B0EE031CB40C7A002F2B61 /* shadersGL3 */,
 			);
 			name = shaders;
@@ -171,6 +182,8 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B3B2F06E1CB54A1500FF25C3 /* instancedManager.cpp */,
+				B3B2F06F1CB54A1500FF25C3 /* instancedManager.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
@@ -282,6 +295,7 @@
 				B331BA531CB4120B0080AE00 /* ofxButton.cpp in Sources */,
 				B331BA571CB4120B0080AE00 /* ofxSlider.cpp in Sources */,
 				B331BA591CB4120B0080AE00 /* ofxToggle.cpp in Sources */,
+				B3B2F0701CB54A1500FF25C3 /* instancedManager.cpp in Sources */,
 				B331BA581CB4120B0080AE00 /* ofxSliderGroup.cpp in Sources */,
 				B331BA541CB4120B0080AE00 /* ofxGuiGroup.cpp in Sources */,
 			);
