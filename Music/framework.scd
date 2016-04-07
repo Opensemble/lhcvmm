@@ -69,18 +69,24 @@ Server.default.boot;
 			};
 
 			fork{
-				self.playEvent(onset);
-				{onsetIndicator.background_(Color.rand);}.defer;
-				onset[1].wait;
-				{onsetIndicator.background_(Color.grey);}.defer;
-				self.playEvent(continuant);
-				{continuantIndicator.background_(Color.rand);}.defer;
-				continuant[1].wait;
-				{continuantIndicator.background_(Color.grey);}.defer;
-				self.playEvent(termination);
-				{terminationIndicator.background_(Color.rand);}.defer;
-				termination[1].wait;
-				{terminationIndicator.background_(Color.grey);}.defer;
+				if(not(onset[0].isEmpty),{
+					self.playEvent(onset);
+					{onsetIndicator.background_(Color.rand);}.defer;
+					onset[1].wait;
+					{onsetIndicator.background_(Color.grey);}.defer;
+				});
+				if(not(continuant[0].isEmpty),{
+					self.playEvent(continuant);
+					{continuantIndicator.background_(Color.rand);}.defer;
+					continuant[1].wait;
+					{continuantIndicator.background_(Color.grey);}.defer;
+				});
+				if(not(termination[0].isEmpty),{
+					self.playEvent(termination);
+					{terminationIndicator.background_(Color.rand);}.defer;
+					termination[1].wait;
+					{terminationIndicator.background_(Color.grey);}.defer;
+				});
 			};
 		}, '/sound_unit').enable;
 	},
