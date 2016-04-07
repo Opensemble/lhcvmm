@@ -10,8 +10,6 @@ SynthDef(\pulse, { |freq = 440, sustain = 1|
 });
 )
 
-
-
 /*
 
 HOW THIS WORKS
