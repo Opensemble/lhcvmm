@@ -12,17 +12,22 @@
 #include <iostream>
 #include "ofMain.h"
 
+enum InstancedMode {
+    LINEAL,
+    RAD_CONCENTRIC,
+    RAD_CENTRIFUGE
+};
 
 class InstancedManager {
 
 public:
+    
     void setup();
     void update();
     void draw();
     void exit();
     
-    
-    
+    void setMode(InstancedMode m){_mode = m;}
     void setWidth(float w){_width =  w*Lim.x;}
     void setHeight(float h){_height= h*Lim.y*2;}
     void setHres(int res){_hRes=res;}
@@ -40,7 +45,9 @@ public:
     void setZnzRug(float r){zNoiseRug = r;}
     void setLimits(ofVec3f vec){Lim = vec;}
     void setCubeSize(float val);
+    void setXpos(float val){xPos = val;}
     void setYPos(float val){yPos=val;}
+    void setRadDeform(float val){radDeform = val;}
     void setOrientation(ofVec3f vec){Orient=vec;}
     void setQuilombo(bool b){bDoQuilombo=b;}
     void setColor(ofColor col){
@@ -54,6 +61,8 @@ public:
     
 private:
     
+    InstancedMode _mode;
+    
     ofVec3f Lim, Orient;
     
     ofVboMesh	vboMesh;
@@ -62,7 +71,9 @@ private:
     float _width, _height;
     int _hRes, _vRes;
     
-    float yPos;
+    float xPos, yPos;
+    
+    float radDeform = 0.0;
     
     float velX = 5.0;
     float vSpacing=.5;

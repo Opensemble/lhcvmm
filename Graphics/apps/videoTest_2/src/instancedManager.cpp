@@ -1,10 +1,4 @@
-//
-//  instancedManager.cpp
-//  borradorFriccion
-//
-//  Created by Leo on 16/03/15.
-//
-//
+
 
 #include "instancedManager.h"
 
@@ -16,6 +10,7 @@ void InstancedManager::setup(){
     
   	shaderInst.load("shadersGL2/instancedRad.vert", "shadersGL2/instancedRad.frag");
     
+    _mode = LINEAL;
     _hRes = 40;
     _vRes = 20;
     _width = 100;
@@ -51,19 +46,21 @@ void InstancedManager::draw(){
 	ofSetColor(mainColor);
 
 	shaderInst.begin();
+    if (_mode == LINEAL)
+        shaderInst.setUniform1i("uMode", 0);
+    else if(_mode == RAD_CONCENTRIC)
+        shaderInst.setUniform1i("uMode", 1);
+    else if(_mode == RAD_CENTRIFUGE)
+        shaderInst.setUniform1i("uMode", 2);
+    
+    shaderInst.setUniform1f("uDeformRad", radDeform);
+        
 	shaderInst.setUniform1i("uHres", _hRes);
     shaderInst.setUniform1i("uWidth", _width);
     shaderInst.setUniform1i("uVres", _vRes);
     shaderInst.setUniform1i("uHeight", _height);
 	shaderInst.setUniform1f("timeValue", (velCounter% 3000) / 3000.0f);
     shaderInst.setUniform1f("timeValue_b", ofGetElapsedTimeMillis());
-    //shaderInst.setUniform1f("timeValue_b", yNzCounter);
-    
-    float vs;
-   _vRes>1 ? vs=_height/(_vRes-1) : vs= 0.0; ///horizontal mode
-//    _vRes>1 ? vs= ofDegToRad(360.0) /(_vRes-1) : vs= 0.0; ///radial mode
-    shaderInst.setUniform1f("uVspacing",vs);
-    
     
     shaderInst.setUniform1f("uTimeNoise", noiseTime);
     
@@ -80,7 +77,15 @@ void InstancedManager::draw(){
     shaderInst.setUniform1f("uZnoiseRug", zNoiseRug);
    
         ofPushMatrix();
-        if(_vRes>1)ofTranslate(0, _height*(-.5) + (yPos*Lim.y),0);
+        //set x - y
+        //lineal
+        if(_mode==LINEAL && _vRes>1)
+            ofTranslate(xPos*Lim.x, _height*(-.5) + (yPos*Lim.y),0);
+        //radial
+        else if(_mode!=LINEAL && _vRes>1)
+            ofTranslate(xPos*Lim.x, ofGetHeight()*(.5) + (yPos*Lim.y),0);
+            
+    
         if(Orient.x<0){
             ofRotateY(180);
             ofTranslate(Lim.x*Orient.x, 0);

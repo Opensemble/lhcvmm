@@ -19,60 +19,56 @@ void ofApp::setup(){
 #else
 	if(ofIsGLProgrammableRenderer()){
         ofLogVerbose()<<"Using ProgrammableRenderer";
-		shader.load("shadersGL3/shader");
 	}else{
         ofLogVerbose()<<"NOT Using ProgrammableRenderer";
-		shader.load("shadersGL2/shader");
+
 	}
 #endif
     
     //gui-------------
     gui.setup();
+    gui.add(tMode.setup("LINEAL/RADIAL", false));
+    gui.add(tRadMode.setup("Concentric/Centrifuge", false));
+    gui.add(sRadDeform.setup("Radial Mix", 0.0, 0.0, 1.0));
+    
+    
     gui.add(sWidth.setup("width", 1.0, 0., 1.0));
-    gui.add(sHeight.setup("height", 0.25, 0., 1.0));
+    gui.add(sHeight.setup("height/radius", 0.25, 0., 1.0));
     gui.add(sCubeSize.setup("cubesize", 0.5, 0., 1.0));
     gui.add(sHres.setup("Hres", 0.3, 0., 1.0));
     gui.add(sVres.setup("Vres", 0.3, 0., 1.0));
-    gui.add(sVelocity.setup("velocity", 0.0, 0., 1.0));
+    gui.add(sXpos.setup("Xpos", 0.5, 0., 1.0));
     gui.add(sYpos.setup("Ypos", 0.5, 0., 1.0));
+    gui.add(sVelocity.setup("velocity", 0.0, 0., 1.0));
     //nz
-    gui.add(tRotate.setup("rotate", false));
-    //-
-    gui.add(sNzTime.setup("nzTime", 1.0, 0.0, 50.0));
+    gui.add(sNzTime.setup("nzTime", 0.1, 0.0, 1.0));
     
-    gui.add(sNzXAmp.setup("nzXAmp", 0.0, 0.0, 500.0));
-    gui.add(sNzXFreq.setup("nzXFreq", 0.05, 0.0, 0.1));
-    gui.add(sNzXRug.setup("nzXRug", 2.0, 0.01, 30.0));
+    gui.add(sNzXAmp.setup("nzXAmp", 0.0, 0.0, 1.0));
+    gui.add(sNzXFreq.setup("nzXFreq", 0.5, 0.0, 1.0));
+    gui.add(sNzXRug.setup("nzXRug", 0.05, 0.01, 1.0));
     
-    gui.add(sNzYAmp.setup("nzYAmp", 0.0, 0.0, 500.0));
-    gui.add(sNzYFreq.setup("nzYFreq", 0.05, 0.0, 0.1));
+    gui.add(sNzYAmp.setup("nzYAmp", 0.0, 0.0, 1.0));
+    gui.add(sNzYFreq.setup("nzYFreq", 0.5, 0.0, 1.0));
     gui.add(sNzYRug.setup("nzYRug", 2.0, 0.01, 30.0));
     
-    gui.add(sNzZAmp.setup("nzZAmp", 0.0, 0.0, 500.0));
-    gui.add(sNzZFreq.setup("nzZFreq", 0.05, 0.0, 0.1));
-    gui.add(sNzZRug.setup("nzZRug", 2.0, 0.01, 30.0));
-    
+    gui.add(sNzZAmp.setup("nzZAmp", 0.0, 0.0, 1.0));
+    gui.add(sNzZFreq.setup("nzZFreq", 0.5, 0.0, 1.0));
+    gui.add(sNzZRug.setup("nzZRug", 0.05, 0.01, 1.0));
     //
+    gui.add(tUseCam.setup("useCam", false));
+    gui.add(tAxis.setup("axis", false));
+    gui.add(tUseLight.setup("useLight", false));
+    gui.add(sLightPos.setup("LighPos", ofVec3f(0.5), ofVec3f(0.0), ofVec3f(1.0)));
     
-    gui.add(b1.setup("b1"));
-    gui.add(b2.setup("b2"));
+    //gui.add(b1.setup("b1"));
   
-    
     ofSetBackgroundColor(ofColor::black);
-
-    //plane----------
-    float planeScale = 1.0;
-    int planeGridSize = 10;
-    int planeWidth = ofGetWidth() * planeScale;
-    int planeHeight = ofGetHeight() * planeScale;
-    int planeColums = planeWidth / planeGridSize;
-    int planeRows = planeHeight / planeGridSize;
     
-    plane.set(planeWidth, planeHeight, planeColums, planeRows, OF_PRIMITIVE_TRIANGLES);
-    
-    //instanced
+    cam.lookAt(ofVec3f( ofGetWidth()*.5, ofGetHeight()*.5, 0.0));
+    light.setPosition(ofGetWidth()*.5, ofGetHeight()*.5, 150.0);
+    light.setPointLight();
    
-    
+   
     ofVec3f sceneLimits;
     sceneLimits.set(ofGetWidth(), ofGetHeight(), 100);
     
@@ -80,10 +76,6 @@ void ofApp::setup(){
     instanced.setLimits(sceneLimits);
     instanced.setOrientation(ofVec3f(1,1,1));
     instanced.setColor(ofColor::white);
-    
-   
-    //instanced.setYPos(ofGetHeight()*.5);
-    
 
 }
 
@@ -91,102 +83,74 @@ void ofApp::setup(){
 void ofApp::update(){
     
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
-    /*
-    float planeScale = sScale;
-    int planeGridSize = 100-sResolution;
-    int planeWidth = ofGetWidth() * planeScale;
-    int planeHeight = ofGetHeight() * planeScale;
-    int planeColums = planeWidth / planeGridSize;
-    int planeRows = planeHeight / planeGridSize;
-    
-    plane.set(planeWidth, planeHeight, planeColums, planeRows);
-    */
+
+    if(!tMode)instanced.setMode(LINEAL);
+    else if(tMode && !tRadMode) instanced.setMode(RAD_CONCENTRIC);
+    else if(tMode && tRadMode){
+        instanced.setMode(RAD_CENTRIFUGE);
+        instanced.setRadDeform(sRadDeform);
+    }
     
     instanced.setWidth(sWidth);
     instanced.setHeight(sHeight);
-    instanced.setCubeSize(sCubeSize*10);
-    instanced.setHres(sHres*200);
-    instanced.setVres(sVres*100);
-    instanced.setVelocity(sVelocity*10);
+    instanced.setCubeSize(sCubeSize * MAX_CUBESIZE);
+    instanced.setHres(sHres * MAX_H_RES);
+    instanced.setVres(sVres * MAX_V_RES);
+    instanced.setVelocity(sVelocity * MAX_VELOCITY);
+    instanced.setXpos(sXpos);
     instanced.setYPos(sYpos);
     //nz
-    instanced.setNzTime(sNzTime);
+    instanced.setNzTime(sNzTime * MAX_NZ_TIME);
     
-    instanced.setXnzAmp(sNzXAmp);
-    instanced.setXnzFreq(sNzXFreq);
-    instanced.setXnzRug(sNzXRug);
-    instanced.setYnzAmp(sNzYAmp);
+    instanced.setXnzAmp(sNzXAmp * MAX_NZ_AMP);
+    instanced.setXnzFreq(sNzXFreq * MAX_NZ_FREQ);
+    instanced.setXnzRug(sNzXRug * MAX_NZ_RUG);
     
-    instanced.setYnzFreq(sNzYFreq);
-    instanced.setYnzRug(sNzYRug);
+    instanced.setYnzAmp(sNzYAmp * MAX_NZ_AMP);
+    instanced.setYnzFreq(sNzYFreq * MAX_NZ_FREQ);
+    instanced.setYnzRug(sNzYRug * MAX_NZ_RUG);
     
-    instanced.setZnzAmp(sNzZAmp);
-    instanced.setZnzFreq(sNzZFreq);
-    instanced.setZnzRug(sNzZRug);
+    instanced.setZnzAmp(sNzZAmp * MAX_NZ_AMP);
+    instanced.setZnzFreq(sNzZFreq * MAX_NZ_FREQ);
+    instanced.setZnzRug(sNzZRug * MAX_NZ_RUG);
     
+    //light pos
     
+    light.setPosition(sLightPos->x * MAX_LIGHT_X,
+                      sLightPos->y * MAX_LIGHT_Y,
+                      sLightPos->z * MAX_LIGHT_Z );
+  
+
     
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-   
-    
-    float percentX = mouseX / (float)ofGetWidth();
-    percentX = ofClamp(percentX, 0, 1);
-
-    ofSetColor(ofColor::white);
-    
-    
-    ofPushMatrix();
-    
-    // translate plane into center screen.
-//    float tx = ofGetWidth() / 2;
-//    float ty = ofGetHeight() / 2;
-//    ofTranslate(tx, ty);
-    
-    if(tRotate){
-        float percentY = mouseY / (float)ofGetHeight();
-        float rotation = ofMap(percentY, 0, 1, -60, 60, true) + 60;
-        ofRotate(rotation, 1, 0, 0);
+    if(tUseLight){
+        ofEnableLighting();
+        light.enable();
     }
-
-    ///Plane
-//    shader.begin();
-//    shader.setUniform1f("uTime", ofGetElapsedTimef());
-//    //nz
-//    shader.setUniform1f("uDispAmp", sNzAmp);
-//    shader.setUniform1f("uDispRug", sNzRug);
-//    shader.setUniform1f("uDispFreq", sNzFreq);
-//    //tr
-//    shader.setUniform1f("uHres", sTrHres);
-//    shader.setUniform1f("uWidth", sTrWidth);
-//    shader.setUniform1f("uVspacing", sTrVspacing);
-//  
-//    
-//    if(tWireframe)plane.drawWireframe();
-//    else plane.drawVertices();
-//    
-//    shader.end();
     
-    ///Instanced
-   
+    if(tUseCam)cam.begin();
     
-   
+    if(tAxis)ofDrawAxis(200);
+    light.draw();
+    
     instanced.draw();
     
-    ofDrawAxis(200);
+    if(tUseCam)cam.end();
     
-    ofPopMatrix();
+    if(tUseLight){
+        light.disable();
+        ofDisableLighting();
+    }
     
     if (bShowGui) gui.draw();
     
     
-    string info = "Verts Num: " + ofToString(plane.getMeshPtr()->getNumVertices()) +
-                    "\nPlane size: " + ofToString(plane.getWidth()) + "x" + ofToString(plane.getHeight()) +
-                    "\nWindoe size: "+ ofToString(ofGetWidth()) + "x" + ofToString(ofGetHeight());
-    ofDrawBitmapString(info, 10, ofGetHeight()-40);
+    string info = "Window size: "+ ofToString(ofGetWidth()) + "x" + ofToString(ofGetHeight());
+    ofDrawBitmapString(info, ofGetWidth()-60, ofGetHeight()-40);
 }
 
 //--------------------------------------------------------------

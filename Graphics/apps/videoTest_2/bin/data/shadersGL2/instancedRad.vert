@@ -8,14 +8,14 @@ uniform vec4 globalColor = vec4(1.0);
 uniform float timeValue=0.0;
 uniform float timeValue_b=0.0;
 
-
+uniform int uMode; // Lineal=0 / Radial_Concentric=1 / Radial_Centrifuge=2
+uniform float uDeformRad;
 //resolution-spacing
 uniform int uHres;
 uniform int uWidth;
 uniform int uVres;
 uniform int uHeight;
 
-//uniform float uVspacing=.5;
 //animation
 uniform float uTimeNoise = 1.0;
 
@@ -123,15 +123,8 @@ void main()
 
     vec4 vPos = gl_Vertex;
     
-    //center the center
-    vPos.x += uWidth*.5;
-    
     //instanced---------------------
 	float iCount = uHres;
-    
-    float radius;
-    float angle;
-    
     
     float instanceX = float (gl_InstanceID % int(iCount))/ iCount;
     
@@ -140,42 +133,53 @@ void main()
     
     float instanceY =  floor(gl_InstanceID/iCount);
     
-    //angle = instanceX * radians(360.0) + instanceY * uVspacing;//flashera
-    
-    //clock motion-----------------------
-    float radialSpacing;
-    if(uVres>1)
-        radialSpacing = uHeight / (uVres-1);
-    else
-        radialSpacing = 0.0;
-    
-//    angle = timeDependentInstanceX * radians(360.0);//animated
-//    radius = instanceY * radialSpacing;//fixed
-    
-    //to the sides motion-------------------------
-    
-    float angularSpacing;
-    if(uVres>1)
-        angularSpacing = radians(360.0) / (uVres-1);
-    else
-        angularSpacing = 0.0;
-    
+    //LINEAL------------------------------------------
+    if(uMode==0){
+        float vSpacing = uHeight / (uVres-1);
+        vPos.x += timeDependentInstanceX* uWidth ;
+        vPos.y += instanceY * vSpacing;
+    }
+    //RADIAL----------------------------------------
+    else {
 
-    angle = instanceY * angularSpacing;
-    radius = timeDependentInstanceX * uHeight;
+        float radius;
+        float angle;
+        
+        //center the center
+        vPos.x += uWidth*.5;
+        
+        float radialSpacing;
+        if(uVres>1)
+            radialSpacing = uHeight / (uVres-1);
+        else
+            radialSpacing = 0.0;
+        
+        float angularSpacing;
+        if(uVres>1)
+            angularSpacing = radians(360.0) / (uVres-1);
+        else
+            angularSpacing = 0.0;
+        
+        //Concentric-----------------------
+        if(uMode == 1){
+            angle = timeDependentInstanceX * radians(360.0);//animated
+            radius = instanceY * radialSpacing;//fixed
+        }
+        //Centrifuge con deform-------------------------
+        else if (uMode == 2){
+            float deformation = timeDependentInstanceX * radians(360.0) * uDeformRad;
+            angle  = instanceY * angularSpacing + deformation;
+            radius = timeDependentInstanceX * uHeight;
+        }
+       
+        
+       
+        //set coordinates-------------------------
+                                    
+        vPos.x += radius * cos (angle);
+        vPos.y += radius * sin (angle);
     
-   
-
-    
-    
-    //set coordinates-------------------------
-                                
-    vPos.x += radius * cos (angle);
-    vPos.y += radius * sin (angle);
-    
-    
-   
-    
+    }
     //noise-------------------------------------
 
     
