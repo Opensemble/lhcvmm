@@ -72,7 +72,7 @@ Blog post about the creation of this track http://schemawound.tumblr.com/post/29
 
 
 
-~opensemble.register(\terror, [\inharmonic, \canopy, \centre],
+~opensemble.register(\terror, [\harmonic, \flow, \canopy, \centre, \statement, \descent],
 	{ arg suf;
 
 		x = Synth(\ThePiano, [

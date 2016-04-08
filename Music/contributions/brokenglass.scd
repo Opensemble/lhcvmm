@@ -90,7 +90,7 @@ SynthDef(\bglass, {
 
 
 
-~opensemble.register(\brokenglass, [\inharmonic, \canopy],
+~opensemble.register(\brokenglass, [\inharmonic, \canopy, \anacrusis, \fall, \descent],
 	{ arg suf;
 x = Synth(\bglass, [\audioOutBus, 0], s);
 } );
