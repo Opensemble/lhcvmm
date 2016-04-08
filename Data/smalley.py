@@ -9,6 +9,7 @@ import csv
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('-c','--csv', help='Load events from csv.', action='store_false')
 parser.add_argument('-r','--random', help='Send random events. (will use a list otherwise)', action='store_true')
+parser.add_argument('-l','--loop', help='Loop events sequence.', action='store_true')
 
 args = parser.parse_args()
 
@@ -128,25 +129,28 @@ def send_events_periodically():
         print "Start Sending events from csv file."
         print "Each * printed represents an event sent."
         print "Press Ctrl + C to finalize."
-        #while 1:
 
-        csv_data_index = 0
+        while 1:
 
-        sys.stdout.write('\r')
-        for i in range(len(csv_data)):
-            sys.stdout.write('-')
-        sys.stdout.write('\r')
+            csv_data_index = 0
 
-        for row in csv_data:
-            send_event(row[1:])
-            sys.stdout.write('*')
-            sys.stdout.flush()
+            sys.stdout.write('\r')
+            for i in range(len(csv_data)):
+                sys.stdout.write('-')
+            sys.stdout.write('\r')
 
-            time_to_sleep = row[0]
-            if time_to_sleep > 0:
-                time_to_sleep = time_to_sleep - ((time.time() - starttime) % time_to_sleep)
-                time.sleep(time_to_sleep)
+            for row in csv_data:
+                send_event(row[1:])
+                sys.stdout.write('*')
+                sys.stdout.flush()
 
+                time_to_sleep = row[0]
+                if time_to_sleep > 0:
+                    time_to_sleep = time_to_sleep - ((time.time() - starttime) % time_to_sleep)
+                    time.sleep(time_to_sleep)
+
+            if not args.loop:
+                break
 
 
 try:
