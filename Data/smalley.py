@@ -138,12 +138,14 @@ def send_events_periodically():
             sys.stdout.write('\r')
 
             for row in csv_data:
-                interval = row[0]
-                time_to_sleep = interval - ((time.time() - starttime) % interval)
                 send_event(row[1:])
                 sys.stdout.write('*')
                 sys.stdout.flush()
-                time.sleep(time_to_sleep)
+
+                time_to_sleep = row[0]
+                if time_to_sleep > 0:
+                    time_to_sleep = time_to_sleep - ((time.time() - starttime) % time_to_sleep)
+                    time.sleep(time_to_sleep)
 
 
 
