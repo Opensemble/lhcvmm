@@ -128,24 +128,24 @@ def send_events_periodically():
         print "Start Sending events from csv file."
         print "Each * printed represents an event sent."
         print "Press Ctrl + C to finalize."
-        while 1:
+        #while 1:
 
-            csv_data_index = 0
+        csv_data_index = 0
 
-            sys.stdout.write('\r')
-            for i in range(len(csv_data)):
-                sys.stdout.write('-')
-            sys.stdout.write('\r')
+        sys.stdout.write('\r')
+        for i in range(len(csv_data)):
+            sys.stdout.write('-')
+        sys.stdout.write('\r')
 
-            for row in csv_data:
-                send_event(row[1:])
-                sys.stdout.write('*')
-                sys.stdout.flush()
+        for row in csv_data:
+            send_event(row[1:])
+            sys.stdout.write('*')
+            sys.stdout.flush()
 
-                time_to_sleep = row[0]
-                if time_to_sleep > 0:
-                    time_to_sleep = time_to_sleep - ((time.time() - starttime) % time_to_sleep)
-                    time.sleep(time_to_sleep)
+            time_to_sleep = row[0]
+            if time_to_sleep > 0:
+                time_to_sleep = time_to_sleep - ((time.time() - starttime) % time_to_sleep)
+                time.sleep(time_to_sleep)
 
 
 
