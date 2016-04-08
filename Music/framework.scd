@@ -155,15 +155,25 @@ Server.default.boot;
 		Window.allWindows.do({|ww| if(ww.name=="Opensemble",ww.close);});
 		r = Window.availableBounds;
 		// set up a window on bottom right corner, right above server status
-		window = Window(name:"Opensemble" ,border:false,bounds:Rect(r.width-200-18, r.top+3, 200, 80));
+		//window = Window(name:"Opensemble" ,border:false,bounds:Rect(r.width-200-18, r.top+3, 200, 80));
+		window = Window(name:"Opensemble" ,border:true,bounds:Rect(r.width-200-50, r.top+50, 200, 80));
 		window.alwaysOnTop = true;
 		window.background = Color.black.alpha = 0.6;
+
+
+
 		t = StaticText.new(window,Rect(10,10,85,26)).string_("Opensemble:");
 		t.stringColor = Color.white;
 		oscIndicator  = StaticText.new(window,Rect(10,50,20,20));
 		onsetIndicator  = StaticText.new(window,Rect(110,50,20,20));
 		continuantIndicator  = StaticText.new(window,Rect(140,50,20,20));
 		terminationIndicator  = StaticText.new(window,Rect(170,50,20,20));
+
+		oscIndicator.background = Color.grey;
+		onsetIndicator.background = Color.grey;
+		continuantIndicator.background = Color.grey;
+		terminationIndicator.background = Color.grey;
+
 		Button(window, Rect(100, 10, 90, 26))
 		.states_([
             ["Listening", Color.white, Color.green.alpha = 0.6;],
@@ -188,7 +198,8 @@ Server.default.boot;
 "~opensemble is now defined.".underlined.postln;
 "Loading contributions.".underlined.postln;
 (thisProcess.nowExecutingPath.dirname +/+ "/contributions/*.scd").loadPaths(warn:false);
-)
 
+
+)
 
 
