@@ -122,10 +122,11 @@ Server.default.boot;
 			wordsCount = self.dict.collect({ | item, key |
 				item[0].count({ arg word; event.includes(word) });
 			});
+
 			//cant find a better way...
 			best = wordsCount.findKeyForValue(wordsCount.maxItem);
 			if(wordsCount[best]>0,{sof = self.dict[best][1];});
-			if(sof.isNil,{"No function matched the requirements!".postln;});
+			if(sof.isNil,{"No function matches ".post;event.postln;});
 		});
 
 		sof; //can return nil
@@ -201,5 +202,6 @@ Server.default.boot;
 
 
 )
+
 
 
