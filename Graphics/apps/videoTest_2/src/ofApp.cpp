@@ -10,6 +10,38 @@ void ofApp::setup(){
     ofLogVerbose()<<"GLVersionMinor: "<< ofGetGLRenderer()->getGLVersionMinor();
     ofLogVerbose()<<"GLSL Version: "<< ofGLSLVersionFromGL(ofGetGLRenderer()->getGLVersionMajor(), ofGetGLRenderer()->getGLVersionMinor());
     
+    //TIMELINE*******************
+    
+//    ofxTimeline::removeCocoaMenusFromGlut("AllTracksExample");
+//    timeline.setup();
+//
+//#ifdef TIMELINE_VIDEO_INCLUDED
+//    timeline.addVideoTrack("fingers", "fingers.mov");
+//#endif
+//#ifdef TIMELINE_AUDIO_INCLUDED
+//    timeline.addAudioTrack("audio", "4chan.wav");
+//    timeline.setDurationInSeconds(timeline.getAudioTrack("audio")->getDuration());
+//#endif
+//    
+//    timeline.addCurves("curves", ofRange(0, 255));
+//    timeline.addBangs("bangs");
+//    timeline.addFlags("flags");
+//    timeline.addColors("colors");
+//    timeline.addLFO("lfo");
+//    timeline.addSwitches("switches");
+//    
+//    timeline.setPageName("Page 1");
+//    timeline.addPage("Page 2");
+//    timeline.addPage("Page 3");
+//    timeline.addPage("Page 4");
+//    timeline.setCurrentPage(0);
+//    
+//    timeline.enableSnapToOtherKeyframes(false);
+//    timeline.setLoopType(OF_LOOP_NORMAL);
+    
+    
+    
+    //******************************
     
     
     //shaders---------------------
@@ -147,6 +179,8 @@ void ofApp::draw(){
     }
     
     if (bShowGui) gui.draw();
+    
+    //timeline.draw();
     
     
     string info = "Window size: "+ ofToString(ofGetWidth()) + "x" + ofToString(ofGetHeight());
