@@ -2,8 +2,10 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "ofxTimeline.h"
 
 #include "instancedManager.h"
+#include "TimelineApp.h"
 
 #define MAX_CUBESIZE 10
 #define MAX_H_RES 200
@@ -65,6 +67,9 @@ class ofApp : public ofBaseApp{
     //----
     InstancedManager instanced;
     
+    //TIMELINE*******
+    //ofxTimeline timeline;
+    shared_ptr<TimelineApp> timelineApp;
     
     
 };
