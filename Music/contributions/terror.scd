@@ -27,7 +27,7 @@ Blog post about the creation of this track http://schemawound.tumblr.com/post/29
 			i_comb1MaxDelay = 1,		comb1Delay = 0.0125,	comb1Decay = 0.1,
 			verb0Mix		= 1.0,		verb0Room = 0.7,
 			verb1Mix		= 1.0,		verb1Room = 1.0,
-			amp = 1
+			amp = 1, dur = 3
 		|
 
 		//Local Vars
@@ -35,7 +35,7 @@ Blog post about the creation of this track http://schemawound.tumblr.com/post/29
 		var saw = Array.new;
 		var comb = Array.new;
 		var verb = Array.new;
-		var comp;
+		var comp, sig;
 
 		//Saws
 		/* -----------
@@ -66,7 +66,9 @@ Blog post about the creation of this track http://schemawound.tumblr.com/post/29
 		verb = verb.add(FreeVerb.ar(verb[0] * saw[6],	verb1Mix,	verb1Room));
 
 		//Out
-		Out.ar(0, verb[1] * (amp * 0.2));
+	    sig = verb[1] * (amp * 0.2);
+   		sig = sig * (Env.linen(0.01, dur, 0.5).kr(2));
+		Out.ar(0, sig);
 	}).add;
 
 
@@ -84,7 +86,7 @@ Blog post about the creation of this track http://schemawound.tumblr.com/post/29
 		\i_comb1MaxDelay,	0.0125,	\comb1Delay,		0.0125,	\comb1Decay,		0.1,
 		\verb0Mix,			1.0,	\verb0Room,			0.7,
 		\verb1Mix,			1.0,	\verb1Room,			1.0,
-		\amp,				1
+		\amp,				1,      \dur,               suf.duration
 	]);
 } );
 
