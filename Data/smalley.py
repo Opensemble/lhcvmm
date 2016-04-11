@@ -23,7 +23,11 @@ with open('data_files/smalley.csv', 'rb') as csvfile:
     for row in csv:
         for i, val in enumerate(row):
             if i in float_indexes:
-                row[i] = float(row[i].replace(",", "."))
+                try:
+                    row[i] = float(row[i].replace(",", "."))
+                except:
+                    row[i] = 0
+
         csv_data.append(row)
 
 
@@ -106,8 +110,12 @@ def send_random_event():
 
     send_event(data)
 
-# Define a function for the thread
-def send_events_periodically():
+
+try:
+    #initialize osc client
+    client = OSCClient()
+    client.connect(('127.0.0.1', osc_port))   # connect to SuperCollider
+
     starttime=time.time()
 
     if args.random:
@@ -152,16 +160,6 @@ def send_events_periodically():
             if not args.loop:
                 break
 
-
-try:
-    #initialize osc client
-    client = OSCClient()
-    client.connect(('127.0.0.1', osc_port))   # connect to SuperCollider
-
-    start_new_thread( send_events_periodically, ())
-
-    while 1:
-        pass
 
 except OSCClientError:
     printc( "\OSCClientError: Connection refused on port %s." % osc_port, 'e')
