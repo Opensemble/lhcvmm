@@ -5,12 +5,16 @@
 /apps/**/bin/*
 !/apps/**/bin/data
 
+#mov files renders
+*.mov
+
 #builds
 build/
 obj/
 *.o
 *.app
 */x64/
+
 
 ### Xcode ###
 ## Build generated
