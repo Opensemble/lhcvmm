@@ -1,26 +1,40 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxGui.h"
-#include "ofxTimeline.h"
+#include "GuiManager.h"
 
 #include "instancedManager.h"
 #include "TimelineApp.h"
 
-#define MAX_CUBESIZE 10
+#include "ofMain.h"
+#include "ofxFisheye.h"
+#include "VideoRenderer.h"
+
+
+//----------------
+
+#include "Constants.h"
+
+//---------------
+#define MAX_CUBESIZE 0.02
 #define MAX_H_RES 200
 #define MAX_V_RES 100
 #define MAX_VELOCITY 10
 
 #define MAX_NZ_TIME 50
 
-#define MAX_NZ_AMP 500
+#define MAX_NZ_AMP 0.2
 #define MAX_NZ_FREQ 0.1
-#define MAX_NZ_RUG 30
+#define MAX_NZ_RUG 0.03
 
 #define MAX_LIGHT_X 1024
 #define MAX_LIGHT_Y 800
 #define MAX_LIGHT_Z 800
+
+enum ValuesMode {
+    GUI,
+    TIMELINE
+};
 
 
 class ofApp : public ofBaseApp{
@@ -29,47 +43,52 @@ class ofApp : public ofBaseApp{
 	void setup();
 	void update();
 	void draw();
-	
-	void keyPressed(int key);
-	void keyReleased(int key);
-	void mouseMoved(int x, int y);
-	void mouseDragged(int x, int y, int button);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void windowResized(int w, int h);
-	void dragEvent(ofDragInfo dragInfo);
-	void gotMessage(ofMessage msg);
+    void exit();
+    
+    void keyPressed(int key);
+    
+    void drawScene(int w, int h);
+    
+    void startAnimation();
+    void stopAnimation();
 
+    void setValuesMode(ValuesMode val){currentValuesMode = val;}
+    void updateInstancedValues();
     
-    //gui
-    ofxToggle tMode, tRadMode;
-    ofxFloatSlider sRadDeform;
+    //commo render vars****************************************
     
-    ofxFloatSlider sWidth, sHeight, sCubeSize, sHres,
-                    sVres, sVelocity, sYpos, sXpos;
+    //animation data variables----------------
+    bool    isAnimating;
+    int     frameCounter;//animation Frame Counter
+    float   frameDuration;//Duration in seconds of each frame
+    int     framesMaxNumber;//Number of frames of the entire animation
+    float   animValue;//Current frame in relationship with the duration of the entire animation (0.0 - 1.0)
+    float   animationTime;
     
-    ofxFloatSlider sNzTime;
-    ofxFloatSlider sNzXAmp, sNzXRug, sNzXFreq;
-    ofxFloatSlider sNzYAmp, sNzYRug, sNzYFreq;
-    ofxFloatSlider sNzZAmp, sNzZRug, sNzZFreq;
+    //----------------------------
+    ofxFisheye fisheye;
+    float fisheyeAmount;
     
-    ofxToggle tUseCam;
-    ofxToggle tAxis;
-    ofxToggle tUseLight;
-    ofxVec3Slider sLightPos;
-    //ofxButton b1;
+    VideoRenderer renderer;
     
-    ofxPanel gui;
-    bool bShowGui = true;
+    ofFbo drawFbo; //FBO for drawing scene, wihtout fisheye
+    
+    ofTrueTypeFont	verdana;
+    
+    //this App vars**************************************************
+    
+    GuiManager gm;
+    bool bShowGui;
     
     ofEasyCam cam;
     ofLight light;
-    //----
+    
+    ValuesMode currentValuesMode;
+    
     InstancedManager instanced;
     
-    //TIMELINE*******
-    //ofxTimeline timeline;
     shared_ptr<TimelineApp> timelineApp;
     
     
+
 };

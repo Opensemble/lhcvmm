@@ -9,7 +9,6 @@
 #ifndef __borradorFriccion__instancedManager__
 #define __borradorFriccion__instancedManager__
 
-#include <iostream>
 #include "ofMain.h"
 
 enum InstancedMode {
@@ -23,7 +22,6 @@ class InstancedManager {
 public:
     
     void setup();
-    void update();
     void draw();
     void exit();
     
@@ -45,15 +43,16 @@ public:
     void setZnzRug(float r){zNoiseRug = r;}
     void setLimits(ofVec3f vec){Lim = vec;}
     void setCubeSize(float val);
+    void setCubeSize(ofVec3f size);
     void setXpos(float val){xPos = val;}
-    void setYPos(float val){yPos=val;}
+    void setYpos(float val){yPos=val;}
     void setRadDeform(float val){radDeform = val;}
     void setOrientation(ofVec3f vec){Orient=vec;}
     void setQuilombo(bool b){bDoQuilombo=b;}
+    void setMaskRadius(float radius){maskRadius=radius;}
     void setColor(ofColor col){
         mainColor=col;
         material.setDiffuseColor(mainColor);
-    
     }
     
     float getCubeSize(){return cubeSize;}
@@ -67,6 +66,8 @@ private:
     
     ofVboMesh	vboMesh;
     ofShader shaderInst;
+    
+    ofColor mainColor;
     
     float _width, _height;
     int _hRes, _vRes;
@@ -94,18 +95,15 @@ private:
     
     float cubeSize;
     
-    bool bDoQuilombo;
+    float maskRadius;
     
-    ofColor mainColor;
+    bool bDoQuilombo;
     
     int velCounter;
     float YnzCounter;
     
     ofMaterial material;
     
-    
-
-
 
 
 };
