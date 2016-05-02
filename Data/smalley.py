@@ -9,6 +9,7 @@ import csv
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('-c','--csv', help='Load events from csv.', action='store_false')
 parser.add_argument('-r','--random', help='Send random events. (will use a list otherwise)', action='store_true')
+parser.add_argument('-l','--loop', help='Loop events sequence.', action='store_true')
 
 args = parser.parse_args()
 
@@ -22,7 +23,11 @@ with open('data_files/smalley.csv', 'rb') as csvfile:
     for row in csv:
         for i, val in enumerate(row):
             if i in float_indexes:
-                row[i] = float(row[i].replace(",", "."))
+                try:
+                    row[i] = float(row[i].replace(",", "."))
+                except:
+                    row[i] = 0
+
         csv_data.append(row)
 
 
@@ -105,8 +110,12 @@ def send_random_event():
 
     send_event(data)
 
-# Define a function for the thread
-def send_events_periodically():
+
+try:
+    #initialize osc client
+    client = OSCClient()
+    client.connect(('127.0.0.1', osc_port))   # connect to SuperCollider
+
     starttime=time.time()
 
     if args.random:
@@ -128,6 +137,7 @@ def send_events_periodically():
         print "Start Sending events from csv file."
         print "Each * printed represents an event sent."
         print "Press Ctrl + C to finalize."
+
         while 1:
 
             csv_data_index = 0
@@ -138,24 +148,18 @@ def send_events_periodically():
             sys.stdout.write('\r')
 
             for row in csv_data:
-                interval = row[0]
-                time_to_sleep = interval - ((time.time() - starttime) % interval)
                 send_event(row[1:])
                 sys.stdout.write('*')
                 sys.stdout.flush()
-                time.sleep(time_to_sleep)
 
+                time_to_sleep = row[0]
+                if time_to_sleep > 0:
+                    time_to_sleep = time_to_sleep - ((time.time() - starttime) % time_to_sleep)
+                    time.sleep(time_to_sleep)
 
+            if not args.loop:
+                break
 
-try:
-    #initialize osc client
-    client = OSCClient()
-    client.connect(('127.0.0.1', osc_port))   # connect to SuperCollider
-
-    start_new_thread( send_events_periodically, ())
-
-    while 1:
-        pass
 
 except OSCClientError:
     printc( "\OSCClientError: Connection refused on port %s." % osc_port, 'e')

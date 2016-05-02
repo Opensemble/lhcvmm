@@ -4,18 +4,37 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "252C6127C45A1F2D4943E6963066F98DFCDB451F" : 0,
+    "65F0E57F9FBE704C78F412BB3A758052CBC46923" : 0,
+    "3C97A515599D3FF8B02338970AA5DBED7A033471" : 0,
+    "A6343E16BC2F648D0FEA647FB75CBADE0A25E0B8" : 0,
     "2DE9C8846D9375EAACFABA8963120E8E7719BAF5" : 0,
-    "3C97A515599D3FF8B02338970AA5DBED7A033471" : 0
+    "9306F8A4B5C13BDC4DDB4D5C22AC1335F4D819E8" : 0,
+    "49ED704B24A08379C9709713E9A651DFA0CED0E3" : 0,
+    "6B5D1DE462D521A98972DF70F1147E20268C546A" : 0,
+    "E0CB4C1C2522C94E4D03AC595BB2CF0D7F09B508" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0526DE4A-0BE3-4514-A04C-826C419AA673",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "252C6127C45A1F2D4943E6963066F98DFCDB451F" : "..\/addons\/ofxTimecode",
+    "65F0E57F9FBE704C78F412BB3A758052CBC46923" : "..\/addons\/ofxAudioDecoder",
+    "3C97A515599D3FF8B02338970AA5DBED7A033471" : "lhcvmm\/",
+    "A6343E16BC2F648D0FEA647FB75CBADE0A25E0B8" : "..\/addons\/ofxTextInputField",
     "2DE9C8846D9375EAACFABA8963120E8E7719BAF5" : "",
-    "3C97A515599D3FF8B02338970AA5DBED7A033471" : "lhcvmm\/"
+    "9306F8A4B5C13BDC4DDB4D5C22AC1335F4D819E8" : "..\/addons\/ofxTimeline",
+    "49ED704B24A08379C9709713E9A651DFA0CED0E3" : "..\/addons\/ofxRange",
+    "6B5D1DE462D521A98972DF70F1147E20268C546A" : "..\/addons\/ofxTween",
+    "E0CB4C1C2522C94E4D03AC595BB2CF0D7F09B508" : "..\/addons\/ofxMSATimer"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "videoTest_2",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Graphics\/apps\/videoTest_2\/videoTest_2.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/YCAMInterlab\/ofxTimecode.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "252C6127C45A1F2D4943E6963066F98DFCDB451F"
+    },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/leozimmerman\/openFrameworks.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
@@ -25,6 +44,36 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Opensemble\/lhcvmm.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3C97A515599D3FF8B02338970AA5DBED7A033471"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Flightphase\/ofxRange.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "49ED704B24A08379C9709713E9A651DFA0CED0E3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/prisonerjohn\/ofxAudioDecoder.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "65F0E57F9FBE704C78F412BB3A758052CBC46923"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/obviousjim\/ofxTween.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6B5D1DE462D521A98972DF70F1147E20268C546A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/YCAMInterlab\/ofxTimeline.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9306F8A4B5C13BDC4DDB4D5C22AC1335F4D819E8"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/elliotwoods\/ofxTextInputField.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A6343E16BC2F648D0FEA647FB75CBADE0A25E0B8"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/obviousjim\/ofxMSATimer.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E0CB4C1C2522C94E4D03AC595BB2CF0D7F09B508"
     }
   ]
 }

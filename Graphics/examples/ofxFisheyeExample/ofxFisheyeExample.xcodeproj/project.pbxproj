@@ -7,23 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B3667D931CBBFD7A00A225F9 /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3667D901CBBFD6E00A225F9 /* openFrameworksDebug.a */; };
 		B3F471DD1C29C5F100333AE1 /* ofxFisheye.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F471DB1C29C5F100333AE1 /* ofxFisheye.cpp */; };
-		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E4328147138ABC890047C5CB /* PBXContainerItemProxy */ = {
+		B3667D8F1CBBFD6E00A225F9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */;
+			containerPortal = B3667D8B1CBBFD6E00A225F9 /* openFrameworksLib.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = E4B27C1510CBEB8E00536013;
 			remoteInfo = openFrameworks;
 		};
-		E4EEB9AB138B136A00A80321 /* PBXContainerItemProxy */ = {
+		B3667D911CBBFD7400A225F9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */;
+			containerPortal = B3667D8B1CBBFD6E00A225F9 /* openFrameworksLib.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = E4B27C1410CBEB8E00536013;
 			remoteInfo = openFrameworks;
@@ -43,18 +43,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B3667D8A1CBBFD6E00A225F9 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = "<group>"; };
+		B3667D8B1CBBFD6E00A225F9 /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = "<group>"; };
 		B3F471D81C29C5F100333AE1 /* fxBarrelDist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fxBarrelDist.h; path = ../../addons/ofxFisheye/src/fxBarrelDist.h; sourceTree = "<group>"; };
 		B3F471D91C29C5F100333AE1 /* fxFixFisheye.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fxFixFisheye.h; path = ../../addons/ofxFisheye/src/fxFixFisheye.h; sourceTree = "<group>"; };
 		B3F471DA1C29C5F100333AE1 /* fxVariableFisheye.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fxVariableFisheye.h; path = ../../addons/ofxFisheye/src/fxVariableFisheye.h; sourceTree = "<group>"; };
 		B3F471DB1C29C5F100333AE1 /* ofxFisheye.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxFisheye.cpp; path = ../../addons/ofxFisheye/src/ofxFisheye.cpp; sourceTree = "<group>"; };
 		B3F471DC1C29C5F100333AE1 /* ofxFisheye.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxFisheye.h; path = ../../addons/ofxFisheye/src/ofxFisheye.h; sourceTree = "<group>"; };
-		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E4B69B5B0A3A1756003C02F2 /* ofxFisheyeExampleDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ofxFisheyeExampleDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofApp.cpp; path = src/ofApp.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ofApp.h; path = src/ofApp.h; sourceTree = SOURCE_ROOT; };
 		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = "<group>"; };
-		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -63,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
+				B3667D931CBBFD7A00A225F9 /* openFrameworksDebug.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,19 +82,19 @@
 			name = local_addons;
 			sourceTree = "<group>";
 		};
+		B3667D8C1CBBFD6E00A225F9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B3667D901CBBFD6E00A225F9 /* openFrameworksDebug.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = addons;
-			sourceTree = "<group>";
-		};
-		E4328144138ABC890047C5CB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E4328148138ABC890047C5CB /* openFrameworksDebug.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		E4B69B4A0A3A1720003C02F2 = {
@@ -123,8 +123,8 @@
 		E4EEC9E9138DF44700A80321 /* openFrameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */,
-				E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */,
+				B3667D8A1CBBFD6E00A225F9 /* CoreOF.xcconfig */,
+				B3667D8B1CBBFD6E00A225F9 /* openFrameworksLib.xcodeproj */,
 			);
 			name = openFrameworks;
 			sourceTree = "<group>";
@@ -144,7 +144,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
+				B3667D921CBBFD7400A225F9 /* PBXTargetDependency */,
 			);
 			name = ofxFisheyeExample;
 			productName = myOFApp;
@@ -174,8 +174,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = E4328144138ABC890047C5CB /* Products */;
-					ProjectRef = E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */;
+					ProductGroup = B3667D8C1CBBFD6E00A225F9 /* Products */;
+					ProjectRef = B3667D8B1CBBFD6E00A225F9 /* openFrameworksLib.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -186,11 +186,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		E4328148138ABC890047C5CB /* openFrameworksDebug.a */ = {
+		B3667D901CBBFD6E00A225F9 /* openFrameworksDebug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = openFrameworksDebug.a;
-			remoteRef = E4328147138ABC890047C5CB /* PBXContainerItemProxy */;
+			remoteRef = B3667D8F1CBBFD6E00A225F9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -207,7 +207,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rsync -aved ../../../../libs/fmodex/lib/osx/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/\"; install_name_tool -change ./libfmodex.dylib @executable_path/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\nrsync -aved \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\nrsync -aved ../../../../libs/glut/lib/osx/GLUT.framework \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/\"\n";
+			shellScript = "rsync -aved ../../../../../libs/fmodex/lib/osx/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/\"; install_name_tool -change ./libfmodex.dylib @executable_path/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\nrsync -aved \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\nrsync -aved ../../../../../libs/glut/lib/osx/GLUT.framework \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -225,10 +225,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		E4EEB9AC138B136A00A80321 /* PBXTargetDependency */ = {
+		B3667D921CBBFD7400A225F9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = openFrameworks;
-			targetProxy = E4EEB9AB138B136A00A80321 /* PBXContainerItemProxy */;
+			targetProxy = B3667D911CBBFD7400A225F9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

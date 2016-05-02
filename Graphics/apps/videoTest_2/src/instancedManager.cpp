@@ -20,7 +20,9 @@ void InstancedManager::setup(){
     yPos = 0.0;
     bDoQuilombo =false;
     velX=1.0;
+    maskRadius=0.0;
     
+    velCounter = 1;
     
     //material--
     material.setShininess( 100 );    // shininess is a value between 0 - 128, 128 being the most shiny //
@@ -28,14 +30,9 @@ void InstancedManager::setup(){
     material.setDiffuseColor(mainColor);
 }
 
-//---------------------------------------
-void InstancedManager::update(){
-    
-}
 
 //--------------------------------------
 void InstancedManager::draw(){
-    
     
     ofEnableDepthTest();
 	ofDisableAlphaBlending();
@@ -44,8 +41,23 @@ void InstancedManager::draw(){
     
     ofPushStyle();
 	ofSetColor(mainColor);
+    
+    ofPushMatrix();
+    //set x - y
+    //lineal
+    if(_mode==LINEAL && _vRes>1)
+        ofTranslate(xPos*Lim.x, _height*(-.5) + (yPos*Lim.y),0);
+    //radial
+    else if(_mode!=LINEAL && _vRes>1)
+        ofTranslate(xPos*Lim.x, Lim.y*(.5) + (yPos*Lim.y),0);
+    
+    
+    if(Orient.x<0){
+        ofRotateY(180);
+        ofTranslate(Lim.x*Orient.x, 0);
+    }
 
-	shaderInst.begin();
+	shaderInst.begin();//---------------------------------------
     if (_mode == LINEAL)
         shaderInst.setUniform1i("uMode", 0);
     else if(_mode == RAD_CONCENTRIC)
@@ -60,7 +72,8 @@ void InstancedManager::draw(){
     shaderInst.setUniform1i("uVres", _vRes);
     shaderInst.setUniform1i("uHeight", _height);
 	shaderInst.setUniform1f("timeValue", (velCounter% 3000) / 3000.0f);
-    shaderInst.setUniform1f("timeValue_b", ofGetElapsedTimeMillis());
+    //shaderInst.setUniform1f("timeValue_b", ofGetElapsedTimeMillis()); //time dependant
+    shaderInst.setUniform1f("timeValue_b", velCounter*10.0); //frame dependant
     
     shaderInst.setUniform1f("uTimeNoise", noiseTime);
     
@@ -76,34 +89,27 @@ void InstancedManager::draw(){
     shaderInst.setUniform1f("uZnoiseAmp", zNoiseAmp*Orient.x);
     shaderInst.setUniform1f("uZnoiseRug", zNoiseRug);
    
-        ofPushMatrix();
-        //set x - y
-        //lineal
-        if(_mode==LINEAL && _vRes>1)
-            ofTranslate(xPos*Lim.x, _height*(-.5) + (yPos*Lim.y),0);
-        //radial
-        else if(_mode!=LINEAL && _vRes>1)
-            ofTranslate(xPos*Lim.x, ofGetHeight()*(.5) + (yPos*Lim.y),0);
-            
+
+    vboMesh.drawInstanced(OF_MESH_FILL, _hRes * _vRes);
     
-        if(Orient.x<0){
-            ofRotateY(180);
-            ofTranslate(Lim.x*Orient.x, 0);
-        }
+	shaderInst.end();//------------------------------------
+    material.end();
     
-        vboMesh.drawInstanced(OF_MESH_FILL, _hRes * _vRes);
-        ofPopMatrix();
-    
-	shaderInst.end();
-    
-    ofEnableAlphaBlending();
 	ofDisableDepthTest();
     //----
     velCounter+=velX;
+    
+    ofPopMatrix();
   
     ofPopStyle();
     
-    material.end();
+    // centered black circle
+//    ofPushStyle();
+//    ofSetColor(ofColor::black);
+//    ofDrawCircle(xPos*Lim.x + Lim.x*.5, ofGetHeight()*(.5) + (yPos*Lim.y),0, maskRadius*_height);
+//    ofPopStyle();
+    
+   
 }
 
 
@@ -115,9 +121,14 @@ void InstancedManager::exit(){
 void InstancedManager::setCubeSize(float val){
     cubeSize = val;
     ofBoxPrimitive tmpBox;
-	tmpBox.set(cubeSize);// set the size
+    tmpBox.set(cubeSize);// set the size
 	vboMesh = tmpBox.getMesh();
-
+}
+//--------------------------------------
+void InstancedManager::setCubeSize(ofVec3f size){
+    ofBoxPrimitive tmpBox;
+    tmpBox.set(size.x, size.y, size.z);
+    vboMesh = tmpBox.getMesh();
 }
 
 
