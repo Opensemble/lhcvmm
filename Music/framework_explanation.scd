@@ -5,8 +5,8 @@ SynthDef(\pulse, { |freq = 440, sustain = 1|
 }).add;
 
 ~opensemble.register(\hard_attack, [\attack, \centre], {
-	|suf| //(sound unit fase)
-	Synth(\pulse, [freq: 400, sustain: suf.duration]);
+	|sup| //(sound unit phase)
+	Synth(\pulse, [freq: 400, sustain: sup.duration]);
 });
 )
 
