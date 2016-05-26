@@ -20,14 +20,16 @@ int main( ){
     //multi
     ofGLFWWindowSettings settings;
     
+    //mainWindow
     settings.width = 1024;
-    settings.height = 576;
+    settings.height = 512;
     settings.setPosition(ofVec2f(300,0));
     settings.resizable = true;
     shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
     
-    settings.width = 300;
-    settings.height = 300;
+    //timelineWindow
+    settings.width = 576;
+    settings.height = 750;
     settings.setPosition(ofVec2f(0,0));
     settings.resizable = false;
     shared_ptr<ofAppBaseWindow> timelineWindow = ofCreateWindow(settings);

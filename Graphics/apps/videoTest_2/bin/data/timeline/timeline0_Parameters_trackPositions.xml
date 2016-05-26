@@ -1,0 +1,32 @@
+<positions>
+    <element name="cubesize">
+        <x>0.000000000</x>
+        <y>268.000000000</y>
+        <width>576.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="fisheye">
+        <x>0.000000000</x>
+        <y>332.000000000</y>
+        <width>576.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="maskRadius">
+        <x>0.000000000</x>
+        <y>134.000000000</y>
+        <width>576.000000000</width>
+        <height>46.000000000</height>
+    </element>
+    <element name="radDeform">
+        <x>0.000000000</x>
+        <y>204.000000000</y>
+        <width>576.000000000</width>
+        <height>40.000000000</height>
+    </element>
+    <element name="velocity">
+        <x>0.000000000</x>
+        <y>70.000000000</y>
+        <width>576.000000000</width>
+        <height>40.000000000</height>
+    </element>
+</positions>

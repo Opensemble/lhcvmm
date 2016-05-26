@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B34C9FE81CBE8B7500788684 /* GuiManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34C9FE61CBE8B7500788684 /* GuiManager.cpp */; };
+		B34CA0021CBE931000788684 /* ofxFisheye.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34CA0001CBE931000788684 /* ofxFisheye.cpp */; };
+		B34CA0071CBE931200788684 /* ofxVideoRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34CA0051CBE931200788684 /* ofxVideoRecorder.cpp */; };
+		B34CA00A1CBE934700788684 /* VideoRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34CA0081CBE934700788684 /* VideoRenderer.cpp */; };
+		B34CA00D1CBE949A00788684 /* ImageSaverThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34CA00B1CBE949A00788684 /* ImageSaverThread.cpp */; };
 		B3667DBB1CBC00A800A225F9 /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3667DB81CBC009B00A225F9 /* openFrameworksDebug.a */; };
 		B3667DCF1CBC00CF00A225F9 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3667DBE1CBC00CF00A225F9 /* ofxBaseGui.cpp */; };
 		B3667DD01CBC00CF00A225F9 /* ofxButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3667DC01CBC00CF00A225F9 /* ofxButton.cpp */; };
@@ -108,6 +113,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B34C9FE61CBE8B7500788684 /* GuiManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GuiManager.cpp; sourceTree = "<group>"; };
+		B34C9FE71CBE8B7500788684 /* GuiManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiManager.h; sourceTree = "<group>"; };
+		B34C9FFD1CBE931000788684 /* fxBarrelDist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxBarrelDist.h; sourceTree = "<group>"; };
+		B34C9FFE1CBE931000788684 /* fxFixFisheye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxFixFisheye.h; sourceTree = "<group>"; };
+		B34C9FFF1CBE931000788684 /* fxVariableFisheye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxVariableFisheye.h; sourceTree = "<group>"; };
+		B34CA0001CBE931000788684 /* ofxFisheye.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFisheye.cpp; sourceTree = "<group>"; };
+		B34CA0011CBE931000788684 /* ofxFisheye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxFisheye.h; sourceTree = "<group>"; };
+		B34CA0051CBE931200788684 /* ofxVideoRecorder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxVideoRecorder.cpp; sourceTree = "<group>"; };
+		B34CA0061CBE931200788684 /* ofxVideoRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxVideoRecorder.h; sourceTree = "<group>"; };
+		B34CA0081CBE934700788684 /* VideoRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VideoRenderer.cpp; path = ../../../common_classes/VideoRenderer.cpp; sourceTree = "<group>"; };
+		B34CA0091CBE934700788684 /* VideoRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoRenderer.h; path = ../../../common_classes/VideoRenderer.h; sourceTree = "<group>"; };
+		B34CA00B1CBE949A00788684 /* ImageSaverThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSaverThread.cpp; path = ../../../common_classes/ImageSaverThread.cpp; sourceTree = "<group>"; };
+		B34CA00C1CBE949A00788684 /* ImageSaverThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSaverThread.h; path = ../../../common_classes/ImageSaverThread.h; sourceTree = "<group>"; };
+		B34CA00F1CBE99BF00788684 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		B3667DB21CBC009B00A225F9 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = "<group>"; };
 		B3667DB31CBC009B00A225F9 /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = "<group>"; };
 		B3667DBE1CBC00CF00A225F9 /* ofxBaseGui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBaseGui.cpp; sourceTree = "<group>"; };
@@ -259,11 +278,8 @@
 		B3667EFA1CBC1A4700A225F9 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		B3667F141CBC208E00A225F9 /* TimelineApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimelineApp.cpp; sourceTree = "<group>"; };
 		B3667F151CBC208E00A225F9 /* TimelineApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelineApp.h; sourceTree = "<group>"; };
-		B3B0EE031CB40C7A002F2B61 /* shadersGL3 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shadersGL3; path = bin/data/shadersGL3; sourceTree = "<group>"; };
 		B3B2F06E1CB54A1500FF25C3 /* instancedManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = instancedManager.cpp; sourceTree = "<group>"; };
 		B3B2F06F1CB54A1500FF25C3 /* instancedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = instancedManager.h; sourceTree = "<group>"; };
-		B3B2F0721CB54D0900FF25C3 /* instanced.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced.frag; path = bin/data/shadersGL2/instanced.frag; sourceTree = "<group>"; };
-		B3B2F0731CB54D0900FF25C3 /* instanced.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced.vert; path = bin/data/shadersGL2/instanced.vert; sourceTree = "<group>"; };
 		B3B2F0761CB5753500FF25C3 /* instancedRad.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instancedRad.frag; path = bin/data/shadersGL2/instancedRad.frag; sourceTree = "<group>"; };
 		B3B2F0771CB5753500FF25C3 /* instancedRad.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instancedRad.vert; path = bin/data/shadersGL2/instancedRad.vert; sourceTree = "<group>"; };
 		E4B69B5B0A3A1756003C02F2 /* videoTest_2Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = videoTest_2Debug.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -292,6 +308,56 @@
 			children = (
 			);
 			name = local_addons;
+			sourceTree = "<group>";
+		};
+		B307B0891CBFD53200C42903 /* common classes */ = {
+			isa = PBXGroup;
+			children = (
+				B34CA00B1CBE949A00788684 /* ImageSaverThread.cpp */,
+				B34CA00C1CBE949A00788684 /* ImageSaverThread.h */,
+				B34CA0081CBE934700788684 /* VideoRenderer.cpp */,
+				B34CA0091CBE934700788684 /* VideoRenderer.h */,
+			);
+			name = "common classes";
+			sourceTree = "<group>";
+		};
+		B34C9FFB1CBE931000788684 /* ofxFisheye */ = {
+			isa = PBXGroup;
+			children = (
+				B34C9FFC1CBE931000788684 /* src */,
+			);
+			name = ofxFisheye;
+			sourceTree = "<group>";
+		};
+		B34C9FFC1CBE931000788684 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B34C9FFD1CBE931000788684 /* fxBarrelDist.h */,
+				B34C9FFE1CBE931000788684 /* fxFixFisheye.h */,
+				B34C9FFF1CBE931000788684 /* fxVariableFisheye.h */,
+				B34CA0001CBE931000788684 /* ofxFisheye.cpp */,
+				B34CA0011CBE931000788684 /* ofxFisheye.h */,
+			);
+			name = src;
+			path = ../../addons/ofxFisheye/src;
+			sourceTree = "<group>";
+		};
+		B34CA0031CBE931200788684 /* ofxVideoRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				B34CA0041CBE931200788684 /* src */,
+			);
+			name = ofxVideoRecorder;
+			sourceTree = "<group>";
+		};
+		B34CA0041CBE931200788684 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B34CA0051CBE931200788684 /* ofxVideoRecorder.cpp */,
+				B34CA0061CBE931200788684 /* ofxVideoRecorder.h */,
+			);
+			name = src;
+			path = ../../addons/ofxVideoRecorder/src;
 			sourceTree = "<group>";
 		};
 		B3667DB41CBC009B00A225F9 /* Products */ = {
@@ -840,9 +906,6 @@
 			children = (
 				B3B2F0761CB5753500FF25C3 /* instancedRad.frag */,
 				B3B2F0771CB5753500FF25C3 /* instancedRad.vert */,
-				B3B2F0721CB54D0900FF25C3 /* instanced.frag */,
-				B3B2F0731CB54D0900FF25C3 /* instanced.vert */,
-				B3B0EE031CB40C7A002F2B61 /* shadersGL3 */,
 			);
 			name = shaders;
 			sourceTree = "<group>";
@@ -859,6 +922,8 @@
 				B3667EC21CBC184A00A225F9 /* ofxTimecode */,
 				B3667EC71CBC184A00A225F9 /* ofxTextInputField */,
 				B3667EE41CBC1A3400A225F9 /* ofxAudioDecoder */,
+				B34C9FFB1CBE931000788684 /* ofxFisheye */,
+				B34CA0031CBE931200788684 /* ofxVideoRecorder */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -881,6 +946,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B307B0891CBFD53200C42903 /* common classes */,
 				B3667F141CBC208E00A225F9 /* TimelineApp.cpp */,
 				B3667F151CBC208E00A225F9 /* TimelineApp.h */,
 				B3B2F06E1CB54A1500FF25C3 /* instancedManager.cpp */,
@@ -888,6 +954,9 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
+				B34C9FE61CBE8B7500788684 /* GuiManager.cpp */,
+				B34C9FE71CBE8B7500788684 /* GuiManager.h */,
+				B34CA00F1CBE99BF00788684 /* Constants.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -997,6 +1066,7 @@
 				B3667E8E1CBC184A00A225F9 /* tinyxmlparser.cpp in Sources */,
 				B3667EB31CBC184A00A225F9 /* ofxEasingExpo.cpp in Sources */,
 				B3667EAF1CBC184A00A225F9 /* ofxEasingBounce.cpp in Sources */,
+				B34CA00D1CBE949A00788684 /* ImageSaverThread.cpp in Sources */,
 				B3667EB61CBC184A00A225F9 /* ofxEasingQuart.cpp in Sources */,
 				B3667EB81CBC184A00A225F9 /* ofxEasingSine.cpp in Sources */,
 				B3667E731CBC184A00A225F9 /* ofxTLLFO.cpp in Sources */,
@@ -1004,6 +1074,7 @@
 				B3667E8B1CBC184A00A225F9 /* ofxXmlSettings.cpp in Sources */,
 				B3667EB91CBC184A00A225F9 /* ofxTween.cpp in Sources */,
 				B3667DD51CBC00CF00A225F9 /* ofxSliderGroup.cpp in Sources */,
+				B34CA0021CBE931000788684 /* ofxFisheye.cpp in Sources */,
 				B3667E7F1CBC184A00A225F9 /* ofOpenALSoundPlayer_TimelineAdditions.cpp in Sources */,
 				B3667EB21CBC184A00A225F9 /* ofxEasingElastic.cpp in Sources */,
 				B3667EB41CBC184A00A225F9 /* ofxEasingLinear.cpp in Sources */,
@@ -1027,8 +1098,10 @@
 				B3667E6D1CBC184A00A225F9 /* ofxTLFlags.cpp in Sources */,
 				B3667E611CBC184A00A225F9 /* ofxHotKeys_impl_mac.mm in Sources */,
 				B3667E651CBC184A00A225F9 /* ofxTLAudioTrack.cpp in Sources */,
+				B34C9FE81CBE8B7500788684 /* GuiManager.cpp in Sources */,
 				B3667EC61CBC184A00A225F9 /* ofxTimecode.cpp in Sources */,
 				B3667DD31CBC00CF00A225F9 /* ofxPanel.cpp in Sources */,
+				B34CA0071CBE931200788684 /* ofxVideoRecorder.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				B3667E7C1CBC184A00A225F9 /* ofxTLZoomer.cpp in Sources */,
 				B3667E691CBC184A00A225F9 /* ofxTLColorTrack.cpp in Sources */,
@@ -1036,6 +1109,7 @@
 				B3667EF71CBC1A3400A225F9 /* audiodecoderbase.cpp in Sources */,
 				B3667EAD1CBC184A00A225F9 /* ofxEasing.cpp in Sources */,
 				B3667E661CBC184A00A225F9 /* ofxTLBangs.cpp in Sources */,
+				B34CA00A1CBE934700788684 /* VideoRenderer.cpp in Sources */,
 				B3667EB51CBC184A00A225F9 /* ofxEasingQuad.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
 				B3667DD21CBC00CF00A225F9 /* ofxLabel.cpp in Sources */,
@@ -1147,7 +1221,7 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = videoTest_2Debug;
-				USER_HEADER_SEARCH_PATHS = "../../../../../addons/ofxTimeline/libs/kiss/include/ ../../../../../addons/ofxTimeline/libs/sndfile/include/ ../../../../../addons/ofxTimeline/libs/openal/include/ ../../../../../addons/ofxAudioDecoder/libs/audiodecoder/include/ ../../../../../addons/ofxAudioDecoder/libs/audiodecoder/include/Apple";
+				USER_HEADER_SEARCH_PATHS = "../../../../../addons/ofxAudioDecoder/libs/audiodecoder/include/Apple ../../../../../addons/ofxTimeline/libs/kiss/include/ ../../../../../addons/ofxTimeline/libs/sndfile/include/ ../../../../../addons/ofxTimeline/libs/openal/include/ ../../../../../addons/ofxAudioDecoder/libs/audiodecoder/include/";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1171,7 +1245,7 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = videoTest_2Debug;
-				USER_HEADER_SEARCH_PATHS = "../../../../../addons/ofxTimeline/libs/kiss/include/ ../../../../../addons/ofxTimeline/libs/sndfile/include/ ../../../../../addons/ofxTimeline/libs/openal/include/ ../../../../../addons/ofxAudioDecoder/libs/audiodecoder/include/ ../../../../../addons/ofxAudioDecoder/libs/audiodecoder/include/Apple";
+				USER_HEADER_SEARCH_PATHS = "../../../../../addons/ofxAudioDecoder/libs/audiodecoder/include/Apple ../../../../../addons/ofxTimeline/libs/kiss/include/ ../../../../../addons/ofxTimeline/libs/sndfile/include/ ../../../../../addons/ofxTimeline/libs/openal/include/ ../../../../../addons/ofxAudioDecoder/libs/audiodecoder/include/";
 				WRAPPER_EXTENSION = app;
 				baseConfigurationReference = E4EB6923138AFD0F00A09F29;
 			};
