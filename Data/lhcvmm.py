@@ -1,119 +1,127 @@
 import time
 import sys
-from thread import start_new_thread
 from OSC import  OSCClient, OSCClientError, OSCBundle, OSCMessage
-from random import random
+import argparse
 
 data_file = None
-data_file_path = "data_files/data_Egamma_A.root"
-osc_port = 57120 #default SuperCollider port (must be open before executing this program)
-interval = 0.12 # time between events, in seconds
+tree = None
+
+parser = argparse.ArgumentParser(description='Process ATLAS data and streams through OSC.')
+parser.add_argument('-d','--datafile', help='Load events from csv.', default='data_files/data_Egamma_A.root')
+parser.add_argument('--host', help='OSC host.', default='127.0.0.1')
+parser.add_argument('--port', help='OSC port.', default=57120, type=int)
+parser.add_argument('-m','--messagename', help='OSC message name.', default='sound_unit')
+parser.add_argument('-r','--rate', help='Rate at which events will be read.', default=1.0, type=float)
+parser.add_argument('-l','--loop', help='Loop events sequence.', default=True, type=bool)
+#parser.add_argument('--offset', help='Offset of read data.', default=0, type=int)
+parser.add_argument('--limit', help='Limit the amount of events to read.', type=int)
+
+args = parser.parse_args()
+
+
 # just some easy ansi colors printing: 'o' for ok, 'w' for warning, 'e' for error.
 def printc(t, c='o'):
     print '\033[9' + {'o': '2m','w': '3m','e': '1m'}[c] + t + '\033[0m'
 
-def get_ttree():
-    global data_file    # Need a reference to file to close it
+def mapValue(value, leftMin, leftMax, rightMin, rightMax):
+    if value < leftMin:
+        return rightMin
+    if value > leftMax:
+        return rightMax
+    # Figure out how 'wide' each range is
+    leftSpan = leftMax - leftMin
+    rightSpan = rightMax - rightMin
+    # Convert the left range into a 0-1 range (float)
+    valueScaled = float(value - leftMin) / float(leftSpan)
+    # Convert the 0-1 range into a value in the right range.
+    return rightMin + (valueScaled * rightSpan)
 
-    try:
-        from ROOT import TFile
-        # open test data file
-        data_file = TFile.Open(data_file_path, "read")
+def send_event():
+    spectral_densities = ['filled', 'packed', 'opaque','translucent','transparent','empty']
+    # fill blanks
+    data = ['']*17*3
+    #onset, continuant, termination
+    data[0] = 'attack'
 
-        #gathers mini ttree
-        tree = data_file.Get("mini")
-        entries_count = tree.GetEntriesFast()
+    #elegimos el de mayor momento transversal
+    i = [l for l in tree.lep_pt].index(max(tree.lep_pt))
 
-        printc( "TTree 'mini' loaded from %s containing %s entries." % (data_file_path, entries_count),'o')
-        #tree.Scan("lep_eta")
-        return tree
+    #duration, based on momento transversal .. lep_pt
+    data[1] = mapValue(tree.lep_pt[i],0,100000,0.1,10)
+    #Spectrum types: electrones : inarmonico  ,  muones:  granular
+    data[10] = 'inharmonic' if tree.lep_type[i] == 11 else 'granular'
+    #Spectrum occupation: angulo
+    data[11] = 'center'
+    #Spectrum density: lepton energy .. lep_E
+    data[16] = spectral_densities[int(mapValue(tree.lep_E[i],0,100000,0,5))]
 
-    except ImportError:
-        printc( "\nError: Unable to load ROOT.\n",'e')
-        printc( "Data will be simulated.\n")
-        return None
-    except ReferenceError:
-        printc( "\nError: %s file not found. Data will be simulated." % data_file_path, 'e')
-        printc( "Download it from https://tripiana.web.cern.ch/tripiana/openensemble/ATLAS_data/data_Egamma_A.root\n", 'w')
-        printc( "Data will be simulated.\n")
-        return None
-    except AttributeError:
-        printc( "\nError: Expected TTree 'mini' in %s file.\n" % data_file_path, 'e')
-        printc( "Data will be simulated.\n")
-        return None
+    bundle = OSCBundle()
+    msg = OSCMessage("/"+args.messagename)
+    for d in data:
+        msg.append(d)
+    bundle.append(msg)
+    client.send(bundle)
 
 
-def send_event(tree=None):
-    try:
-        bundle = OSCBundle()
-        msg = OSCMessage("/entry")
-        if tree is None:
-            msg.append(random())
-            msg.append(random())
-            msg.append(random(), 'b')
-        else:
-            msg.append(tree.lbNumber)
-            msg.append(tree.mu)
-            msg.append(tree.lep_eta[0], 'b')
-        bundle.append(msg)
-        client.send(bundle)
 
-    except OSCClientError, e:
-        printc( "\OSCClientError: Connection refused on port %s." % osc_port, 'e')
 
-# Define a function for the thread
-def send_events_periodically():
-    print "Start Sending events every %s seconds." % interval
+
+try:
+    from ROOT import TFile
+
+    #initialize osc client
+    client = OSCClient()
+    client.connect((args.host, args.port))   # connect to SuperCollider
+
+    # open test data file
+    data_file = TFile.Open(args.datafile, "read")
+    #gathers mini ttree
+    tree = data_file.Get("mini")
+
+    printc( "TTree 'mini' loaded from %s containing %s entries." % (args.datafile, tree.GetEntriesFast()),'o')
+    print "Limit events: %s." % args.limit
+    print "Loop enabled: %s." % args.loop
+    print "Start Sending events every %s seconds." % args.rate
     print "Each * printed represents an event sent."
-    print "Press Ctrl + C to finalize."
+    print "Press Ctrl + C to terminate."
 
-    entries_index = 0
-    entries_count = 0
-    if tree is not None:
-        entries_count = tree.GetEntriesFast()
-
+    count = tree.GetEntriesFast()
+    if args.limit and args.limit < count:
+        count = args.limit
     starttime=time.time()
 
     while 1:
-        # restart * printing every 10 events
-        sys.stdout.write('\r----------\r')
-        for i in range(0, 10):
-            if entries_count is 0:
-                send_event()
-            else:
-                # copy next entry into memory
-                tree.GetEntry(entries_index)
-                send_event(tree)
-                entries_index += 1
-                entries_index %= entries_count
+        for i in range(0, count):
+            if(i%10==0):
+                # restart * printing every 10 events
+                sys.stdout.write('\r----------\r')
 
-            time_to_sleep = interval - ((time.time() - starttime) % interval)
+            # copy next entry into memory
+            tree.GetEntry(i)
+            send_event()
+
+            time_to_sleep = args.rate - ((time.time() - starttime) % args.rate)
             sys.stdout.write('*')
             sys.stdout.flush()
             time.sleep(time_to_sleep)
 
-
-try:
-    #initialize osc client
-    client = OSCClient()
-
-    client.connect(('127.0.0.1', osc_port))   # connect to SuperCollider
-
-    tree = get_ttree()
-
-    start_new_thread( send_events_periodically, ())
-    while 1:
-        pass
+        if not args.loop:
+            break
 
 except OSCClientError:
-    printc( "\OSCClientError: Connection refused on port %s." % osc_port, 'e')
-
+    printc( "\OSCClientError: Connection refused to %s on port %s." % args.host, args.port, 'e')
 except KeyboardInterrupt:
     if data_file is not None:
         data_file.Close()
     print "\nProgram terminated."
-
-
+except ReferenceError:
+    printc( "Error: %s file not found. Data will be simulated." % args.datafile, 'e')
+    printc( "Download it from https://tripiana.web.cern.ch/tripiana/openensemble/ATLAS_data/data_Egamma_A.root\n", 'w')
+except AttributeError:
+    printc( "Error: Expected TTree 'mini' in %s file.\n" % args.datafile, 'e')
+except ImportError:
+    printc( "Error: Unable to load ROOT.\n", 'e')
+    printc( "Checkout https://github.com/Opensemble/lhcvmm/tree/master/Data#installing-root for further instructions.\n",'e')
 
 
 

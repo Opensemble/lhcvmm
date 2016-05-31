@@ -15,9 +15,9 @@ Server.default.boot;
 	var oscIndicator, onsetIndicator, continuantIndicator,terminationIndicator;
 
 	//-----------------------------------
-	// SOUND UNIT FASE
+	// SOUND UNIT PHASE
 	//-----------------------------------
-	var sound_unit_fase = (
+	var sound_unit_phase = (
 		isOnset:	{
 			|self|
 			['departure','emergence','anacrusis','attack','upbeat','downbeat'].includes(self.function)
@@ -102,18 +102,17 @@ Server.default.boot;
 	},
 	register:  {
 		|self, key, keywords, func|
-		var sof = ();
-		sof.parent = sound_unit_fase;
-		sof.playEvent = func;
-		sof.register(key, keywords );
+		var sup = ();
+		sup.parent = sound_unit_phase;
+		sup.playEvent = func;
+		sup.register(key, keywords );
 		//todo: validate words
-		self.dict.add(key -> [keywords,sof]);
+		self.dict.add(key -> [keywords,sup]);
 		format("Function % registered\n", key);
 
 	},
 	unregister:  {
 		|self, key|
-		//todo: validate words
 		self.dict.removeAt(key);
 		format("Function % unregistered\n", key);
 	},
@@ -202,7 +201,7 @@ Server.default.boot;
 ).init; // call init upon creation
 }.value;
 
-"~opensemble is now defined.".underlined.postln;
+"~opensemble has been defined.".underlined.postln;
 "Loading contributions.".underlined.postln;
 (thisProcess.nowExecutingPath.dirname +/+ "/contributions/*.scd").loadPaths(warn:false);
 
