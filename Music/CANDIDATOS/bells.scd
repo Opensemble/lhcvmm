@@ -64,58 +64,25 @@ SynthDef(\prayer_bell, { |outbus, t_trig = 1, sing_switch = 0, freq = 2434, amp 
   DetectSilence.ar(sig, doneAction: i_doneAction);
   Out.ar(outbus, sig);
 }).add;
+
+
+
+
+
+~opensemble.register(\bells, [\harmonic, \canopy, \attack, \plane, \packed],
+	{ arg suf;
+
+
+	x = Synth(\prayer_bell,
+			[\decayscale, 0.4, \freq, 1320,	\amp, 0.5]
+		);
+
+} );
+
+
+
+
+
+
 )
 
-
-(
-Pdef(\bell_1,
-  Pmono(\prayer_bell,
-    \dur, Pseq([8, 20], inf),
-    \freq, Pseq([2500, 500], inf),
-    \amp, 0.5,
-    \lag, 0,
-    \trig, Pseq([0.1], inf) * Pwhite(0.5, 1, inf) * Pwrand([0, 1], [1, 5].normalizeSum, inf),
-    \sing_switch, Pseq((0!4) ++ (1!4), inf)
-  )
-);
-
-Pdef(\bell_2,
-  Pmono(\prayer_bell,
-    \dur, Pwhite(8, 20, inf),
-    \trig, Pwhite(0.05, 0.09),
-    \sing_switch, Pwrand([0, 1], [5, 3].normalizeSum, inf),
-    \freq, Prand((240, 360 .. 2000), inf),
-    \amp, 0.5
-  )
-);
-
-Pdef(\bell_3,
-  Ppar([
-    Pmono(\prayer_bell,
-      \freq, 100,
-      \dur, 1,
-      \trig, 0,
-      \sing_switch, Pwrand([0, 1], [10, 3].normalizeSum, inf),
-      \amp, Pwhite(0.1, 0.5)
-    ),
-    Pmono(\prayer_bell,
-      \freq, 200,
-      \dur, 1,
-      \trig, 0,
-      \sing_switch, Pwrand([0, 1], [10, 3].normalizeSum, inf),
-      \amp, Pwhite(0.1, 0.5)
-    ),
-    Pmono(\prayer_bell,
-      \freq, 300,
-      \dur, 1,
-      \trig, 0,
-      \sing_switch, Pwrand([0, 1], [10, 3].normalizeSum, inf),
-      \amp, Pwhite(0.1, 0.5)
-    )
-  ])
-);
-
-Pdef(\bell_1).play;
-Pdef(\bell_2).play;
-Pdef(\bell_3).play;
-)

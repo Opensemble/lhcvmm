@@ -33,7 +33,12 @@ SynthDef(\samplePlayer, {
 	~bufferLittle1 = Buffer.read(s, ~pathLittle1);
 
 	// Pdef definitionn
-	~samplePlayer_patt = Pbind(
+
+//};
+//----------------------------------------------------,
+
+~samplePlayer_play = {
+		Pbind(
 		\instrument, \samplePlayer,
 		\out, 0,
 		\buf,  ~bufferLittle1,
@@ -43,16 +48,10 @@ SynthDef(\samplePlayer, {
 		\pos, 1300000 + Pseries(0, 1000, inf),
 		\lev, 1,
 		\dur, Pseq([Pgeom(0.02, 1.03, 60), Pgeom(0.09, 0.97, 200)])
-	    );
-
-//};
-//----------------------------------------------------,
-
-~samplePlayer_play = {
-	~samplePlayer_patt.play;
+	    ).play;
 };
 
-~samplePlayer_keywords = [\harmonic, \inharmonic, \root, \canopy, \centre];
+~samplePlayer_keywords = [\granular, \root, \centre, \parabola, \attack, \upbeat,\downbeat];
 
 ~opensemble.register(\samplePlayer, ~samplePlayer_keywords, ~samplePlayer_play);
 
