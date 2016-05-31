@@ -1,0 +1,40 @@
+<group>
+    <fill>1</fill>
+    <radius>140</radius>
+    <center>512, 384</center>
+    <color>100, 100, 140, 255</color>
+    <circle_res>5</circle_res>
+    <screen_size>1024x768</screen_size>
+<group/>
+	<Velocity>0.7</Velocity>
+<RECEIVE_OSC>1</RECEIVE_OSC>
+	<Do_Displacement>1</Do_Displacement>
+	<Do_Metaball>0</Do_Metaball>
+	<Do_CubeMesh>1</Do_CubeMesh>
+	<Do_Marching>0</Do_Marching>
+	<Do_Faces>0</Do_Faces>
+	<Draw_Axis>0</Draw_Axis>
+	<LitSphere>0</LitSphere>
+	<Displacement_----/>
+	<Volume>0.5</Volume>
+	<X>0.02</X>
+	<Y>0.01</Y>
+	<Radius>100</Radius>
+	<Resolution>48</Resolution>
+	<Strength>-25</Strength>
+	<FaceNoise>20</FaceNoise>
+	<Metaball_----/>
+	<ScaleCube>250</ScaleCube>
+	<VelOrbit>1</VelOrbit>
+	<DistOrbit>1</DistOrbit>
+	<minRadius>0.1</minRadius>
+	<maxRadius>0.2</maxRadius>
+	<Marching_----/>
+	<MarhNoise-1>0.06</MarhNoise-1>
+	<MarhNoise-2>2</MarhNoise-2>
+	<MarchStep>0.5</MarchStep>
+	<MarchRadius>250</MarchRadius>
+	<CubeMesh_----/>
+	<Do_Shader>0</Do_Shader>
+	<Size>3</Size>
+</group>
