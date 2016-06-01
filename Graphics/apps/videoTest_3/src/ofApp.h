@@ -3,10 +3,14 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 
+#include "PostProcessingManager.h"
+
 #include "instancedManager.h"
 
 #include "ParticleSystemPair.h"
 #include "GuiManager.h"
+
+#include "DisplacementSphereMesh.h"
 
 //---------------
 #define MAX_CUBESIZE 0.02
@@ -37,6 +41,12 @@ public:
    
     void drawScene(int w, int h);
     void drawDomeMask(int w, int h);
+    
+    void drawFboInstanced();
+    void drawFboParticles();
+    void drawFboSphere();
+    void drawFboMain();
+    void drawFboPost();
     
     void keyPressed(int key);
  
@@ -83,7 +93,7 @@ private:
     ofxFloatSlider gRadDeform;
     
     ofxFloatSlider gWidth, gHeight, gHres,
-    gVres, gVelocity, gYpos, gXpos;
+    gVres, gVelocity, gYpos, gXpos, gZpos;
     
     ofxVec3Slider gCubesize;
     ofxFloatSlider gCubesizeUnified;
@@ -104,24 +114,42 @@ private:
     ofShader cubeShader;
     
     ofxPanel guiSphere;
-    ofxToggle bDoShaderGui;
-    ofxFloatSlider xShGui, yShGui;
-    ofxFloatSlider volumeShGui;
-    ofxFloatSlider velShGui;
-    ofxFloatSlider sizeShGui;
-    ofxIntSlider radiusShGui;
     
-    //for cubeMesh
-    float cubeX, cubeY;
-    float cubeVol;
-    float cubeSize;
-    int cubeRadius;
-    float cubeVel;
     
+    ofxFloatSlider velGui;
+    ofxFloatSlider volumeGui;
+    ofxFloatSlider xGui, yGui;
+    ofxFloatSlider radiusGui;
+    ofxIntSlider resolGui;
+    ofxFloatSlider faceNoiseGui;
+    ofxFloatSlider strengthGui;
+    ofxFloatSlider zPos;
+
     //Cubes-sphere----------------
     ofSpherePrimitive sphereCubes;
     ofMesh cubeMesh;
+    //Displacement-sphere-------
+    DisplacementSphereMesh displacement;
+    int dispResolution;
+    vector<ofMeshFace> triangles;
+    ofSpherePrimitive sphereDistor;
+    float dispNzAmnt;
+    bool bDoFaceSh, bDoFaces;
+    ofShader faceShader;
+    ofShader phongShader;
     
+    ofVec3f _center;
+    
+    //-----------------
+    ofFbo fboInstanced;
+    ofFbo fboParticles;
+    ofFbo fboSphere;
+    
+    ofFbo fboPost;
+    
+    //-------------------
+    PostProcessingManager postManager;
+
     
 
 };

@@ -21,6 +21,8 @@ void InstancedManager::setup(){
     bDoQuilombo =false;
     velX=1.0;
     
+    zPos = 0.0;
+    
     velCounter = 1;
     
     maskRadius = 0.0;
@@ -47,10 +49,10 @@ void InstancedManager::draw(){
     //set x - y
     //lineal
     if(_mode==LINEAL && _vRes>1)
-        ofTranslate(xPos*Lim.x, _height*(-.5) + (yPos*Lim.y),0);
+        ofTranslate(xPos*Lim.x, _height*(-.5) + (yPos*Lim.y), zPos);
     //radial
     else if(_mode!=LINEAL && _vRes>1)
-        ofTranslate(xPos*Lim.x, Lim.y*(.5) + (yPos*Lim.y),0);
+        ofTranslate(xPos*Lim.x, Lim.y*(.5) + (yPos*Lim.y),zPos);
     
     
     if(Orient.x<0){
@@ -109,7 +111,7 @@ void InstancedManager::draw(){
     //FIXME: fix mask circle, add to shader or whatever
     ofPushStyle();
         ofSetColor(ofColor::black);
-        ofDrawCircle(xPos*Lim.x + Lim.x*.5, ofGetHeight()*(.5) + (yPos*Lim.y),0, maskRadius*_height);
+        ofDrawCircle(xPos*Lim.x + Lim.x*.5, ofGetHeight()*(.5) + (yPos*Lim.y), zPos, maskRadius*_height);
     ofPopStyle();
     
    
@@ -119,14 +121,16 @@ void InstancedManager::draw(){
 //--------------------------------------
 void InstancedManager::setCubeSize(float val){
     cubeSize = val;
+
     ofBoxPrimitive tmpBox;
     tmpBox.set(cubeSize);// set the size
+    vboMesh = tmpBox.getMesh();
     
 //    ofSpherePrimitive tmpSph;
 //    tmpSph.set(cubeSize, 10);
-    
-	vboMesh = tmpBox.getMesh();
- //   vboMesh = tmpSph.getMesh();
+//    vboMesh = tmpSph.getMesh();
+
+  
 }
 //--------------------------------------
 void InstancedManager::setCubeSize(ofVec3f size){

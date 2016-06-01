@@ -1,18 +1,26 @@
 #include "ofApp.h"
 
-//TODO: fix cubeSphere shader
-//TODO: add post-processing with its gui
-//TODO: add behaivour react to simulated parameters onset, power, etc - gui
 
+
+//TODO: clean-up code
+//TODO: add behaivour react to simulated parameters onset, power, etc - gui
 //TODO: add OSC with Sonoscopio
+
+
 //TODO: para el jueves: demo con wav viejo, con OSC
+
+//FIXME: solve edges marking with post-procc.
+//FIXME: esta dado vuelta con el post-processing?
+
+//TODO: make all animations frameNum dependants
 
 //--------------------------------------------------------------
 void ofApp::setup(){
     
  
     ofSetBackgroundColor(0);
-    ofSetFrameRate(60);
+    ///FRAME RATE: 30
+    ofSetFrameRate(30.0);
     ofEnableAlphaBlending();
     ofEnableDepthTest();
     
@@ -22,13 +30,35 @@ void ofApp::setup(){
     fw = drawFbo.getWidth();
     fh = drawFbo.getHeight();
     
+    fboPost.allocate(fw, fh);
+    fboPost.begin();
+    ofClear(0,0,0,1);
+    fboPost.end();
+    
+    fboInstanced.allocate(fw, fh, GL_RGBA);
+    fboInstanced.begin();
+        ofClear(255,255,255, 0);
+    fboInstanced.end();
+    
+    fboParticles.allocate(fw, fh, GL_RGBA);
+    fboParticles.begin();
+    ofClear(255,255,255, 0);
+    fboParticles.end();
+    
+    fboSphere.allocate(fw, fh, GL_RGBA);
+    fboSphere.begin();
+    ofClear(255,255,255, 0);
+    fboSphere.end();
+    
+    
     //gui-------------
     setupGui();
     
+    _center.set(fw*0.5, fh*0.5, 0.0);
     
-    cam.setPosition(ofVec3f(fw*0.5, fh*0.5, 500.0));
-    cam.lookAt(ofVec3f( fw*0.5, fh*0.5, 0.0));
-    cam.setTarget(ofVec3f( fw*0.5, fh*0.5, 0.0));
+    cam.setPosition(ofVec3f(_center.x, _center.y, 500.0));
+    cam.lookAt(_center);
+    cam.setTarget(_center);
     
     light.setPosition(fw*0.2, fw*.5, fh*0.3);
     light.setPointLight();
@@ -53,7 +83,22 @@ void ofApp::setup(){
     sphereCubes.setRadius(100);
     cubeMesh = sphereCubes.getMesh();
     cubeMesh.setMode(OF_PRIMITIVE_TRIANGLES);
-
+    
+    ///Displacement-------------
+    displacement.setup();
+    dispResolution = 48;
+    
+    faceShader.setGeometryInputType(GL_TRIANGLE_STRIP);
+    faceShader.setGeometryOutputType(GL_TRIANGLE_STRIP);
+    faceShader.setGeometryOutputCount(3);
+    faceShader.load("entropica/shaders/faces/vert.glsl", "entropica/shaders/faces/frag.glsl", "entropica/shaders/faces/geom.glsl");
+    
+    phongShader.load("entropica/shaders/phong/phong.vert","entropica/shaders/phong/phong.frag" );
+    
+    //-------------------------------
+    
+    postManager.setup(fw, fh);
+    
 }
 
 //--------------------------------------------------------------
@@ -62,10 +107,10 @@ void ofApp::update(){
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
     
     updateInstanced();
-    
     updatePair();
-    
     updateSphere();
+    
+    postManager.updateValues();
     
     //light pos
     light.setPosition(gLightPos->x * MAX_LIGHT_X,
@@ -73,10 +118,14 @@ void ofApp::update(){
                       gLightPos->z * MAX_LIGHT_Z );
     
     //draw openGL scene in drawFbo
-    drawFbo.begin();
-    ofClear(0, 0, 0, 255);
-    drawScene(768, 768);
-    drawFbo.end();
+    drawFboInstanced();
+    drawFboParticles();
+    drawFboSphere();
+    
+    drawFboMain();
+    
+    drawFboPost();
+
 
 
    
@@ -85,9 +134,12 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    ofBackground(100);
+    ofBackground(0);
     
-    drawFbo.draw(ofGetWidth()-768, 0, fw, fh);
+    
+    //drawFbo.draw(ofGetWidth()-768, 0, fw, fh);
+    fboPost.draw(ofGetWidth()-768, 0, fw, fh);
+    
     
     if (bShowGuiInstanced)
         guiInstanced.draw();
@@ -95,6 +147,8 @@ void ofApp::draw(){
         guiPair.draw();
     if(bShowGuiCubeSphere)
         guiSphere.draw();
+    
+    postManager.drawGui(200,500);
 
 }
 
@@ -133,48 +187,182 @@ void ofApp::keyPressed(int key){
 }
 //--------------------------------------------------------------
 void ofApp::drawScene(int w, int h){
-    
-    ofBackground(0);
-    
 
+   
+    
+//    ofBackground(0);
+//    
+//
+//    if(gUseLight){
+//        ofEnableLighting();
+//        light.enable();
+//    }
+//    
+//    if(gUseCam)cam.begin();
+//    
+//    if(gAxis)ofDrawAxis(1000);
+//    
+//    ///Draw INSTANCED
+//    instanced.draw();
+//    
+//    ///DRAW pair
+//    ofEnableDepthTest();
+//    ofEnableAlphaBlending();
+//    materialPair.begin();
+//    pair.draw();
+//    materialPair.end();
+//    
+//    ///draw cubeSphere
+//   
+//    materialPair.begin();
+//    
+//    if (bDoFaceSh) {
+//        faceShader.begin();
+//        faceShader.setUniform1f("timeVal", ofGetFrameNum());
+//        faceShader.setUniform1f("noiseAmnt", dispNzAmnt);
+//    }else{
+//        phongShader.begin();
+//    }
+//    
+//    ofPushMatrix();
+//    ofTranslate(_center.x, _center.y, zPos);
+//    ofRotateX(180.0);
+//    
+//
+//    bDoFaces ? sphereDistor.draw() : displacement.mainMesh.draw();
+//    ofPopStyle();
+//    
+//    
+//    ofPopMatrix();
+//    
+//    
+//    if (bDoFaceSh){
+//        faceShader.end();
+//    }else{
+//        phongShader.end();
+//    }
+//    
+//    materialPair.end();
+//    
+//    ///---------
+//    
+//    if(gUseCam)cam.end();
+//    
+//    if(gUseLight){
+//        light.disable();
+//        ofDisableLighting();
+//    }
+//    
+//    ofDisableDepthTest();
+    
+    drawDomeMask(fw, fh);
+}
+//--------------------------------------------------------------
+void ofApp::drawDomeMask(int w, int h){
+    
+    
+    //ofBackground(255);
+    int x = w*0.5;
+    int y = h*0.5;
+    int rad = w*0.5;
+    
+    ofPushStyle();
+    ofSetCircleResolution(30);
+    ofNoFill();
+    //full
+    ofSetColor(ofColor::red);
+    ofDrawCircle(x,y,rad);
+//    //mid
+//    ofSetColor(ofColor::orange);
+//    ofDrawCircle(x,y,rad*0.66);
+//    //small
+//    ofSetColor(ofColor::yellow);
+//    ofDrawCircle(x,y,rad*0.33);
+    
+    
+    ofPopStyle();
+}
+//--------------------------------------------------------------
+void ofApp::drawFboPost(){
+
+    fboPost.begin();
+    ofClear(0,0,0,1);
+    
+    ofDisableAlphaBlending();
+    
+    postManager.begin();
+    drawFbo.draw(0,0);
+    postManager.end();
+    
+    fboPost.end();
+    
+    ofEnableAlphaBlending();
+}
+//--------------------------------------------------------------
+void ofApp::drawFboMain(){
+    
+    drawFbo.begin();
+    ofClear(255, 255, 255, 0);
+//    ofClear(0,0, 0, 1);
+    
+    fboInstanced.draw(0,0);
+    fboParticles.draw(0,0);
+    fboSphere.draw(0,0);
+    
+    drawDomeMask(fw, fh);
+    
+    drawFbo.end();
+}
+//--------------------------------------------------------------
+void ofApp::drawFboInstanced(){
+    
+    
+    ofEnableAlphaBlending();
+    
+    fboInstanced.begin();
+    ofClear(255,255,255, 0);
+    //----------------------------
     if(gUseLight){
         ofEnableLighting();
         light.enable();
     }
     
-    if(gUseCam)cam.begin();
+    cam.begin();
     
     if(gAxis)ofDrawAxis(1000);
     
-    ///Draw INSTANCED
     instanced.draw();
     
+    cam.end();
+    
+    if(gUseLight){
+        light.disable();
+        ofDisableLighting();
+    }
+    //----------------------------
+    fboInstanced.end();
+
+    //ofDisableAlphaBlending();
+    
+}
+//--------------------------------------------------------------
+void ofApp::drawFboParticles(){
+
+    fboParticles.begin();
+    ofClear(255,255,255, 0);
+    //----------------------------
+    if(gUseLight){
+        ofEnableLighting();
+        light.enable();
+    }
+
+    if(gUseCam)cam.begin();
+
     ///DRAW pair
     ofEnableDepthTest();
     ofEnableAlphaBlending();
     materialPair.begin();
     pair.draw();
-    materialPair.end();
-    
-    ///draw cubeSphere
-    static int cubeTimeCnt;
-    materialPair.begin();
-    cubeShader.begin();
-    cubeShader.setUniform1f("timeVal", cubeTimeCnt);
-    cubeShader.setUniform1f("mouseX", cubeX);
-    cubeShader.setUniform1f("mouseY", cubeY);
-    cubeShader.setUniform1f("volume", cubeVol);
-    cubeShader.setUniform1f("size", cubeSize);
-    
-    
-    ofSetColor(ofColor::yellow);
-    sphereCubes.setPosition(fw/2, fh/2, 0.0);
-    sphereCubes.draw();
-    
-    cubeShader.end();
-    
-    cubeTimeCnt += (1+cubeVel);
- 
     materialPair.end();
     
     if(gUseCam)cam.end();
@@ -185,23 +373,76 @@ void ofApp::drawScene(int w, int h){
     }
     
     ofDisableDepthTest();
-    
-    drawDomeMask(fw, fh);
+    //----------------------------
+    fboParticles.end();
 }
 //--------------------------------------------------------------
-void ofApp::drawDomeMask(int w, int h){
+void ofApp::drawFboSphere(){
+    
+    fboSphere.begin();
+    ofClear(255,255,255, 0);
+    //----------------------------
     
     
-    //ofBackground(255);
+    ofEnableDepthTest();
+   
     
-    ofPushStyle();
-    ofNoFill();
-    ofSetColor(ofColor::red);
-    ofSetCircleResolution(30);
-    ofDrawCircle(w*.5, h*.5, w*.5);
+    if(gUseLight){
+        ofEnableLighting();
+        light.enable();
+    }
+
+    cam.begin();
+  
+
+    ///draw cubeSphere
+
+    materialPair.begin();
+
+    if (bDoFaceSh) {
+        faceShader.begin();
+        faceShader.setUniform1f("timeVal", ofGetFrameNum());
+        faceShader.setUniform1f("noiseAmnt", dispNzAmnt);
+    }else{
+        phongShader.begin();
+    }
+
+    ofPushMatrix();
+    ofTranslate(_center.x, _center.y, zPos);
+    ofRotateX(180.0);
+
+
+    bDoFaces ? sphereDistor.draw() : displacement.mainMesh.draw();
+
+
+    ofPopMatrix();
+
+
+    if (bDoFaceSh){
+        faceShader.end();
+    }else{
+        phongShader.end();
+    }
+
+    materialPair.end();
+    
+    ///---------
     
     
-    ofPopStyle();
+    
+    if(gUseLight){
+        light.disable();
+        ofDisableLighting();
+    }
+    
+    cam.end();
+    postManager.end();
+    
+    ofDisableDepthTest();
+    
+    //----------------------------
+    fboSphere.end();
+
 }
 //--------------------------------------------------------------
 void ofApp::setupGui(){
@@ -214,7 +455,7 @@ void ofApp::setupGui(){
     
     
     guiInstanced.add(gWidth.setup("width", 1.0, 0., 1.0));
-    guiInstanced.add(gHeight.setup("height/radius", 0.36, 0., 1.0));
+    guiInstanced.add(gHeight.setup("height/radius", 0.36, 0., 3.0));
     guiInstanced.add(gCubesizeUnified.setup("cubesize", 0.15, 0., 1.0));
     //guiInstanced.add(gCubesize.setup("cubesize", ofVec3f(0.2), ofVec3f(0.0), ofVec3f(1.0)));
     guiInstanced.add(gMaskRadius.setup("maskRadius", 0.53, 0.0, 1.0));
@@ -222,6 +463,7 @@ void ofApp::setupGui(){
     guiInstanced.add(gVres.setup("Vres", 0.7, 0., 1.0));
     guiInstanced.add(gXpos.setup("Xpos", 0.0, 0., 1.0));
     guiInstanced.add(gYpos.setup("Ypos", 0.0, 0., 1.0));
+    guiInstanced.add(gZpos.setup("Zpos", 0.0, -3000.0, 0.0));
     guiInstanced.add(gVelocity.setup("velocity", 0.1, 0., 1.0));
     //nz
     guiInstanced.add(gNzTime.setup("nzTime", 0.1, 0.0, 1.0));
@@ -249,15 +491,18 @@ void ofApp::setupGui(){
     guiPair.gui.setPosition(200, 0);
     
     //cubeSphere------------
-    guiSphere.setup("cube sphere");
-    guiSphere.setPosition(200,400);
-    guiSphere.add(bDoShaderGui.setup("Do Shader", false));
-    guiSphere.add(xShGui.setup( "X", 0.02, 0, 2.0 ));
-    guiSphere.add(yShGui.setup( "Y", 0.01, 0, 0.5 ));
-    guiSphere.add(velShGui.setup( "Velocity", .1, 0, 20.0 ));
-    guiSphere.add(volumeShGui.setup( "Volume", 0.5, 0, 1.0 ));
-    guiSphere.add(sizeShGui.setup( "Size", 3, 0, 10.0 ));
-    guiSphere.add(radiusShGui.setup( "Radius", 100, 0, 500 ));
+    guiSphere.setup("sphere");
+    guiSphere.setPosition(200,300);
+    guiSphere.add(velGui.setup( "Velocity", 1, 0, 5 ));
+    guiSphere.add(volumeGui.setup( "Volume", 0.25, 0, 1 ));
+    guiSphere.add(xGui.setup( "X", 0.02, 0, 0.1 ));
+    guiSphere.add(yGui.setup( "Y", 0.01, 0, 0.1 ));
+    guiSphere.add(radiusGui.setup( "Radius", 30, 0, 500 ));
+    guiSphere.add(resolGui.setup( "Resolution", 48, 1, 100 ));
+    guiSphere.add(strengthGui.setup( "Strength", -25, -200, 200 ));
+    guiSphere.add(faceNoiseGui.setup( "FaceNoise", 20., 0., 20.));
+    guiSphere.add(zPos.setup( "Z pos", 0.0, -300.0, 300.0));
+
 
 }
 //--------------------------------------------------------------
@@ -285,6 +530,7 @@ void ofApp::updateInstanced(){
     instanced.setVelocity(gVelocity * MAX_VELOCITY);
     instanced.setXpos(gXpos);
     instanced.setYpos(gYpos);
+    instanced.setZpos(gZpos);
     //nz
     instanced.setNzTime(gNzTime * MAX_NZ_TIME);
     
@@ -359,15 +605,24 @@ void ofApp::updatePair(){
 }
 //--------------------------------------------------------------
 void ofApp::updateSphere(){
+ 
     
-    cubeX = xShGui;
-    cubeY = yShGui;
-    cubeVol = volumeShGui;
-    cubeSize = sizeShGui;
-    cubeRadius = radiusShGui;
-    cubeVel = velShGui;
+    //---------------------------------
+    float x, y, vol, rad, res, vel;
     
-    sphereCubes.setRadius(cubeRadius);
+    float centroid = 0.5;
+    float specComp = 0.5;
+    
+    x   = centroid*.1;
+    y   = .001 + specComp*.049;
+    vol = 0.5+centroid*0.1;
+    rad = 30+specComp*100;
+    res = dispResolution;
+    vel  = 1;
+    
+    dispNzAmnt =strengthGui;
+    
+    displacement.update(xGui, yGui, volumeGui, radiusGui, resolGui, ofGetFrameNum()*velGui);
 }
 //--------------------------------------------------------------
 void ofApp::resetCamera(){

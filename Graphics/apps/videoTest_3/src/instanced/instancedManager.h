@@ -44,6 +44,7 @@ public:
     void setCubeSize(ofVec3f size);
     void setXpos(float val){xPos = val;}
     void setYpos(float val){yPos=val;}
+    void setZpos(float val){zPos=val;}
     void setRadDeform(float val){radDeform = val;}
     void setOrientation(ofVec3f vec){Orient=vec;}
     void setQuilombo(bool b){bDoQuilombo=b;}
@@ -72,7 +73,7 @@ private:
     float _width, _height;
     int _hRes, _vRes;
     
-    float xPos, yPos;
+    float xPos, yPos, zPos;
     
     float radDeform = 0.0;
     
