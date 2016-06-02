@@ -6,30 +6,22 @@
 #include "PostProcessingManager.h"
 
 #include "instancedManager.h"
+#include "SphereManager.h"
 
 #include "ParticleSystemPair.h"
 #include "GuiManager.h"
 
-#include "DisplacementSphereMesh.h"
-
-//---------------
-#define MAX_CUBESIZE 0.02
-#define MAX_H_RES 200
-#define MAX_V_RES 100
-#define MAX_VELOCITY 10
-
-#define MAX_NZ_TIME 50
-
-#define MAX_NZ_AMP 0.2
-#define MAX_NZ_FREQ 0.1
-#define MAX_NZ_RUG 0.03
+//--------------------------------
+//COLORS
+#define COLOR_SPHERE    ofColor::red
+#define COLOR_INSTANCED ofColor::yellow
+#define COLOR_PARTICLES ofColor::green
 
 #define MAX_LIGHT_X 1024
 #define MAX_LIGHT_Y 800
 #define MAX_LIGHT_Z 800
 
-
-
+//--------------------------------
 
 class ofApp : public ofBaseApp{
 	
@@ -39,8 +31,7 @@ public:
 	void update();
 	void draw();
    
-    void drawScene(int w, int h);
-    void drawDomeMask(int w, int h);
+   
     
     void drawFboInstanced();
     void drawFboParticles();
@@ -48,14 +39,15 @@ public:
     void drawFboMain();
     void drawFboPost();
     
+    void drawDomeLimits(int w, int h);
+    
     void keyPressed(int key);
  
     void setupGui();
     void resetCamera();
     
-    void updateInstanced();
+    
     void updatePair();
-    void updateSphere();
     
     //gui----
     bool bShowGuiInstanced;
@@ -74,7 +66,7 @@ public:
     
     int fw, fh;
     
-    ofMaterial materialPair;
+    //ofMaterial materialPair;
     
     //pair particles
     ParticleSystemPair pair;
@@ -87,56 +79,14 @@ public:
     float maxAngleVar;
     
 private:
-    //instanced gui----------------
-    ofxPanel guiInstanced;
-    ofxToggle gMode, gRadMode;
-    ofxFloatSlider gRadDeform;
     
-    ofxFloatSlider gWidth, gHeight, gHres,
-    gVres, gVelocity, gYpos, gXpos, gZpos;
     
-    ofxVec3Slider gCubesize;
-    ofxFloatSlider gCubesizeUnified;
+  
     
-    ofxFloatSlider gMaskRadius;
-    
-    ofxFloatSlider gNzTime;
-    ofxFloatSlider gNzXAmp, gNzXRug, gNzXFreq;
-    ofxFloatSlider gNzYAmp, gNzYRug, gNzYFreq;
-    ofxFloatSlider gNzZAmp, gNzZRug, gNzZFreq;
-    
-    ofxToggle gUseCam;
-    ofxToggle gAxis;
-    ofxToggle gUseLight;
-    ofxVec3Slider gLightPos;
     
     //cubeSphere---------------------
-    ofShader cubeShader;
     
-    ofxPanel guiSphere;
-    
-    
-    ofxFloatSlider velGui;
-    ofxFloatSlider volumeGui;
-    ofxFloatSlider xGui, yGui;
-    ofxFloatSlider radiusGui;
-    ofxIntSlider resolGui;
-    ofxFloatSlider faceNoiseGui;
-    ofxFloatSlider strengthGui;
-    ofxFloatSlider zPos;
 
-    //Cubes-sphere----------------
-    ofSpherePrimitive sphereCubes;
-    ofMesh cubeMesh;
-    //Displacement-sphere-------
-    DisplacementSphereMesh displacement;
-    int dispResolution;
-    vector<ofMeshFace> triangles;
-    ofSpherePrimitive sphereDistor;
-    float dispNzAmnt;
-    bool bDoFaceSh, bDoFaces;
-    ofShader faceShader;
-    ofShader phongShader;
     
     ofVec3f _center;
     
@@ -150,6 +100,20 @@ private:
     //-------------------
     PostProcessingManager postManager;
 
+    ofxPanel guiMain;
+    ofxToggle gDoPostProcessing;
+    ofxToggle gReceiveOSC;
+    ofxToggle gDoDrawInstanced;
+    ofxToggle gDoDrawSphere;
+    ofxToggle gDoDrawParts;
+    ofxToggle gDoDrawDomeLimits;
+    ofxVec3Slider gLightPos;
     
+    ofxToggle gUseCam;
+    ofxToggle gAxis;
+    ofxToggle gUseLight;
+    
+    
+    SphereManager sphere;
 
 };

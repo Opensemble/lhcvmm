@@ -1,8 +1,6 @@
 #include "ofApp.h"
 
 
-
-//TODO: clean-up code
 //TODO: add behaivour react to simulated parameters onset, power, etc - gui
 //TODO: add OSC with Sonoscopio
 
@@ -53,7 +51,10 @@ void ofApp::setup(){
     
     //gui-------------
     setupGui();
+    bShowGuiCubeSphere = bShowGuiPair = bShowGuiInstanced = true;
     
+    
+    //----------------------------
     _center.set(fw*0.5, fh*0.5, 0.0);
     
     cam.setPosition(ofVec3f(_center.x, _center.y, 500.0));
@@ -63,42 +64,25 @@ void ofApp::setup(){
     light.setPosition(fw*0.2, fw*.5, fh*0.3);
     light.setPointLight();
     
-    instanced.setup();
+    //Instanced---------------------------
+    instanced.setup(fw);
     instanced.setLimits(ofVec3f(fw, fh, 100));
     instanced.setOrientation(ofVec3f(1,1,1));
-    instanced.setColor(ofColor::white);
+    instanced.setColor(COLOR_INSTANCED);
     
-    
+    //Particles------------------
     pair.setup(0, fh*0.5, fw, fh, OUT);
-    materialPair.setShininess(100);
-    bShowGuiCubeSphere = bShowGuiPair = bShowGuiInstanced = true;
+    pair.setColor(COLOR_PARTICLES);
     
-    //cubeSphere
-    cubeShader.setGeometryInputType(GL_TRIANGLE_STRIP);
-    cubeShader.setGeometryOutputType(GL_TRIANGLE_STRIP);
-    cubeShader.setGeometryOutputCount(24);
-    cubeShader.load("entropica/shaders/cubes/vert.glsl", "entropica/shaders/cubes/frag.glsl", "entropica/shaders/cubes/geom.glsl");
+    //Sphere------------------------
+    sphere.setup();
+    sphere.setColor(COLOR_SPHERE);
+    sphere.setPosition(_center);
     
-    sphereCubes.setResolution(48);///
-    sphereCubes.setRadius(100);
-    cubeMesh = sphereCubes.getMesh();
-    cubeMesh.setMode(OF_PRIMITIVE_TRIANGLES);
-    
-    ///Displacement-------------
-    displacement.setup();
-    dispResolution = 48;
-    
-    faceShader.setGeometryInputType(GL_TRIANGLE_STRIP);
-    faceShader.setGeometryOutputType(GL_TRIANGLE_STRIP);
-    faceShader.setGeometryOutputCount(3);
-    faceShader.load("entropica/shaders/faces/vert.glsl", "entropica/shaders/faces/frag.glsl", "entropica/shaders/faces/geom.glsl");
-    
-    phongShader.load("entropica/shaders/phong/phong.vert","entropica/shaders/phong/phong.frag" );
-    
-    //-------------------------------
-    
+    //Post-Procesing-------------------------------
     postManager.setup(fw, fh);
     
+    //--------------------------------------------
 }
 
 //--------------------------------------------------------------
@@ -106,9 +90,9 @@ void ofApp::update(){
     //display frame rate as window title
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
     
-    updateInstanced();
+    instanced.update();
     updatePair();
-    updateSphere();
+    sphere.update();
     
     postManager.updateValues();
     
@@ -142,11 +126,13 @@ void ofApp::draw(){
     
     
     if (bShowGuiInstanced)
-        guiInstanced.draw();
+        instanced.drawGui();
     if(bShowGuiPair)
         guiPair.draw();
     if(bShowGuiCubeSphere)
-        guiSphere.draw();
+        sphere.drawGui();
+    
+    guiMain.draw();
     
     postManager.drawGui(200,500);
 
@@ -185,80 +171,9 @@ void ofApp::keyPressed(int key){
     }
     
 }
-//--------------------------------------------------------------
-void ofApp::drawScene(int w, int h){
 
-   
-    
-//    ofBackground(0);
-//    
-//
-//    if(gUseLight){
-//        ofEnableLighting();
-//        light.enable();
-//    }
-//    
-//    if(gUseCam)cam.begin();
-//    
-//    if(gAxis)ofDrawAxis(1000);
-//    
-//    ///Draw INSTANCED
-//    instanced.draw();
-//    
-//    ///DRAW pair
-//    ofEnableDepthTest();
-//    ofEnableAlphaBlending();
-//    materialPair.begin();
-//    pair.draw();
-//    materialPair.end();
-//    
-//    ///draw cubeSphere
-//   
-//    materialPair.begin();
-//    
-//    if (bDoFaceSh) {
-//        faceShader.begin();
-//        faceShader.setUniform1f("timeVal", ofGetFrameNum());
-//        faceShader.setUniform1f("noiseAmnt", dispNzAmnt);
-//    }else{
-//        phongShader.begin();
-//    }
-//    
-//    ofPushMatrix();
-//    ofTranslate(_center.x, _center.y, zPos);
-//    ofRotateX(180.0);
-//    
-//
-//    bDoFaces ? sphereDistor.draw() : displacement.mainMesh.draw();
-//    ofPopStyle();
-//    
-//    
-//    ofPopMatrix();
-//    
-//    
-//    if (bDoFaceSh){
-//        faceShader.end();
-//    }else{
-//        phongShader.end();
-//    }
-//    
-//    materialPair.end();
-//    
-//    ///---------
-//    
-//    if(gUseCam)cam.end();
-//    
-//    if(gUseLight){
-//        light.disable();
-//        ofDisableLighting();
-//    }
-//    
-//    ofDisableDepthTest();
-    
-    drawDomeMask(fw, fh);
-}
 //--------------------------------------------------------------
-void ofApp::drawDomeMask(int w, int h){
+void ofApp::drawDomeLimits(int w, int h){
     
     
     //ofBackground(255);
@@ -302,14 +217,18 @@ void ofApp::drawFboPost(){
 void ofApp::drawFboMain(){
     
     drawFbo.begin();
-    ofClear(255, 255, 255, 0);
-//    ofClear(0,0, 0, 1);
     
-    fboInstanced.draw(0,0);
-    fboParticles.draw(0,0);
-    fboSphere.draw(0,0);
+//    ofClear(255, 255, 255, 0);
+    ofClear(0, 0, 0, 0);
+
     
-    drawDomeMask(fw, fh);
+    if(gDoDrawInstanced)fboInstanced.draw(0,0);
+
+    if(gDoDrawParts) fboParticles.draw(0,0);
+    
+    if(gDoDrawSphere) fboSphere.draw(0,0);
+    
+    if(gDoDrawDomeLimits) drawDomeLimits(fw, fh);
     
     drawFbo.end();
 }
@@ -329,9 +248,15 @@ void ofApp::drawFboInstanced(){
     
     cam.begin();
     
-    if(gAxis)ofDrawAxis(1000);
+    //??? hacen falta estos guachines?
+    ofEnableDepthTest();
+    ofDisableAlphaBlending();
+    //-----------------------
     
-    instanced.draw();
+    instanced.drawScene();
+    
+    
+    ofDisableDepthTest();//??? hace falta?
     
     cam.end();
     
@@ -342,7 +267,7 @@ void ofApp::drawFboInstanced(){
     //----------------------------
     fboInstanced.end();
 
-    //ofDisableAlphaBlending();
+   
     
 }
 //--------------------------------------------------------------
@@ -358,12 +283,13 @@ void ofApp::drawFboParticles(){
 
     if(gUseCam)cam.begin();
 
-    ///DRAW pair
+    
     ofEnableDepthTest();
     ofEnableAlphaBlending();
-    materialPair.begin();
-    pair.draw();
-    materialPair.end();
+   
+    ///DRAW pair
+    pair.drawScene();
+   
     
     if(gUseCam)cam.end();
     
@@ -395,37 +321,8 @@ void ofApp::drawFboSphere(){
     cam.begin();
   
 
-    ///draw cubeSphere
-
-    materialPair.begin();
-
-    if (bDoFaceSh) {
-        faceShader.begin();
-        faceShader.setUniform1f("timeVal", ofGetFrameNum());
-        faceShader.setUniform1f("noiseAmnt", dispNzAmnt);
-    }else{
-        phongShader.begin();
-    }
-
-    ofPushMatrix();
-    ofTranslate(_center.x, _center.y, zPos);
-    ofRotateX(180.0);
-
-
-    bDoFaces ? sphereDistor.draw() : displacement.mainMesh.draw();
-
-
-    ofPopMatrix();
-
-
-    if (bDoFaceSh){
-        faceShader.end();
-    }else{
-        phongShader.end();
-    }
-
-    materialPair.end();
-    
+    ///drawSphere---------
+    sphere.drawScene();
     ///---------
     
     
@@ -436,7 +333,6 @@ void ofApp::drawFboSphere(){
     }
     
     cam.end();
-    postManager.end();
     
     ofDisableDepthTest();
     
@@ -447,113 +343,32 @@ void ofApp::drawFboSphere(){
 //--------------------------------------------------------------
 void ofApp::setupGui(){
     
-    guiInstanced.setup("instanced");
-    guiInstanced.setPosition(0,0);
-    guiInstanced.add(gMode.setup("LINEAL/RADIAL", true));
-    guiInstanced.add(gRadMode.setup("Concentric/Centrifuge", false));
-    guiInstanced.add(gRadDeform.setup("Radial Mix", 0.0, 0.0, 1.0));
-    
-    
-    guiInstanced.add(gWidth.setup("width", 1.0, 0., 1.0));
-    guiInstanced.add(gHeight.setup("height/radius", 0.36, 0., 3.0));
-    guiInstanced.add(gCubesizeUnified.setup("cubesize", 0.15, 0., 1.0));
-    //guiInstanced.add(gCubesize.setup("cubesize", ofVec3f(0.2), ofVec3f(0.0), ofVec3f(1.0)));
-    guiInstanced.add(gMaskRadius.setup("maskRadius", 0.53, 0.0, 1.0));
-    guiInstanced.add(gHres.setup("Hres", 0.7, 0., 1.0));
-    guiInstanced.add(gVres.setup("Vres", 0.7, 0., 1.0));
-    guiInstanced.add(gXpos.setup("Xpos", 0.0, 0., 1.0));
-    guiInstanced.add(gYpos.setup("Ypos", 0.0, 0., 1.0));
-    guiInstanced.add(gZpos.setup("Zpos", 0.0, -3000.0, 0.0));
-    guiInstanced.add(gVelocity.setup("velocity", 0.1, 0., 1.0));
-    //nz
-    guiInstanced.add(gNzTime.setup("nzTime", 0.1, 0.0, 1.0));
-    
-    guiInstanced.add(gNzXAmp.setup("nzXAmp", 0.0, 0.0, 1.0));
-    guiInstanced.add(gNzXFreq.setup("nzXFreq", 0.5, 0.0, 1.0));
-    guiInstanced.add(gNzXRug.setup("nzXRug", 0.05, 0.01, 1.0));
-    
-    guiInstanced.add(gNzYAmp.setup("nzYAmp", 0.0, 0.0, 1.0));
-    guiInstanced.add(gNzYFreq.setup("nzYFreq", 0.5, 0.0, 1.0));
-    guiInstanced.add(gNzYRug.setup("nzYRug", 2.0, 0.01, 30.0));
-    
-    guiInstanced.add(gNzZAmp.setup("nzZAmp", 0.0, 0.0, 1.0));
-    guiInstanced.add(gNzZFreq.setup("nzZFreq", 0.5, 0.0, 1.0));
-    guiInstanced.add(gNzZRug.setup("nzZRug", 0.05, 0.01, 1.0));
-    //
-    guiInstanced.add(gUseCam.setup("useCam", true));
-    guiInstanced.add(gAxis.setup("axis", true));
-    guiInstanced.add(gUseLight.setup("useLight", true));
-    guiInstanced.add(gLightPos.setup("LighPos", ofVec3f(0.5), ofVec3f(0.0), ofVec3f(1.0)));
+    //-----------------------------------
+    guiMain.setup("Main Panel");
+    guiMain.setPosition(0, 0);
+    guiMain.add(gDoPostProcessing.setup("Post-Proc", true));
+    guiMain.add(gReceiveOSC.setup("Receive Osc", true));
+    guiMain.add(gDoDrawInstanced.setup("Draw Inst", true));
+    guiMain.add(gDoDrawSphere.setup("Draw Sphere", true));
+    guiMain.add(gDoDrawParts.setup("Draw Parts", true));
+    guiMain.add(gDoDrawDomeLimits.setup("Draw Dome Lim", true));
+    guiMain.add(gLightPos.setup("LighPos", ofVec3f(0.5), ofVec3f(0.0), ofVec3f(1.0)));
+    guiMain.add(gUseCam.setup("useCam", true));
+    guiMain.add(gAxis.setup("axis", true));
+    guiMain.add(gUseLight.setup("useLight", true));
+
     
     //--------------------------
-    
+    //??? mandarlo al particleSystemPair?
     guiPair.setup();
     guiPair.gui.setPosition(200, 0);
-    
-    //cubeSphere------------
-    guiSphere.setup("sphere");
-    guiSphere.setPosition(200,300);
-    guiSphere.add(velGui.setup( "Velocity", 1, 0, 5 ));
-    guiSphere.add(volumeGui.setup( "Volume", 0.25, 0, 1 ));
-    guiSphere.add(xGui.setup( "X", 0.02, 0, 0.1 ));
-    guiSphere.add(yGui.setup( "Y", 0.01, 0, 0.1 ));
-    guiSphere.add(radiusGui.setup( "Radius", 30, 0, 500 ));
-    guiSphere.add(resolGui.setup( "Resolution", 48, 1, 100 ));
-    guiSphere.add(strengthGui.setup( "Strength", -25, -200, 200 ));
-    guiSphere.add(faceNoiseGui.setup( "FaceNoise", 20., 0., 20.));
-    guiSphere.add(zPos.setup( "Z pos", 0.0, -300.0, 300.0));
 
 
 }
-//--------------------------------------------------------------
-void ofApp::updateInstanced(){
-    
-    int w = fw;
-    
-    //update instancedManager values
-    if(!gMode)instanced.setMode(LINEAL);
-    else if(gMode && !gRadMode) instanced.setMode(RAD_CONCENTRIC);
-    else if(gMode && gRadMode){
-        instanced.setMode(RAD_CENTRIFUGE);
-        instanced.setRadDeform(gRadDeform);
-    }
-    
-    instanced.setWidth(gWidth);
-    instanced.setHeight(gHeight);
-    instanced.setCubeSize(gCubesizeUnified * MAX_CUBESIZE*w);
-    //    instanced.setCubeSize(ofVec3f(gCubesize->x * MAX_CUBESIZE,
-    //                                  gCubesize->y * MAX_CUBESIZE,
-    //                                  gCubesize->z * MAX_CUBESIZE));
-    instanced.setMaskRadius(gMaskRadius);
-    instanced.setHres(gHres * MAX_H_RES);
-    instanced.setVres(gVres * MAX_V_RES);
-    instanced.setVelocity(gVelocity * MAX_VELOCITY);
-    instanced.setXpos(gXpos);
-    instanced.setYpos(gYpos);
-    instanced.setZpos(gZpos);
-    //nz
-    instanced.setNzTime(gNzTime * MAX_NZ_TIME);
-    
-    instanced.setXnzAmp(gNzXAmp * MAX_NZ_AMP*w);
-    instanced.setXnzFreq(gNzXFreq * MAX_NZ_FREQ);
-    instanced.setXnzRug(gNzXRug * MAX_NZ_RUG*w);
-    
-    instanced.setYnzAmp(gNzYAmp * MAX_NZ_AMP*w);
-    instanced.setYnzFreq(gNzYFreq * MAX_NZ_FREQ);
-    instanced.setYnzRug(gNzYRug * MAX_NZ_RUG*w);
-    
-    instanced.setZnzAmp(gNzZAmp * MAX_NZ_AMP*w);
-    instanced.setZnzFreq(gNzZFreq * MAX_NZ_FREQ);
-    instanced.setZnzRug(gNzZRug * MAX_NZ_RUG*w);
-    
 
-
-}
 //--------------------------------------------------------------
 void ofApp::updatePair(){
-    
- 
-   
+   //??? mandarlo al particleSystemPair?
     bool onset1, onset2;
     float pow1, pow2;
     float pitch1, pitch2;
@@ -603,29 +418,10 @@ void ofApp::updatePair(){
     pair.update(pairData_A, pairData_B);
 
 }
-//--------------------------------------------------------------
-void ofApp::updateSphere(){
- 
-    
-    //---------------------------------
-    float x, y, vol, rad, res, vel;
-    
-    float centroid = 0.5;
-    float specComp = 0.5;
-    
-    x   = centroid*.1;
-    y   = .001 + specComp*.049;
-    vol = 0.5+centroid*0.1;
-    rad = 30+specComp*100;
-    res = dispResolution;
-    vel  = 1;
-    
-    dispNzAmnt =strengthGui;
-    
-    displacement.update(xGui, yGui, volumeGui, radiusGui, resolGui, ofGetFrameNum()*velGui);
-}
+
 //--------------------------------------------------------------
 void ofApp::resetCamera(){
+    
     cam.setPosition(ofVec3f(fw*0.5, fh*0.5, 500.0));
     cam.lookAt(ofVec3f( fw*0.5, fh*0.5, 0.0));
     cam.setTarget(ofVec3f( fw*0.5, fh*0.5, 0.0));

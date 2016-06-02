@@ -33,6 +33,7 @@ void ParticleSystemPair::setup(int x, int y, int w, int h, PairType type){
     lastTimer = 0.0;
     _continuum_rate_ms = 500.0;
     
+    material.setShininess(100);
    
  
 }
@@ -57,13 +58,16 @@ void ParticleSystemPair::update(std::map<string, float>& data1, std::map<string,
     
 }
 //----------------------------------------------------------
-void ParticleSystemPair::draw(){
+void ParticleSystemPair::drawScene(){
 
+    material.begin();
+    
     checkAndDrawGroupUnions();
     
     system_1.drawParticles();
     system_2.drawParticles();
     
+    material.end();
     
 }
 
@@ -172,7 +176,7 @@ void ParticleSystemPair::drawSolidMesh(ParticleGroup *group1, ParticleGroup *gro
     ofFill();
     
     
-    //ofSetColor(color_union);
+   
     
     phongShader.begin();
     
@@ -223,7 +227,6 @@ void ParticleSystemPair::drawLineStructure(ParticleGroup *group1, ParticleGroup 
     ofPushStyle();
     
     ofFill();
-    //ofSetColor(color_union);
     
     lineShader.begin();
     lineShader.setUniform1f("thickness", 2.0);
@@ -284,5 +287,10 @@ void ParticleSystemPair::reset(int x, int y, int w, int h){
 int ParticleSystemPair::getPartsNum(){
     
     return system_1.partGroups.size() + system_2.partGroups.size();
+}
+//----------------------------------
+void ParticleSystemPair::setColor(ofColor col){
+    _mainColor = col;
+    material.setDiffuseColor(_mainColor);//??? es diffuse el que va?
 }
 

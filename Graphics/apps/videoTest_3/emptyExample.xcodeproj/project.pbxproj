@@ -20,6 +20,7 @@
 		B30E4B2B1CFDE5EA001DB62F /* ParticleGroupSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B30E4B241CFDE5EA001DB62F /* ParticleGroupSystem.cpp */; };
 		B30E4B2C1CFDE5EA001DB62F /* ParticleSystemPair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B30E4B261CFDE5EA001DB62F /* ParticleSystemPair.cpp */; };
 		B30E4B311CFDE60A001DB62F /* instancedManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B30E4B2F1CFDE60A001DB62F /* instancedManager.cpp */; };
+		B33B22691D007ABA0020B9D8 /* SphereManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33B22671D007ABA0020B9D8 /* SphereManager.cpp */; };
 		B3667D781CBBF86600A225F9 /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3667D631CBBF46A00A225F9 /* openFrameworksDebug.a */; };
 		B3FC962B1CFF3EC3002C5374 /* PostProcessingManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FC96291CFF3EC3002C5374 /* PostProcessingManager.cpp */; };
 		B3FC96611CFF3EDF002C5374 /* BleachBypassPass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FC962E1CFF3EDF002C5374 /* BleachBypassPass.cpp */; };
@@ -109,6 +110,9 @@
 		B30E4B271CFDE5EA001DB62F /* ParticleSystemPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParticleSystemPair.h; path = particleSystem/ParticleSystemPair.h; sourceTree = "<group>"; };
 		B30E4B2F1CFDE60A001DB62F /* instancedManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = instancedManager.cpp; path = instanced/instancedManager.cpp; sourceTree = "<group>"; };
 		B30E4B301CFDE60A001DB62F /* instancedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = instancedManager.h; path = instanced/instancedManager.h; sourceTree = "<group>"; };
+		B33B22661D0074280020B9D8 /* instanced.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced.vert; path = bin/data/shadersGL2/instanced.vert; sourceTree = "<group>"; };
+		B33B22671D007ABA0020B9D8 /* SphereManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SphereManager.cpp; sourceTree = "<group>"; };
+		B33B22681D007ABA0020B9D8 /* SphereManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SphereManager.h; sourceTree = "<group>"; };
 		B3667D5D1CBBF43C00A225F9 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = "<group>"; };
 		B3667D5E1CBBF46A00A225F9 /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = "<group>"; };
 		B3FC95B01CFF137E002C5374 /* DisplacementSphereMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisplacementSphereMesh.h; path = cubeMesh/DisplacementSphereMesh.h; sourceTree = "<group>"; };
@@ -250,6 +254,24 @@
 			name = instanced;
 			sourceTree = "<group>";
 		};
+		B33B22651D0074170020B9D8 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				B33B22661D0074280020B9D8 /* instanced.vert */,
+			);
+			name = shaders;
+			sourceTree = "<group>";
+		};
+		B33B226A1D007DF60020B9D8 /* sphere */ = {
+			isa = PBXGroup;
+			children = (
+				B3FC95B01CFF137E002C5374 /* DisplacementSphereMesh.h */,
+				B33B22671D007ABA0020B9D8 /* SphereManager.cpp */,
+				B33B22681D007ABA0020B9D8 /* SphereManager.h */,
+			);
+			name = sphere;
+			sourceTree = "<group>";
+		};
 		B3667D5F1CBBF46A00A225F9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -337,6 +359,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				B33B22651D0074170020B9D8 /* shaders */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
@@ -350,9 +373,9 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B33B226A1D007DF60020B9D8 /* sphere */,
 				B3FC96291CFF3EC3002C5374 /* PostProcessingManager.cpp */,
 				B3FC962A1CFF3EC3002C5374 /* PostProcessingManager.h */,
-				B3FC95B01CFF137E002C5374 /* DisplacementSphereMesh.h */,
 				B30E4B2E1CFDE601001DB62F /* instanced */,
 				B30E4B2D1CFDE5F0001DB62F /* partSystem */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
@@ -466,6 +489,7 @@
 				B3FC966D1CFF3EDF002C5374 /* KaleidoscopePass.cpp in Sources */,
 				B30E4B2A1CFDE5EA001DB62F /* ParticleGroup.cpp in Sources */,
 				B3FC96661CFF3EDF002C5374 /* DofPass.cpp in Sources */,
+				B33B22691D007ABA0020B9D8 /* SphereManager.cpp in Sources */,
 				B3FC96621CFF3EDF002C5374 /* BloomPass.cpp in Sources */,
 				B3FC96781CFF3EDF002C5374 /* VerticalTiltShifPass.cpp in Sources */,
 				B3FC96771CFF3EDF002C5374 /* ToonPass.cpp in Sources */,

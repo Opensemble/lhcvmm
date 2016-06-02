@@ -17,7 +17,7 @@ public:
     
     void setup(int x, int y, int w, int h, PairType type);
     void update(std::map<string, float>& data1, std::map<string, float>& data2);
-    void draw();
+    void drawScene();
     
     void reset(int x, int y, int w, int h);
     
@@ -38,6 +38,8 @@ public:
         system_1.setDoAddRandom(state);
         system_2.setDoAddRandom(state);
     }
+    
+    void setColor(ofColor col);
     
     bool getIsContinuum(){return _bIsContinuum;}
     bool getIsDoingRandom(){return _bDoRandom;}
@@ -63,6 +65,10 @@ private:
     float lastTimer;
     float _continuum_rate_ms;
     float _bDoRandom;
+    
+    ofMaterial material;
+    
+    ofColor _mainColor;
     
     
     

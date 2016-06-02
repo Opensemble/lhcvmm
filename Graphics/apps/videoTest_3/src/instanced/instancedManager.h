@@ -1,14 +1,24 @@
-//
-//  instancedManager.h
-//  borradorFriccion
-//
-//  Created by Leo on 16/03/15.
-//
-//
+
 
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGui.h"
+
+//---------------
+#define MAX_CUBESIZE 0.02
+#define MAX_H_RES 200
+#define MAX_V_RES 100
+#define MAX_VELOCITY 10
+
+#define MAX_NZ_TIME 50
+
+#define MAX_NZ_AMP 0.2
+#define MAX_NZ_FREQ 0.1
+#define MAX_NZ_RUG 0.03
+
+
+//-----------------------
 
 enum InstancedMode {
     LINEAL,
@@ -20,8 +30,15 @@ class InstancedManager {
 
 public:
     
-    void setup();
-    void draw();
+    void setup(int fboWidth);
+    void update();
+    void drawScene();
+    void exit(){};
+    
+    
+    void setupGui();
+    void drawGui();
+    
     
     void setMode(InstancedMode m){_mode = m;}
     void setWidth(float w){_width =  w*Lim.x;}
@@ -72,6 +89,7 @@ private:
     
     float _width, _height;
     int _hRes, _vRes;
+    int _fboWidth;
     
     float xPos, yPos, zPos;
     
@@ -102,6 +120,25 @@ private:
     float YnzCounter;
     
     ofMaterial material;
+    
+    //gui----------------
+    //instanced gui----------------
+    ofxPanel guiInstanced;
+    ofxToggle gMode, gRadMode;
+    ofxFloatSlider gRadDeform;
+    
+    ofxFloatSlider gWidth, gHeight, gHres,
+    gVres, gVelocity, gYpos, gXpos, gZpos;
+    
+    ofxVec3Slider gCubesize;
+    ofxFloatSlider gCubesizeUnified;
+    
+    ofxFloatSlider gMaskRadius;
+    
+    ofxFloatSlider gNzTime;
+    ofxFloatSlider gNzXAmp, gNzXRug, gNzXFreq;
+    ofxFloatSlider gNzYAmp, gNzYRug, gNzYFreq;
+    ofxFloatSlider gNzZAmp, gNzZRug, gNzZFreq;
     
 
 

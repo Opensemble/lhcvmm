@@ -16,6 +16,8 @@ uniform int uWidth;
 uniform int uVres;
 uniform int uHeight;
 
+uniform float uMaskRadius;
+
 //animation
 uniform float uTimeNoise = 1.0;
 
@@ -172,6 +174,9 @@ void main()
             radius = timeDependentInstanceX * uHeight;
         }
        
+        float radiusMask = uMaskRadius * uHeight;
+        
+        radius += radiusMask;
         
        
         //set coordinates-------------------------

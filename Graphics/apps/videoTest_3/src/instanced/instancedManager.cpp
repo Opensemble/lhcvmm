@@ -2,7 +2,9 @@
 
 #include "instancedManager.h"
 
-void InstancedManager::setup(){
+void InstancedManager::setup(int fboWidth){
+    
+    _fboWidth = fboWidth;
     
     ofBoxPrimitive tmpBox;
 	tmpBox.set(1.0);// set the size
@@ -31,14 +33,56 @@ void InstancedManager::setup(){
     material.setShininess( 100 );    // shininess is a value between 0 - 128, 128 being the most shiny //
     material.setSpecularColor(ofColor(255.f, 255.f, 255.f, 255.f));
     material.setDiffuseColor(mainColor);
+    
+    //-------------------
+    setupGui();//mandatory
 }
 
 
 //--------------------------------------
-void InstancedManager::draw(){
+void InstancedManager::update(){
     
-    ofEnableDepthTest();
-	ofDisableAlphaBlending();
+    int w = _fboWidth;
+    
+    //update instancedManager values
+    if(!gMode)setMode(LINEAL);
+    else if(gMode && !gRadMode) setMode(RAD_CONCENTRIC);
+    else if(gMode && gRadMode){
+        setMode(RAD_CENTRIFUGE);
+        setRadDeform(gRadDeform);
+    }
+    
+    setWidth(gWidth);
+    setHeight(gHeight);
+    setCubeSize(gCubesizeUnified * MAX_CUBESIZE*w);
+    
+    setMaskRadius(gMaskRadius);
+    setHres(gHres * MAX_H_RES);
+    setVres(gVres * MAX_V_RES);
+    setVelocity(gVelocity * MAX_VELOCITY);
+    setXpos(gXpos);
+    setYpos(gYpos);
+    setZpos(gZpos);
+    //nz
+    setNzTime(gNzTime * MAX_NZ_TIME);
+    
+    setXnzAmp(gNzXAmp * MAX_NZ_AMP*w);
+    setXnzFreq(gNzXFreq * MAX_NZ_FREQ);
+    setXnzRug(gNzXRug * MAX_NZ_RUG*w);
+    
+    setYnzAmp(gNzYAmp * MAX_NZ_AMP*w);
+    setYnzFreq(gNzYFreq * MAX_NZ_FREQ);
+    setYnzRug(gNzYRug * MAX_NZ_RUG*w);
+    
+    setZnzAmp(gNzZAmp * MAX_NZ_AMP*w);
+    setZnzFreq(gNzZFreq * MAX_NZ_FREQ);
+    setZnzRug(gNzZRug * MAX_NZ_RUG*w);
+
+}
+//--------------------------------------
+void InstancedManager::drawScene(){
+    
+
 
     material.begin();
     
@@ -46,7 +90,9 @@ void InstancedManager::draw(){
 	ofSetColor(mainColor);
     
     ofPushMatrix();
-    //set x - y
+    
+    //set XYZ-----------------------
+    
     //lineal
     if(_mode==LINEAL && _vRes>1)
         ofTranslate(xPos*Lim.x, _height*(-.5) + (yPos*Lim.y), zPos);
@@ -59,8 +105,10 @@ void InstancedManager::draw(){
         ofRotateY(180);
         ofTranslate(Lim.x*Orient.x, 0);
     }
-
-	shaderInst.begin();//---------------------------------------
+    //-----------------------------------
+    //Set Shader uniforms
+    //---------------------------------------
+	shaderInst.begin();
     if (_mode == LINEAL)
         shaderInst.setUniform1i("uMode", 0);
     else if(_mode == RAD_CONCENTRIC)
@@ -74,6 +122,8 @@ void InstancedManager::draw(){
     shaderInst.setUniform1i("uWidth", _width);
     shaderInst.setUniform1i("uVres", _vRes);
     shaderInst.setUniform1i("uHeight", _height);
+    shaderInst.setUniform1f("uMaskRadius", maskRadius);
+    
 	shaderInst.setUniform1f("timeValue", (velCounter% 3000) / 3000.0f);
     //shaderInst.setUniform1f("timeValue_b", ofGetElapsedTimeMillis()); //time dependant
     shaderInst.setUniform1f("timeValue_b", velCounter*10.0); //frame dependant
@@ -92,26 +142,17 @@ void InstancedManager::draw(){
     shaderInst.setUniform1f("uZnoiseAmp", zNoiseAmp*Orient.x);
     shaderInst.setUniform1f("uZnoiseRug", zNoiseRug);
    
-
     vboMesh.drawInstanced(OF_MESH_FILL, _hRes * _vRes);
     
 	shaderInst.end();//------------------------------------
     material.end();
     
-	ofDisableDepthTest();
+	
     //----
     velCounter+=velX;
     
     ofPopMatrix();
   
-    ofPopStyle();
-    
-    
-// centered black circle
-    //FIXME: fix mask circle, add to shader or whatever
-    ofPushStyle();
-        ofSetColor(ofColor::black);
-        ofDrawCircle(xPos*Lim.x + Lim.x*.5, ofGetHeight()*(.5) + (yPos*Lim.y), zPos, maskRadius*_height);
     ofPopStyle();
     
    
@@ -138,7 +179,45 @@ void InstancedManager::setCubeSize(ofVec3f size){
     tmpBox.set(size.x, size.y, size.z);
     vboMesh = tmpBox.getMesh();
 }
+//--------------------------------------
+void InstancedManager::setupGui(){
 
+    guiInstanced.setup("instanced");
+    guiInstanced.setPosition(0,300);
+    guiInstanced.add(gMode.setup("LINEAL/RADIAL", true));
+    guiInstanced.add(gRadMode.setup("Concentric/Centrifuge", false));
+    guiInstanced.add(gRadDeform.setup("Radial Mix", 0.0, 0.0, 1.0));
+    
+    
+    guiInstanced.add(gWidth.setup("width", 1.0, 0., 1.0));
+    guiInstanced.add(gHeight.setup("height/radius", 0.36, 0., 3.0));
+    guiInstanced.add(gCubesizeUnified.setup("cubesize", 0.15, 0., 1.0));
+    guiInstanced.add(gMaskRadius.setup("maskRadius", 0.53, 0.0, 1.0));
+    guiInstanced.add(gHres.setup("Hres", 0.7, 0., 1.0));
+    guiInstanced.add(gVres.setup("Vres", 0.7, 0., 1.0));
+    guiInstanced.add(gXpos.setup("Xpos", 0.0, 0., 1.0));
+    guiInstanced.add(gYpos.setup("Ypos", 0.0, 0., 1.0));
+    guiInstanced.add(gZpos.setup("Zpos", 0.0, -3000.0, 0.0));
+    guiInstanced.add(gVelocity.setup("velocity", 0.1, 0., 1.0));
+    //nz
+    guiInstanced.add(gNzTime.setup("nzTime", 0.1, 0.0, 1.0));
+    
+    guiInstanced.add(gNzXAmp.setup("nzXAmp", 0.0, 0.0, 1.0));
+    guiInstanced.add(gNzXFreq.setup("nzXFreq", 0.5, 0.0, 1.0));
+    guiInstanced.add(gNzXRug.setup("nzXRug", 0.05, 0.01, 1.0));
+    
+    guiInstanced.add(gNzYAmp.setup("nzYAmp", 0.0, 0.0, 1.0));
+    guiInstanced.add(gNzYFreq.setup("nzYFreq", 0.5, 0.0, 1.0));
+    guiInstanced.add(gNzYRug.setup("nzYRug", 2.0, 0.01, 30.0));
+    
+    guiInstanced.add(gNzZAmp.setup("nzZAmp", 0.0, 0.0, 1.0));
+    guiInstanced.add(gNzZFreq.setup("nzZFreq", 0.5, 0.0, 1.0));
+    guiInstanced.add(gNzZRug.setup("nzZRug", 0.05, 0.01, 1.0));
+}
+//--------------------------------------
+void InstancedManager::drawGui(){
+    guiInstanced.draw();
+}
 
 
 
