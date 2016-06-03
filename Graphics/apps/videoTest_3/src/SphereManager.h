@@ -23,8 +23,7 @@ public:
     void setColor(ofColor col);
     
     
-    
-private:
+
     
     ofColor _mainColor;
     

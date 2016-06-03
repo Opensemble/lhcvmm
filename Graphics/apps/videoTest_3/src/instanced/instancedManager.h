@@ -74,7 +74,7 @@ public:
     float getCubeSize(){return cubeSize;}
     
     
-private:
+
     
     InstancedMode _mode;
     

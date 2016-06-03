@@ -11,16 +11,35 @@
 #include "ParticleSystemPair.h"
 #include "GuiManager.h"
 
+#include "ofxOsc.h"
+// listen on port 12345
+#define PORT 12345
+
 //--------------------------------
 //COLORS
-#define COLOR_SPHERE    ofColor::red
-#define COLOR_INSTANCED ofColor::yellow
-#define COLOR_PARTICLES ofColor::green
+#define COLOR_SPHERE    ofColor::white
+#define COLOR_INSTANCED ofColor::white
+#define COLOR_PARTICLES ofColor::white
 
 #define MAX_LIGHT_X 1024
 #define MAX_LIGHT_Y 800
 #define MAX_LIGHT_Z 800
-
+//-------------------------------
+#define MTR_NAME_POWER "POWER"
+#define MTR_NAME_PITCH_FREQ "FREQ"
+#define MTR_NAME_PITCH_CONF "CONFID"
+#define MTR_NAME_PITCH_SALIENCE "SALIENCE"
+#define MTR_NAME_HFC "HFC"
+#define MTR_NAME_CENTROID "CENTROID"
+#define MTR_NAME_SPEC_COMP "SPEC-COMP"
+#define MTR_NAME_INHARMONICTY "INHARM"
+#define MTR_NAME_SPECTRUM "SPECTRUM"
+#define MTR_NAME_MEL_BANDS "MEL-BANDS"
+#define MTR_NAME_MFCC "MFCC"
+#define MTR_NAME_HPCP "HPCP"
+#define MTR_NAME_ONSETS "ONSETS"
+#define MTR_SMOOTHING "SMOOTH"
+#define MTR_ON_OFF "ON"
 //--------------------------------
 
 class ofApp : public ofBaseApp{
@@ -31,7 +50,9 @@ public:
 	void update();
 	void draw();
    
-   
+    void updatePair();
+    void updateSphere();
+    void updateInstanced();
     
     void drawFboInstanced();
     void drawFboParticles();
@@ -46,8 +67,9 @@ public:
     void setupGui();
     void resetCamera();
     
+    void receiveOsc();
     
-    void updatePair();
+    void triggerOnset();
     
     //gui----
     bool bShowGuiInstanced;
@@ -66,7 +88,6 @@ public:
     
     int fw, fh;
     
-    //ofMaterial materialPair;
     
     //pair particles
     ParticleSystemPair pair;
@@ -80,13 +101,22 @@ public:
     
 private:
     
+    ofxOscReceiver receiver;
     
-  
+    float oscPower;
+    float oscFreq;
+    float oscConfidence;
+    float oscSalience;
+    float oscHfc;
+    float oscCentroid;
+    float oscSpecComp;
+    float oscInharm;
+    bool  oscOnset; //onset from reseiver
     
+    bool isOnset; //evaluated onset
     
-    //cubeSphere---------------------
-    
-
+    float elapsed, lastElapsed;
+    //-----------------------
     
     ofVec3f _center;
     

@@ -4,7 +4,7 @@
 void SphereManager::setup(){
     
     displacement.setup();
-    dispResolution = 48;
+    dispResolution = 96;
     
     faceShader.setGeometryInputType(GL_TRIANGLE_STRIP);
     faceShader.setGeometryOutputType(GL_TRIANGLE_STRIP);
@@ -85,11 +85,11 @@ void SphereManager::setupGui(){
     gui.setup("sphere");
     gui.setPosition(200,300);
     gui.add(velGui.setup( "Velocity", 1, 0, 5 ));
-    gui.add(volumeGui.setup( "Volume", 0.25, 0, 1 ));
-    gui.add(xGui.setup( "X", 0.02, 0, 0.1 ));
-    gui.add(yGui.setup( "Y", 0.01, 0, 0.1 ));
-    gui.add(radiusGui.setup( "Radius", 30, 0, 500 ));
-    gui.add(resolGui.setup( "Resolution", 48, 1, 100 ));
+    gui.add(volumeGui.setup( "Volume", 0.185, 0, 1 ));
+    gui.add(xGui.setup( "X", 0.0815, 0, 0.1 ));
+    gui.add(yGui.setup( "Y", 0.06, 0, 0.1 ));
+    gui.add(radiusGui.setup( "Radius", 97, 0, 500 ));
+    gui.add(resolGui.setup( "Resolution", 96, 1, 100 ));
     gui.add(strengthGui.setup( "Strength", -25, -200, 200 ));
     gui.add(faceNoiseGui.setup( "FaceNoise", 20., 0., 20.));
     gui.add(zPos.setup( "Z pos", 0.0, -300.0, 300.0));

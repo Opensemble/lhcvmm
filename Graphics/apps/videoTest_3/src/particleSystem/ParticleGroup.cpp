@@ -27,8 +27,8 @@ ParticleGroup::ParticleGroup(int partsNum,int x, int y, int w, int d, float radi
         _angle = ofDegToRad(180.0);//starts from the left
     
     
-    _rotRadiusInit = radiusInit;
-    _rotAngleInit = angleInit;
+    _rotRadiusInit = ofRandom(radiusInit);
+    _rotAngleInit = ofRandom(angleInit);
     
     for(int i=0; i<_partsNum ; i++){
         ofVec3f pos(_x, _y, _z);

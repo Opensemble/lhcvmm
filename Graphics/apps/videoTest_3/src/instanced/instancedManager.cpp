@@ -191,27 +191,27 @@ void InstancedManager::setupGui(){
     
     guiInstanced.add(gWidth.setup("width", 1.0, 0., 1.0));
     guiInstanced.add(gHeight.setup("height/radius", 0.36, 0., 3.0));
-    guiInstanced.add(gCubesizeUnified.setup("cubesize", 0.15, 0., 1.0));
+    guiInstanced.add(gCubesizeUnified.setup("cubesize", 0.2, 0., 1.0));
     guiInstanced.add(gMaskRadius.setup("maskRadius", 0.53, 0.0, 1.0));
     guiInstanced.add(gHres.setup("Hres", 0.7, 0., 1.0));
     guiInstanced.add(gVres.setup("Vres", 0.7, 0., 1.0));
     guiInstanced.add(gXpos.setup("Xpos", 0.0, 0., 1.0));
     guiInstanced.add(gYpos.setup("Ypos", 0.0, 0., 1.0));
     guiInstanced.add(gZpos.setup("Zpos", 0.0, -3000.0, 0.0));
-    guiInstanced.add(gVelocity.setup("velocity", 0.1, 0., 1.0));
+    guiInstanced.add(gVelocity.setup("velocity", 0.75, 0., 1.0));
     //nz
     guiInstanced.add(gNzTime.setup("nzTime", 0.1, 0.0, 1.0));
     
-    guiInstanced.add(gNzXAmp.setup("nzXAmp", 0.0, 0.0, 1.0));
-    guiInstanced.add(gNzXFreq.setup("nzXFreq", 0.5, 0.0, 1.0));
-    guiInstanced.add(gNzXRug.setup("nzXRug", 0.05, 0.01, 1.0));
+    guiInstanced.add(gNzXAmp.setup("nzXAmp", 1.0, 0.0, 1.0));
+    guiInstanced.add(gNzXFreq.setup("nzXFreq", 0.31, 0.0, 1.0));
+    guiInstanced.add(gNzXRug.setup("nzXRug", 0.21, 0.01, 1.0));
     
     guiInstanced.add(gNzYAmp.setup("nzYAmp", 0.0, 0.0, 1.0));
     guiInstanced.add(gNzYFreq.setup("nzYFreq", 0.5, 0.0, 1.0));
     guiInstanced.add(gNzYRug.setup("nzYRug", 2.0, 0.01, 30.0));
     
-    guiInstanced.add(gNzZAmp.setup("nzZAmp", 0.0, 0.0, 1.0));
-    guiInstanced.add(gNzZFreq.setup("nzZFreq", 0.5, 0.0, 1.0));
+    guiInstanced.add(gNzZAmp.setup("nzZAmp", 1.0, 0.0, 1.0));
+    guiInstanced.add(gNzZFreq.setup("nzZFreq", 0.2, 0.0, 1.0));
     guiInstanced.add(gNzZRug.setup("nzZRug", 0.05, 0.01, 1.0));
 }
 //--------------------------------------
