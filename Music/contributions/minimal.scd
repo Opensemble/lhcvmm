@@ -33,6 +33,7 @@ SynthDef(\bass,{arg out=0, freq=120,amp=1, noise=0, pan=0;
 
 ~opensemble.register(\attack_opaque, [\attack, \opaque],
 	{ arg suf;
+		//Synth(\SOSkick,[\amp,0.3]);
 
 		Pmono(\main,
 			\dur,Pxrand((1/8!8)++(1/4!8)++Pseq([1/16,1/16],Prand([1,2],1)),suf.duration.round*2),
@@ -51,9 +52,14 @@ SynthDef(\bass,{arg out=0, freq=120,amp=1, noise=0, pan=0;
 
 ~opensemble.register(\attack_translucent, [\attack, \translucent],
 	{ arg suf;
-		var y=Pmono(\main,\dur,Pxrand((1/4!8),suf.duration.round*2),\trig,1,\p,{rrand(-1,1)},\i,Pwrand([0,1,3,4],[0.946,0.03,0.02,0.004],inf),\d,Pwrand([1,30],[0.98,0.02],inf),\f,Pwrand([35,40,6000,20000],[0.30,0.65,0.03,0.02],inf),\l,{rrand(0.1,0.5)},\n,{[1,2,3,30].wchoose([0.8,0.1,0.05,0.05])});
-		var z=Pmono(\hat,\dur,Pxrand((1/4!8),suf.duration.round*2),\trig,1,\p,{rrand(-1,1)},\a,0.1);
+
+		var y=Pmono(\main,\dur,Pxrand((1/4!8)++(1/8!4),suf.duration.round*2),\trig,1,\p,{rrand(-1,1)},\i,Pwrand([0,1,3,4],[0.946,0.03,0.02,0.004],inf),\d,Pwrand([1,30],[0.98,0.02],inf),\f,Pwrand([35,40,6000,20000],[0.30,0.65,0.03,0.02],inf),\l,{rrand(0.1,0.5)},\n,{[1,2,3,30].wchoose([0.8,0.1,0.05,0.05])});
+		var z=Pmono(\hat,\dur,Pxrand((1/4!8)++(1/8!4),suf.duration.round*2),\trig,1,\p,{rrand(-1,1)},\a,0.1);
 		Ppar([y,z],1).play;
+		\attack_translucent.postln;
+		//Synth(\SOSkick,[\amp,0.3]);
+
+
 
 });
 
@@ -61,6 +67,9 @@ SynthDef(\bass,{arg out=0, freq=120,amp=1, noise=0, pan=0;
 
 ~opensemble.register(\attack_packed, [\attack, \packed],
 	{ arg suf;
+		//Synth(\SOSkick,[\amp,0.3]);
+
+
 		Pmono(\bass,
 			\dur,Pxrand((1/4!8)++(1/8!4),suf.duration.round*2),
 			\freq, 120,
@@ -72,6 +81,8 @@ SynthDef(\bass,{arg out=0, freq=120,amp=1, noise=0, pan=0;
 
 ~opensemble.register(\attack_empty, [\attack, \empty],
 	{ arg suf;
+
+		//Synth(\SOSkick, [\mod_freq,3,\beater_noise_level,0.14,\amp,0.3]);
 
 		Pmono(\hat,
 			\dur,Pxrand((1/8!8)++(1/16!4),suf.duration.round*2),
@@ -91,15 +102,3 @@ SynthDef(\bass,{arg out=0, freq=120,amp=1, noise=0, pan=0;
 //~opensemble.unregister(\attack_empty);
 
 )
-
-
-
-
-(
-y=Pmono(\main,\dur,Pxrand((1/8!8)++(1/4!8)++Pseq([1/16,1/16],Prand([1,2],1)),inf),\trig,1,\p,{rrand(-1,1)},\i,Pwrand([0,1,3,4],[0.946,0.03,0.02,0.004],inf),\d,Pwrand([1,30],[0.98,0.02],inf),\f,Pwrand([35,40,6000,20000],[0.30,0.65,0.03,0.02],inf),\l,{rrand(0.1,0.5)},\n,{[1,2,3,30].wchoose([0.8,0.1,0.05,0.05])});
-z=Pmono(\hat,\dur,Pxrand((1/8!8)++(1/4!8)++Pseq([1/32,1/32,1/32,1/32],Prand([1,2],1)),inf),\trig,1,\p,{rrand(-1,1)},\a,0.1);
-w=Ppar([y,z],inf).play;
-
-)
-
-TempoClock.tempo = 1
