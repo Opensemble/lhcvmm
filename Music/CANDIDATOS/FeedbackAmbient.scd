@@ -1,12 +1,16 @@
-// Rumush
-// Facebook: https://www.facebook.com/rumushproduction
-// SoundCloud: https://soundcloud.com/rumushproduction
-// YouTube: https://www.youtube.com/channel/UCs_Cn1R4iFrYOyc8liFucSQ
-// Blog: https://mycelialcordsblog.wordpress.com/
-// GitHub: https://github.com/RumushMycelialCords
+//-----------------------------------------------------------------
+// EJEMPLO: \inharmonic1
+// Descripción:
+//     Colaborador kurt kobain
+//     Contribución: Espectro Armónico/Inarmónico, implementa distintos Onsets
+//-----------------------------------------------------------------
+
+// SynthDefs
 
 (
-Ndef(\fdb1, {
+
+
+SynthDef(\feedbackAmbient, {
 	var src, loc, freq, rt;
 	rt = 0.25;
 	freq = Duty.ar(16/rt,0,Dseq([60,68,67,59,61,64,65].midicps,inf));
@@ -26,5 +30,18 @@ Ndef(\fdb1, {
 	LocalOut.ar(loc*1.75);
 
 	Out.ar(0,Limiter.ar(loc)*0.5);
-}).play
+}).add;
+
+
+~opensemble.register(\feedbackAmbient, [\harmonic, \canopy, \centre],
+	{ arg suf;
+
+	Synth(\feedbackAmbient);
+
+} );
+
 )
+
+
+
+
