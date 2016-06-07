@@ -13,7 +13,7 @@
 
 #define MAX_NZ_TIME 50
 
-#define MAX_NZ_AMP 0.2
+#define MAX_NZ_AMP 0.6
 #define MAX_NZ_FREQ 0.1
 #define MAX_NZ_RUG 0.03
 

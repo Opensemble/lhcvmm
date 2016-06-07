@@ -18,7 +18,7 @@ void ParticleGroupSystem::setup(int x, int y, int w, int h, int dir){
     _minRadius = 30.0;
     _maxRadius = 90.0;
     
-  TRUE;
+  
 }
 //----------------------------------
 void ParticleGroupSystem::update(std::map<string, float>& data){

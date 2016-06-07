@@ -43,17 +43,9 @@ void ParticleSystemPair::update(std::map<string, float>& data1, std::map<string,
     system_1.update(data1);
     system_2.update(data2);
     
+    _groupPartsNum = data1.at(KEY_PARTS_NUM);
     
-    if(_bIsContinuum){
-        continuumTimer = ofGetElapsedTimeMillis() - lastTimer;
-        if(continuumTimer > _continuum_rate_ms){
-            system_1.addParticlesGroup(_groupPartsNum);
-            system_2.addParticlesGroup(_groupPartsNum);
-            lastTimer = ofGetElapsedTimeMillis();
-            continuumTimer = 0.0f;
-        }
-    }
-        
+
     
     
 }
@@ -64,8 +56,13 @@ void ParticleSystemPair::drawScene(){
     
     checkAndDrawGroupUnions();
     
+    lineShader.begin();
+    lineShader.setUniform1f("thickness", 2.0);
+    
     system_1.drawParticles();
     system_2.drawParticles();
+    
+    lineShader.end();
     
     material.end();
     

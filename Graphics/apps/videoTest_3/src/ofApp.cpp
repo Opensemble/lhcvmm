@@ -1,12 +1,8 @@
 #include "ofApp.h"
 
-//TODO: add OSC with Sonoscopio
-//TODO: add behaivour react to simulated parameters onset, power, etc - gui
-
-//TODO: para el jueves: demo con wav viejo, con OSC
 
 
-//FIXME: esta dado vuelta con el post-processing?
+//FIXME: esta dado vuelta con el post-processing? no me importa mucho...
 
 //TODO: make all animations frameNum dependants
 
@@ -50,13 +46,14 @@ void ofApp::setup(){
     
     //gui-------------
     setupGui();
-    bShowGuiCubeSphere = bShowGuiPair = bShowGuiInstanced = true;
+    bShowGuiCubeSphere =false;
+    bShowGuiPair = bShowGuiInstanced = true;
     
     
     //----------------------------
     _center.set(fw*0.5, fh*0.5, 0.0);
-    
-    cam.setPosition(ofVec3f(_center.x, _center.y, 500.0));
+    cam.disableMouseInput();
+    cam.setPosition(ofVec3f(_center.x, _center.y, 700.0));
     cam.lookAt(_center);
     cam.setTarget(_center);
     
@@ -92,10 +89,9 @@ void ofApp::setup(){
     oscSpecComp = 0.0;
     oscInharm = 0.0;
     oscOnset = false;
+    oscTLtrack = 0.0;
     
-    isOnset = false;
-    elapsed = 0.0;
-    lastElapsed = 0.0;
+
     
 }
 
@@ -104,30 +100,17 @@ void ofApp::update(){
     //display frame rate as window title
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
     
-    //receive osc-----------------------------------
-    bool prevFrameOnset = oscOnset;
+    //receiveOsc----------------
     receiveOsc();
-    float timemMillis = ofGetElapsedTimeMillis();
-    
-    elapsed = timemMillis - lastElapsed;
-    
-    float timeTreshold = 400.0;
-    if(oscOnset && !prevFrameOnset && elapsed>timeTreshold){
-        isOnset = true;
-        lastElapsed = ofGetElapsedTimeMillis();
-    }else{
-        isOnset = false;
-    }
-    
-    //onsets trigger---------------------------------
-    if(isOnset) triggerOnset();
+    if(oscOnset)triggerOnset();
+
     
     //update graphics--------------------------------
-    //instanced.update();
     updateInstanced();
     updatePair();
-    updateSphere();
-    //sphere.update();
+    
+    //updateSphere();
+   
     
     //update post-processing------------------------
     postManager.updateValues();
@@ -137,7 +120,8 @@ void ofApp::update(){
                       gLightPos->y * MAX_LIGHT_Y,
                       gLightPos->z * MAX_LIGHT_Z );
     
-    //draw openGL scene in drawFbo
+    
+    //draw openGL scene in drawFbo------------------
     drawFboInstanced();
     drawFboParticles();
     drawFboSphere();
@@ -145,8 +129,6 @@ void ofApp::update(){
     drawFboMain();
     
     drawFboPost();
-
-
 
    
 }
@@ -157,10 +139,10 @@ void ofApp::draw(){
     ofBackground(0);
     
     
-    //drawFbo.draw(ofGetWidth()-768, 0, fw, fh);
     fboPost.draw(ofGetWidth()-768, 0, fw, fh);
     
     
+    //drawGuis------------------
     if (bShowGuiInstanced)
         instanced.drawGui();
     if(bShowGuiPair)
@@ -173,13 +155,7 @@ void ofApp::draw(){
     postManager.drawGui(200,500);
 
     
-    string info =
-    "power: " + ofToString(oscPower) +
-    "\nfreq: " + ofToString(oscFreq) +
-    "\nhfc: " + ofToString(oscHfc) +
-    "\nonset: " + ofToString(oscOnset);
     
-    ofDrawBitmapString(info, ofGetWidth()-150, 10);
     
 }
 
@@ -263,13 +239,12 @@ void ofApp::drawFboMain(){
     
     drawFbo.begin();
     
-//    ofClear(255, 255, 255, 0);
+
     ofClear(0, 0, 0, 0);
 
-    
-    if(gDoDrawInstanced)fboInstanced.draw(0,0);
-
     if(gDoDrawParts) fboParticles.draw(0,0);
+   
+    if(gDoDrawInstanced)fboInstanced.draw(0,0);
     
     if(gDoDrawSphere) fboSphere.draw(0,0);
     
@@ -402,57 +377,57 @@ void ofApp::updatePair(){
     
     guiPair.update();
     
-    
-   
-    
     std::map<string, float> oscData;
     
     
-    oscData[KEY_DIST_TRESHOLD] = guiPair.gDistTreshold * oscPower * oscPower;
+    oscData[KEY_DIST_TRESHOLD] = guiPair.gDistTreshold;///osc
     oscData[KEY_PARTS_NUM]     = guiPair.gPartsNum;
     oscData[KEY_X_VELOCITY]    = guiPair.gXvelocity;
     oscData[KEY_RADIUS_INIT]   = guiPair.gRadiusInit;
-    oscData[KEY_RADIUS_VAR]    = guiPair.gRadiusVar * oscPower * oscPower;
+    oscData[KEY_RADIUS_VAR]    = guiPair.gRadiusVar;///osc
     oscData[KEY_ANGLE_INIT]    = guiPair.gAngleInit;
-    oscData[KEY_ANGLE_VAR]     = guiPair.gAngleVar *  oscPower * oscPower;
+    oscData[KEY_ANGLE_VAR]     = guiPair.gAngleVar;///osc
     //nz
-    oscData[KEY_ANGLE_NZ_AMP]  = guiPair.gNzAngleAmp * oscCentroid;
+    oscData[KEY_ANGLE_NZ_AMP]  = guiPair.gNzAngleAmp;///osc
     oscData[KEY_ANGLE_NZ_FREQ] = guiPair.gNzAngleFreq;
-    oscData[KEY_RADIUS_NZ_AMP] = guiPair.gNzRadAmp * oscCentroid;
+    oscData[KEY_RADIUS_NZ_AMP] = guiPair.gNzRadAmp;///osc
     oscData[KEY_RADIUS_NZ_FREQ]= guiPair.gNzRadFreq;
     oscData[KEY_X_NZ_AMP]      = guiPair.gNzXposAmp;
     oscData[KEY_X_NZ_FREQ]     = guiPair.gNzXposFreq;
-    oscData[KEY_PART_SIZE]     = 15 * oscPower;
+    oscData[KEY_PART_SIZE]     = 15; ///osc
+    
+    if(gReceiveOSC){
+        
+        //oscData[KEY_DIST_TRESHOLD] = guiPair.gDistTreshold * oscCentroid * oscCentroid;
+        //oscData[KEY_DIST_TRESHOLD] = 460 * oscCentroid * oscCentroid;
+        if(oscHfc>0.5){
+            oscData[KEY_DIST_TRESHOLD] = 1000 * oscHfc;
+        }
+        
+        //oscData[KEY_RADIUS_VAR]    = guiPair.gRadiusVar   * oscCentroid;
+        oscData[KEY_RADIUS_VAR]    = 35 + 160 * 4   * oscCentroid * oscCentroid;
+        
+        //oscData[KEY_ANGLE_VAR]     = guiPair.gAngleVar *  oscSpecComp * oscSpecComp ;
+        oscData[KEY_ANGLE_VAR]     = 0.132 *  oscSpecComp * oscSpecComp ;
+        
+        //oscData[KEY_X_NZ_AMP]      =  guiPair.gNzXposAmp * oscSpecComp;
+       oscData[KEY_X_NZ_AMP]      =  50+630.0 * oscSpecComp;
+        
+
+    }
 
     
-//    std::map<string, float> pairData_A = guiPair.getData();
-//    std::map<string, float> pairData_B = guiPair.getData();
+
 
     std::map<string, float> pairData_A = oscData;
     std::map<string, float> pairData_B = oscData;
 
+
     
-    //-----------------
-//    //vars that change in continuum MODE
-//    if(pair.getIsContinuum() ){
-//
-//        pairData_A[KEY_X_VELOCITY]  = minVelX + pow1  *  pitch1 * maxVelX;
-//        pairData_B[KEY_X_VELOCITY]  = minVelX + pow2  *  pitch2 * maxVelX;
-//
-//        pairData_A[KEY_ANGLE_VAR]  =  pitch1  *  pitch1  * maxAngleVar;
-//        pairData_B[KEY_ANGLE_VAR]  =  pitch2  *  pitch2  *maxAngleVar;
-//
-//    }else{
-//
-//        pairData_A[KEY_X_VELOCITY]  = minVelX + pow1 * maxVelX;
-//        pairData_B[KEY_X_VELOCITY]  = minVelX + pow2 * maxVelX;
-//
-//        pairData_A[KEY_ANGLE_VAR]  =  pitch1 * maxAngleVar;
-//        pairData_B[KEY_ANGLE_VAR]  =  pitch2 * maxAngleVar;
-//
-//    }
+   // pair.setDistanceTreshold(guiPair.gDistTreshold);
+   pair.setDistanceTreshold(120 * oscPower * oscPower * 5);///fixme
     
-    pair.setDistanceTreshold(guiPair.gDistTreshold);
+    
     pair.update(pairData_A, pairData_B);
     
 }
@@ -496,14 +471,12 @@ void ofApp::updateInstanced(){
     instanced.setHeight(instanced.gHeight);
     instanced.setCubeSize(instanced.gCubesizeUnified * MAX_CUBESIZE*w);
     
-    ///instanced.setMaskRadius(instanced.gMaskRadius);
-    instanced.setMaskRadius(1-ofClamp(oscHfc * 10.0 * instanced.gMaskRadius, 0.45, .85));
+    instanced.setMaskRadius(instanced.gMaskRadius);///osc
     
     instanced.setHres(instanced.gHres * MAX_H_RES);
     instanced.setVres(instanced.gVres * MAX_V_RES);
     
-    ///instanced.setVelocity(instanced.gVelocity * MAX_VELOCITY);
-    instanced.setVelocity(oscPower * instanced.gVelocity * MAX_VELOCITY);
+    instanced.setVelocity(instanced.gVelocity * MAX_VELOCITY);///osc
     
     instanced.setXpos(instanced.gXpos);
     instanced.setYpos(instanced.gYpos);
@@ -511,8 +484,7 @@ void ofApp::updateInstanced(){
     //nz
     instanced.setNzTime(instanced.gNzTime * MAX_NZ_TIME);
     
-    ///instanced.setXnzAmp(instanced.gNzXAmp * MAX_NZ_AMP*w);
-    instanced.setXnzAmp(oscSpecComp * oscSpecComp * instanced.gNzXAmp * MAX_NZ_AMP*w);
+    instanced.setXnzAmp(instanced.gNzXAmp * MAX_NZ_AMP*w);///osc
     instanced.setXnzFreq(instanced.gNzXFreq * MAX_NZ_FREQ);
     instanced.setXnzRug(instanced.gNzXRug * MAX_NZ_RUG*w);
     
@@ -520,11 +492,25 @@ void ofApp::updateInstanced(){
     instanced.setYnzFreq(instanced.gNzYFreq * MAX_NZ_FREQ);
     instanced.setYnzRug(instanced.gNzYRug * MAX_NZ_RUG*w);
     
-    ///instanced.setZnzAmp(instanced.gNzZAmp * MAX_NZ_AMP*w);
-    instanced.setZnzAmp(oscCentroid*oscCentroid * instanced.gNzZAmp * MAX_NZ_AMP*w);
-    
+    instanced.setZnzAmp(instanced.gNzZAmp * MAX_NZ_AMP*w);///osc
     instanced.setZnzFreq(instanced.gNzZFreq * MAX_NZ_FREQ);
     instanced.setZnzRug(instanced.gNzZRug * MAX_NZ_RUG*w);
+    
+    if(gReceiveOSC){
+        
+        instanced.setVelocity(oscPower * oscPower * 0.7 * MAX_VELOCITY);
+        instanced.setZnzAmp(oscCentroid*oscCentroid * 6 * MAX_NZ_AMP*w);
+//        instanced.setZnzAmp(oscCentroid * instanced.gNzZAmp*3 * MAX_NZ_AMP*w);
+        
+        instanced.setXnzAmp(oscSpecComp * oscSpecComp  * MAX_NZ_AMP*w);
+        
+        if(oscOnset)instanced.setMaskRadius(0.0);
+        else instanced.setMaskRadius(0.8 - oscTLtrack*0.8);
+        
+        
+        
+        
+    }
 
 
 }
@@ -539,7 +525,7 @@ void ofApp::setupGui(){
     guiMain.add(gDoPostProcessing.setup("Post-Proc", true));
     guiMain.add(gReceiveOSC.setup("Receive Osc", true));
     guiMain.add(gDoDrawInstanced.setup("Draw Inst", true));
-    guiMain.add(gDoDrawSphere.setup("Draw Sphere", true));
+    guiMain.add(gDoDrawSphere.setup("Draw Sphere", false));
     guiMain.add(gDoDrawParts.setup("Draw Parts", true));
     guiMain.add(gDoDrawDomeLimits.setup("Draw Dome Lim", true));
     guiMain.add(gLightPos.setup("LighPos", ofVec3f(0.5), ofVec3f(0.0), ofVec3f(1.0)));
@@ -591,6 +577,9 @@ void ofApp::receiveOsc(){
             oscSpecComp     = m.getArgAsFloat(6);
             oscInharm       = m.getArgAsFloat(7);
             oscOnset        = m.getArgAsInt32(8);
+        }
+        else if(m.getAddress()=="/TL-default"){
+            oscTLtrack       = m.getArgAsFloat(0);
         }
 //        string address  = m.getAddress();
 //        

@@ -112,10 +112,9 @@ private:
     float oscSpecComp;
     float oscInharm;
     bool  oscOnset; //onset from reseiver
+    float oscTLtrack;
     
-    bool isOnset; //evaluated onset
-    
-    float elapsed, lastElapsed;
+  
     //-----------------------
     
     ofVec3f _center;
