@@ -20,6 +20,14 @@
 		B30E4B2B1CFDE5EA001DB62F /* ParticleGroupSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B30E4B241CFDE5EA001DB62F /* ParticleGroupSystem.cpp */; };
 		B30E4B2C1CFDE5EA001DB62F /* ParticleSystemPair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B30E4B261CFDE5EA001DB62F /* ParticleSystemPair.cpp */; };
 		B30E4B311CFDE60A001DB62F /* instancedManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B30E4B2F1CFDE60A001DB62F /* instancedManager.cpp */; };
+		B324AC631D07487F004FA416 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC5C1D07487F004FA416 /* ofxXmlSettings.cpp */; };
+		B324AC641D07487F004FA416 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC5F1D07487F004FA416 /* tinyxml.cpp */; };
+		B324AC651D07487F004FA416 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC611D07487F004FA416 /* tinyxmlerror.cpp */; };
+		B324AC661D07487F004FA416 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC621D07487F004FA416 /* tinyxmlparser.cpp */; };
+		B324AC6C1D074B15004FA416 /* ImageSaverThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC681D074B15004FA416 /* ImageSaverThread.cpp */; };
+		B324AC6D1D074B15004FA416 /* VideoRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC6A1D074B15004FA416 /* VideoRenderer.cpp */; };
+		B324AC761D074B40004FA416 /* ofxFisheye.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC741D074B40004FA416 /* ofxFisheye.cpp */; };
+		B324AC7B1D074B43004FA416 /* ofxVideoRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC791D074B43004FA416 /* ofxVideoRecorder.cpp */; };
 		B33B22691D007ABA0020B9D8 /* SphereManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33B22671D007ABA0020B9D8 /* SphereManager.cpp */; };
 		B33B22991D00906B0020B9D8 /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33B22721D00906B0020B9D8 /* ofxOscBundle.cpp */; };
 		B33B229A1D00906B0020B9D8 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33B22741D00906B0020B9D8 /* ofxOscMessage.cpp */; };
@@ -122,6 +130,23 @@
 		B30E4B271CFDE5EA001DB62F /* ParticleSystemPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParticleSystemPair.h; path = particleSystem/ParticleSystemPair.h; sourceTree = "<group>"; };
 		B30E4B2F1CFDE60A001DB62F /* instancedManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = instancedManager.cpp; path = instanced/instancedManager.cpp; sourceTree = "<group>"; };
 		B30E4B301CFDE60A001DB62F /* instancedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = instancedManager.h; path = instanced/instancedManager.h; sourceTree = "<group>"; };
+		B324AC5C1D07487F004FA416 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
+		B324AC5D1D07487F004FA416 /* ofxXmlSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		B324AC5F1D07487F004FA416 /* tinyxml.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		B324AC601D07487F004FA416 /* tinyxml.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		B324AC611D07487F004FA416 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		B324AC621D07487F004FA416 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		B324AC681D074B15004FA416 /* ImageSaverThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageSaverThread.cpp; sourceTree = "<group>"; };
+		B324AC691D074B15004FA416 /* ImageSaverThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageSaverThread.h; sourceTree = "<group>"; };
+		B324AC6A1D074B15004FA416 /* VideoRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoRenderer.cpp; sourceTree = "<group>"; };
+		B324AC6B1D074B15004FA416 /* VideoRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoRenderer.h; sourceTree = "<group>"; };
+		B324AC711D074B40004FA416 /* fxBarrelDist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxBarrelDist.h; sourceTree = "<group>"; };
+		B324AC721D074B40004FA416 /* fxFixFisheye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxFixFisheye.h; sourceTree = "<group>"; };
+		B324AC731D074B40004FA416 /* fxVariableFisheye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxVariableFisheye.h; sourceTree = "<group>"; };
+		B324AC741D074B40004FA416 /* ofxFisheye.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFisheye.cpp; sourceTree = "<group>"; };
+		B324AC751D074B40004FA416 /* ofxFisheye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxFisheye.h; sourceTree = "<group>"; };
+		B324AC791D074B43004FA416 /* ofxVideoRecorder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxVideoRecorder.cpp; sourceTree = "<group>"; };
+		B324AC7A1D074B43004FA416 /* ofxVideoRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxVideoRecorder.h; sourceTree = "<group>"; };
 		B33B22661D0074280020B9D8 /* instanced.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced.vert; path = bin/data/shadersGL2/instanced.vert; sourceTree = "<group>"; };
 		B33B22671D007ABA0020B9D8 /* SphereManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SphereManager.cpp; sourceTree = "<group>"; };
 		B33B22681D007ABA0020B9D8 /* SphereManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SphereManager.h; sourceTree = "<group>"; };
@@ -296,6 +321,87 @@
 				B30E4B301CFDE60A001DB62F /* instancedManager.h */,
 			);
 			name = instanced;
+			sourceTree = "<group>";
+		};
+		B324AC5A1D07487F004FA416 /* ofxXmlSettings */ = {
+			isa = PBXGroup;
+			children = (
+				B324AC5B1D07487F004FA416 /* src */,
+				B324AC5E1D07487F004FA416 /* libs */,
+			);
+			name = ofxXmlSettings;
+			sourceTree = "<group>";
+		};
+		B324AC5B1D07487F004FA416 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B324AC5C1D07487F004FA416 /* ofxXmlSettings.cpp */,
+				B324AC5D1D07487F004FA416 /* ofxXmlSettings.h */,
+			);
+			name = src;
+			path = ../../../../../addons/ofxXmlSettings/src;
+			sourceTree = "<group>";
+		};
+		B324AC5E1D07487F004FA416 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				B324AC5F1D07487F004FA416 /* tinyxml.cpp */,
+				B324AC601D07487F004FA416 /* tinyxml.h */,
+				B324AC611D07487F004FA416 /* tinyxmlerror.cpp */,
+				B324AC621D07487F004FA416 /* tinyxmlparser.cpp */,
+			);
+			name = libs;
+			path = ../../../../../addons/ofxXmlSettings/libs;
+			sourceTree = "<group>";
+		};
+		B324AC6E1D074B17004FA416 /* common classes */ = {
+			isa = PBXGroup;
+			children = (
+				B324AC681D074B15004FA416 /* ImageSaverThread.cpp */,
+				B324AC691D074B15004FA416 /* ImageSaverThread.h */,
+				B324AC6A1D074B15004FA416 /* VideoRenderer.cpp */,
+				B324AC6B1D074B15004FA416 /* VideoRenderer.h */,
+			);
+			name = "common classes";
+			sourceTree = "<group>";
+		};
+		B324AC6F1D074B40004FA416 /* ofxFisheye */ = {
+			isa = PBXGroup;
+			children = (
+				B324AC701D074B40004FA416 /* src */,
+			);
+			name = ofxFisheye;
+			sourceTree = "<group>";
+		};
+		B324AC701D074B40004FA416 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B324AC711D074B40004FA416 /* fxBarrelDist.h */,
+				B324AC721D074B40004FA416 /* fxFixFisheye.h */,
+				B324AC731D074B40004FA416 /* fxVariableFisheye.h */,
+				B324AC741D074B40004FA416 /* ofxFisheye.cpp */,
+				B324AC751D074B40004FA416 /* ofxFisheye.h */,
+			);
+			name = src;
+			path = ../../addons/ofxFisheye/src;
+			sourceTree = "<group>";
+		};
+		B324AC771D074B43004FA416 /* ofxVideoRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				B324AC781D074B43004FA416 /* src */,
+			);
+			name = ofxVideoRecorder;
+			sourceTree = "<group>";
+		};
+		B324AC781D074B43004FA416 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B324AC791D074B43004FA416 /* ofxVideoRecorder.cpp */,
+				B324AC7A1D074B43004FA416 /* ofxVideoRecorder.h */,
+			);
+			name = src;
+			path = ../../addons/ofxVideoRecorder/src;
 			sourceTree = "<group>";
 		};
 		B33B22651D0074170020B9D8 /* shaders */ = {
@@ -494,6 +600,9 @@
 				B30E4AFE1CFDE583001DB62F /* ofxGui */,
 				B3FC962C1CFF3EDF002C5374 /* ofxPostProcessing */,
 				B33B226E1D00906B0020B9D8 /* ofxOsc */,
+				B324AC5A1D07487F004FA416 /* ofxXmlSettings */,
+				B324AC6F1D074B40004FA416 /* ofxFisheye */,
+				B324AC771D074B43004FA416 /* ofxVideoRecorder */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -515,6 +624,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B324AC6E1D074B17004FA416 /* common classes */,
 				B33B226A1D007DF60020B9D8 /* sphere */,
 				B3FC96291CFF3EC3002C5374 /* PostProcessingManager.cpp */,
 				B3FC962A1CFF3EC3002C5374 /* PostProcessingManager.h */,
@@ -631,6 +741,8 @@
 				B3FC966D1CFF3EDF002C5374 /* KaleidoscopePass.cpp in Sources */,
 				B30E4B2A1CFDE5EA001DB62F /* ParticleGroup.cpp in Sources */,
 				B33B22A21D00906B0020B9D8 /* OscPrintReceivedElements.cpp in Sources */,
+				B324AC661D07487F004FA416 /* tinyxmlparser.cpp in Sources */,
+				B324AC7B1D074B43004FA416 /* ofxVideoRecorder.cpp in Sources */,
 				B3FC96661CFF3EDF002C5374 /* DofPass.cpp in Sources */,
 				B33B22691D007ABA0020B9D8 /* SphereManager.cpp in Sources */,
 				B3FC96621CFF3EDF002C5374 /* BloomPass.cpp in Sources */,
@@ -641,6 +753,9 @@
 				B33B22A41D00906B0020B9D8 /* OscTypes.cpp in Sources */,
 				B3FC96731CFF3EDF002C5374 /* RenderPass.cpp in Sources */,
 				B3FC96691CFF3EDF002C5374 /* FxaaPass.cpp in Sources */,
+				B324AC651D07487F004FA416 /* tinyxmlerror.cpp in Sources */,
+				B324AC6D1D074B15004FA416 /* VideoRenderer.cpp in Sources */,
+				B324AC6C1D074B15004FA416 /* ImageSaverThread.cpp in Sources */,
 				B3FC96641CFF3EDF002C5374 /* ConvolutionPass.cpp in Sources */,
 				B33B229A1D00906B0020B9D8 /* ofxOscMessage.cpp in Sources */,
 				B33B22991D00906B0020B9D8 /* ofxOscBundle.cpp in Sources */,
@@ -648,13 +763,16 @@
 				B33B229D1D00906B0020B9D8 /* ofxOscSender.cpp in Sources */,
 				B3FC96791CFF3EDF002C5374 /* ZoomBlurPass.cpp in Sources */,
 				B33B22A31D00906B0020B9D8 /* OscReceivedElements.cpp in Sources */,
+				B324AC641D07487F004FA416 /* tinyxml.cpp in Sources */,
 				B33B229B1D00906B0020B9D8 /* ofxOscParameterSync.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
 				B30E4B151CFDE583001DB62F /* ofxPanel.cpp in Sources */,
+				B324AC631D07487F004FA416 /* ofxXmlSettings.cpp in Sources */,
 				B3FC96631CFF3EDF002C5374 /* ContrastPass.cpp in Sources */,
 				B3FC966A1CFF3EDF002C5374 /* GodRaysPass.cpp in Sources */,
 				B3FC96701CFF3EDF002C5374 /* NoiseWarpPass.cpp in Sources */,
 				B33B22A01D00906B0020B9D8 /* UdpSocket.cpp in Sources */,
+				B324AC761D074B40004FA416 /* ofxFisheye.cpp in Sources */,
 				B3FC966E1CFF3EDF002C5374 /* LimbDarkeningPass.cpp in Sources */,
 				B3FC962B1CFF3EC3002C5374 /* PostProcessingManager.cpp in Sources */,
 				B30E4B121CFDE583001DB62F /* ofxButton.cpp in Sources */,

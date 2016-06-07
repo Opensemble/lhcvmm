@@ -81,9 +81,9 @@ void PostProcessingManager::updateValues(){
 void PostProcessingManager::setupGui(){
     gui.setup("postProcessing");
     
-    gui.add(gDoFxaa.setup("Fxaa", false));
+    gui.add(gDoFxaa.setup("Fxaa", true));
     
-    gui.add(gDoBloom.setup("Bloom", false));
+    gui.add(gDoBloom.setup("Bloom", true));
     
     gui.add(gDoDof.setup("Dof", false));
     gui.add(gDofFocus.setup("Dof-Focus", 0.9, 0.0, 1.0));

@@ -56,13 +56,13 @@ void ParticleSystemPair::drawScene(){
     
     checkAndDrawGroupUnions();
     
-    lineShader.begin();
-    lineShader.setUniform1f("thickness", 2.0);
+//    lineShader.begin();
+//    lineShader.setUniform1f("thickness", 2.0);
     
     system_1.drawParticles();
     system_2.drawParticles();
     
-    lineShader.end();
+//    lineShader.end();
     
     material.end();
     

@@ -12,14 +12,22 @@
 #include "GuiManager.h"
 
 #include "ofxOsc.h"
+#include "ofxXmlSettings.h"
+
+#include "ofxFisheye.h"
+#include "VideoRenderer.h"
+
+
 // listen on port 12345
 #define PORT 12345
+
+#define FRAME_RATE 30
 
 //--------------------------------
 //COLORS
 #define COLOR_SPHERE    ofColor::white
-#define COLOR_INSTANCED ofColor::white
-#define COLOR_PARTICLES ofColor::white
+#define COLOR_INSTANCED ofColor::orange
+#define COLOR_PARTICLES ofColor::orange
 
 #define MAX_LIGHT_X 1024
 #define MAX_LIGHT_Y 800
@@ -68,8 +76,14 @@ public:
     void resetCamera();
     
     void receiveOsc();
+    void updateOscFromDataFile(int frameNum);
     
     void triggerOnset();
+    
+    //---------------------
+    void startAnimation();
+    void stopAnimation();
+
     
     //gui----
     bool bShowGuiInstanced;
@@ -114,7 +128,7 @@ private:
     bool  oscOnset; //onset from reseiver
     float oscTLtrack;
     
-  
+    bool isReallyOnset;
     //-----------------------
     
     ofVec3f _center;
@@ -137,12 +151,38 @@ private:
     ofxToggle gDoDrawParts;
     ofxToggle gDoDrawDomeLimits;
     ofxVec3Slider gLightPos;
+    ofxFloatSlider gFisheye;
     
     ofxToggle gUseCam;
     ofxToggle gAxis;
     ofxToggle gUseLight;
-    
-    
+
     SphereManager sphere;
+
+    //----------------------
+    
+    ofxXmlSettings data;
+    
+    //renderer-----------------
+    //commo render vars****************************************
+    
+    //animation data variables----------------
+    bool    isAnimating;
+    int     frameCounter;//animation Frame Counter
+    //float   frameDuration;//Duration in seconds of each frame
+    int     framesMaxNumber;//Number of frames of the entire animation
+    float   animValue;//Current frame in relationship with the duration of the entire animation (0.0 - 1.0)
+    float   animationTime;
+    
+    int lastFrameWithOnset;
+    //----------------------------
+    ofxFisheye fisheye;
+    float fisheyeAmount;
+    
+    VideoRenderer renderer;
+    
+    //ofFbo drawFbo; //FBO for drawing scene, wihtout fisheye
+    
+    ofTrueTypeFont	verdana;
 
 };

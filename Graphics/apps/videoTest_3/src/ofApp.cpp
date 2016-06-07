@@ -12,14 +12,38 @@ void ofApp::setup(){
     
     ofSetBackgroundColor(0);
     ///FRAME RATE: 30
-    ofSetFrameRate(30.0);
+    ofSetFrameRate(FRAME_RATE);
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofEnableAlphaBlending();
     ofEnableDepthTest();
     
+    //Setup settings-----------------
+    data.load("analysisData.xml");
+    
+    int frameRate = data.getValue("FILE-INFO:frameRate",0);
+    int totalFramesNum = data.getValue("FILE-INFO:totalFramesNum", 0);
+    cout<<"frameRate - "<<frameRate<<endl;
+    cout<<"total frames - "<<totalFramesNum<<endl;
+    
+    //renderer setup-------------------
+    
+    framesMaxNumber = totalFramesNum;
+    frameCounter = 0;
+    isAnimating = false;
+    ofLogVerbose()<<"ANIMATION INFO ---- ";
+    
+    
+    fisheye.setup(tVariableFisheye);
+    fisheyeAmount = 0.0;
+    
+    renderer.setup(FRAME_RATE, PNG_SEQUENCE, r1024);
+    
+   
+    verdana.load("fonts/verdana.ttf", renderer.getFboWidth()*0.04, true, true);
+    
     //
     
-    drawFbo.allocate(768,768);
+    drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
     fw = drawFbo.getWidth();
     fh = drawFbo.getHeight();
     
@@ -91,7 +115,10 @@ void ofApp::setup(){
     oscOnset = false;
     oscTLtrack = 0.0;
     
-
+   
+    lastFrameWithOnset = 0;
+    isReallyOnset = false;
+    
     
 }
 
@@ -100,17 +127,41 @@ void ofApp::update(){
     //display frame rate as window title
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
     
+    //animation frameNumUpdate
+    if(isAnimating){
+        frameCounter++;
+        //end recording and animation at 15"
+        if (frameCounter>=framesMaxNumber){
+            stopAnimation();
+            renderer.stopRecording();
+        }
+    }
+    
+    
     //receiveOsc----------------
-    receiveOsc();
-    if(oscOnset)triggerOnset();
+    if(gReceiveOSC){
+        //receiveOsc();
+        updateOscFromDataFile(frameCounter);
+    }else{
+        
+    }
+    
+    //check trigger onset---------------------
+    if(oscOnset && isAnimating){
+        if(frameCounter-lastFrameWithOnset > 10){
+            isReallyOnset = true;
+            triggerOnset();
+            lastFrameWithOnset = frameCounter;
+        }
+    }else{
+        isReallyOnset=false;
+    }
 
     
     //update graphics--------------------------------
     updateInstanced();
     updatePair();
     
-    //updateSphere();
-   
     
     //update post-processing------------------------
     postManager.updateValues();
@@ -121,7 +172,16 @@ void ofApp::update(){
                       gLightPos->z * MAX_LIGHT_Z );
     
     
-    //draw openGL scene in drawFbo------------------
+
+    ///-------------------------------
+    
+   
+    //-----------------------------------
+    
+    int rw = renderer.getFboWidth();
+    int rh =  renderer.getFboHeight();
+    
+    ///draw openGL scene in drawFbo------------------
     drawFboInstanced();
     drawFboParticles();
     drawFboSphere();
@@ -129,6 +189,25 @@ void ofApp::update(){
     drawFboMain();
     
     drawFboPost();
+    ///-------------------------------
+    
+   
+    fisheyeAmount = 0.6;
+    renderer.getFbo()->begin();
+    ofClear(0);
+    fisheye.begin(fboPost.getTexture(), rw, rh, fisheyeAmount);///which fbo to render
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(0, 0, 0);
+    glTexCoord2f(rw, 0); glVertex3f(rw, 0, 0);
+    glTexCoord2f(rw, rh); glVertex3f(rw, rh, 0);
+    glTexCoord2f(0,rh);  glVertex3f(0, rh, 0);
+    glEnd();
+    fisheye.end();
+    renderer.getFbo()->end();
+    
+    //Record Renderer's FBO into a .mov file or png sequence
+    renderer.update();
+
 
    
 }
@@ -139,8 +218,9 @@ void ofApp::draw(){
     ofBackground(0);
     
     
-    fboPost.draw(ofGetWidth()-768, 0, fw, fh);
-    
+    //fboPost.draw(ofGetWidth()-768, 0, fw, fh);
+    renderer.draw(ofGetWidth()-768, 0, 768, 768);
+
     
     //drawGuis------------------
     if (bShowGuiInstanced)
@@ -153,6 +233,50 @@ void ofApp::draw(){
     guiMain.draw();
     
     postManager.drawGui(200,500);
+    
+    
+    //Recording indicator-------------------
+    if(renderer.getIsRecording()){
+        ofPushStyle();
+        ofPushMatrix();
+        ofTranslate(ofGetWidth() - 60, 60);
+        ofSetColor(255, 0, 0);
+        ofDrawCircle(0,0, 40);
+        ofSetColor(ofColor::white);
+        ofDrawBitmapString("REC", -10, 0);
+        ofPopMatrix();
+        ofPopStyle();
+    }
+    
+    //Display Key commands-----------------
+    ofPushStyle();
+    string keys = "KEY COMMANDS:";
+    keys += "\nSpacebar: START/STOP Animation"
+    "\nr: START/STOP Recording & Animation"
+    "\np: Secuencia Png"
+    "\nm: Archivo MOV-H264"
+    "\n1: 256x256"
+    "\n2: 512x512"
+    "\n3: 1024x1024"
+    "\n4: 2048x2048"
+    "\n5: 4096x4096";
+    ofSetColor(ofColor::white);
+    ofDrawBitmapString(keys, ofGetWidth()-200, 20);
+    ofPopStyle();
+    
+    //Display Info-----------------
+    ofPushStyle();
+    string info = "INFO: ";
+    info += "\nfps: "+ofToString(ofGetFrameRate())
+    + "\nFBO output res: " + renderer.getResolutionAsString()
+    + "\nREC mode: " + renderer.getRecordingModeAsString() +
+    + "\nframeCounter: " + ofToString(frameCounter);
+    if(renderer.getIsRecording()){
+        info  += "\nRECORDING FRAME NUM: " + ofToString(ofGetFrameNum() - renderer.getLastFrameMarker());
+    }
+    ofSetColor(ofColor::yellow);
+    ofDrawBitmapString(info, ofGetWidth()-200, ofGetHeight()-100);
+    ofPopStyle();
 
     
     
@@ -173,18 +297,86 @@ void ofApp::keyPressed(int key){
             
         //gui shows
             
+//        case '1':
+//            bShowGuiInstanced = !bShowGuiInstanced;
+//            break;
+//        case '2':
+//            bShowGuiPair = !bShowGuiPair;
+//            break;
+//        case '3':
+//            bShowGuiCubeSphere = !bShowGuiCubeSphere;
+//            break;
+//            
+//        case 'r':
+//            resetCamera();
+//            break;
+        
+            //start-stop Animation--------------------
+        case ' ':
+            if(!isAnimating)startAnimation();
+            else stopAnimation();
+            break;
+            //start-stop Animation & Recording---------------
+        case 'r':
+            if(!renderer.getIsRecording())renderer.startRecording();
+            else renderer.stopRecording();
+            
+            if(!isAnimating)startAnimation();
+            else stopAnimation();
+            break;
+            //change resolution-----------------------------
         case '1':
-            bShowGuiInstanced = !bShowGuiInstanced;
+            if(renderer.getOutputResolution()!= r256){
+                renderer.setOutputResolution(r256);
+                verdana.load("fonts/verdana.ttf", renderer.getFboWidth()*0.04, true, true);
+                drawFbo.clear();
+                drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
+                instanced.setLimits(ofVec3f(renderer.getFboWidth(), renderer.getFboHeight(), 100));
+            }
             break;
         case '2':
-            bShowGuiPair = !bShowGuiPair;
+            if(renderer.getOutputResolution()!= r512){
+                renderer.setOutputResolution(r512);
+                verdana.load("fonts/verdana.ttf", renderer.getFboWidth()*0.04, true, true);
+                drawFbo.clear();
+                drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
+                instanced.setLimits(ofVec3f(renderer.getFboWidth(), renderer.getFboHeight(), 100));
+            }
             break;
         case '3':
-            bShowGuiCubeSphere = !bShowGuiCubeSphere;
+            if(renderer.getOutputResolution()!= r1024){
+                renderer.setOutputResolution(r1024);
+                verdana.load("fonts/verdana.ttf", renderer.getFboWidth()*0.04, true, true);
+                drawFbo.clear();
+                drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
+                instanced.setLimits(ofVec3f(renderer.getFboWidth(), renderer.getFboHeight(), 100));
+            }
+            break;
+        case '4':
+            if(renderer.getOutputResolution()!= r2048){
+                renderer.setOutputResolution(r2048);
+                verdana.load("fonts/verdana.ttf", renderer.getFboWidth()*0.04, true, true);
+                drawFbo.clear();
+                drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
+                instanced.setLimits(ofVec3f(renderer.getFboWidth(), renderer.getFboHeight(), 100));
+            }
+            break;
+        case '5':
+            if(renderer.getOutputResolution()!= r4096){
+                renderer.setOutputResolution(r4096);
+                verdana.load("fonts/verdana.ttf", renderer.getFboWidth()*0.04, true, true);
+                drawFbo.clear();
+                drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
+                instanced.setLimits(ofVec3f(renderer.getFboWidth(), renderer.getFboHeight(), 100));
+            }
             break;
             
-        case 'r':
-            resetCamera();
+            //change recording mode---------------
+        case 'p':
+            if(renderer.getRecordingMode()!=PNG_SEQUENCE) renderer.setRecordingMode(PNG_SEQUENCE);
+            break;
+        case 'm':
+            if(renderer.getRecordingMode()!=MOV_FILE) renderer.setRecordingMode(MOV_FILE);
             break;
             
         default:
@@ -286,7 +478,7 @@ void ofApp::drawFboInstanced(){
     }
     //----------------------------
     fboInstanced.end();
-
+    
    
     
 }
@@ -394,7 +586,7 @@ void ofApp::updatePair(){
     oscData[KEY_RADIUS_NZ_FREQ]= guiPair.gNzRadFreq;
     oscData[KEY_X_NZ_AMP]      = guiPair.gNzXposAmp;
     oscData[KEY_X_NZ_FREQ]     = guiPair.gNzXposFreq;
-    oscData[KEY_PART_SIZE]     = 15; ///osc
+    oscData[KEY_PART_SIZE]     = 4 + oscPower*4; ///osc
     
     if(gReceiveOSC){
         
@@ -404,14 +596,16 @@ void ofApp::updatePair(){
             oscData[KEY_DIST_TRESHOLD] = 1000 * oscHfc;
         }
         
-        //oscData[KEY_RADIUS_VAR]    = guiPair.gRadiusVar   * oscCentroid;
-        oscData[KEY_RADIUS_VAR]    = 35 + 160 * 4   * oscCentroid * oscCentroid;
+        oscData[KEY_RADIUS_VAR]    = guiPair.gRadiusVar   * oscCentroid;
+        //oscData[KEY_RADIUS_VAR]    = 15 + 160 * 4   * oscCentroid * oscCentroid;
         
-        //oscData[KEY_ANGLE_VAR]     = guiPair.gAngleVar *  oscSpecComp * oscSpecComp ;
-        oscData[KEY_ANGLE_VAR]     = 0.132 *  oscSpecComp * oscSpecComp ;
+        oscData[KEY_ANGLE_VAR]     = 0.025  *  oscSpecComp * oscSpecComp ;
+        //oscData[KEY_ANGLE_VAR]     = 0.132 *  oscSpecComp * oscSpecComp ;
         
-        //oscData[KEY_X_NZ_AMP]      =  guiPair.gNzXposAmp * oscSpecComp;
-       oscData[KEY_X_NZ_AMP]      =  50+630.0 * oscSpecComp;
+        oscData[KEY_X_NZ_AMP]      =  guiPair.gNzXposAmp;
+       //oscData[KEY_X_NZ_AMP]      = 50 +630.0 * oscSpecComp;
+        
+        oscData[KEY_X_VELOCITY]    = guiPair.gXvelocity*0.5 + guiPair.gXvelocity*oscCentroid;
         
 
     }
@@ -424,8 +618,8 @@ void ofApp::updatePair(){
 
 
     
-   // pair.setDistanceTreshold(guiPair.gDistTreshold);
-   pair.setDistanceTreshold(120 * oscPower * oscPower * 5);///fixme
+    //pair.setDistanceTreshold(guiPair.gDistTreshold);
+   pair.setDistanceTreshold(guiPair.gDistTreshold * oscPower * oscPower * 5);///fixme
     
     
     pair.update(pairData_A, pairData_B);
@@ -497,17 +691,16 @@ void ofApp::updateInstanced(){
     instanced.setZnzRug(instanced.gNzZRug * MAX_NZ_RUG*w);
     
     if(gReceiveOSC){
-        
         instanced.setVelocity(oscPower * oscPower * 0.7 * MAX_VELOCITY);
+       
         instanced.setZnzAmp(oscCentroid*oscCentroid * 6 * MAX_NZ_AMP*w);
+        
 //        instanced.setZnzAmp(oscCentroid * instanced.gNzZAmp*3 * MAX_NZ_AMP*w);
         
         instanced.setXnzAmp(oscSpecComp * oscSpecComp  * MAX_NZ_AMP*w);
         
-        if(oscOnset)instanced.setMaskRadius(0.0);
-        else instanced.setMaskRadius(0.8 - oscTLtrack*0.8);
-        
-        
+        if(isReallyOnset)instanced.setMaskRadius(0.0);
+        else instanced.setMaskRadius(0.5 - oscTLtrack*0.5);
         
         
     }
@@ -532,6 +725,7 @@ void ofApp::setupGui(){
     guiMain.add(gUseCam.setup("useCam", true));
     guiMain.add(gAxis.setup("axis", true));
     guiMain.add(gUseLight.setup("useLight", true));
+    guiMain.add(gFisheye.setup("fisheye", 0.6, 0.0, 1.0));
 
     
     //--------------------------
@@ -558,6 +752,32 @@ void ofApp::triggerOnset(){
 
 }
 //--------------------------------------------------------------
+void ofApp::updateOscFromDataFile(int frameNum){
+    
+    string frameNumStr = ofToString(frameNum);
+    
+    oscPower = data.getValue("ANALYSIS-DATA:FRAME-" + frameNumStr + ":ANALYZER:CHANNEL-0:POWER",0.0);
+ 
+    oscFreq = data.getValue("ANALYSIS-DATA:FRAME-" + frameNumStr + ":ANALYZER:CHANNEL-0:PITCHFREQ", 0.0);
+    
+    oscConfidence = data.getValue("ANALYSIS-DATA:FRAME-" + frameNumStr + ":ANALYZER:CHANNEL-0:PITCHCONF", 0.0);
+    
+    oscSalience = data.getValue("ANALYSIS-DATA:FRAME-" + frameNumStr + ":ANALYZER:CHANNEL-0:SALIENCE", 0.0);
+    
+    oscHfc = data.getValue("ANALYSIS-DATA:FRAME-" + frameNumStr + ":ANALYZER:CHANNEL-0:HFC", 0.0);
+    
+    oscCentroid = data.getValue("ANALYSIS-DATA:FRAME-" + frameNumStr + ":ANALYZER:CHANNEL-0:CENTROID", 0.0);
+    
+    oscSpecComp = data.getValue("ANALYSIS-DATA:FRAME-" + frameNumStr + ":ANALYZER:CHANNEL-0:SPECCOMP", 0.0);
+    
+    oscInharm = data.getValue("ANALYSIS-DATA:FRAME-" + frameNumStr + ":ANALYZER:CHANNEL-0:INHARM", 0.0);
+    
+    oscOnset = data.getValue("ANALYSIS-DATA:FRAME-" + frameNumStr + ":ANALYZER:CHANNEL-0:ONSET", 0.0);
+    
+    oscTLtrack = data.getValue("ANALYSIS-DATA:FRAME-" + frameNumStr + ":TIMELINE:TL-default", 0.0);
+    
+}
+//--------------------------------------------------------------
 void ofApp::receiveOsc(){
     
     
@@ -581,112 +801,22 @@ void ofApp::receiveOsc(){
         else if(m.getAddress()=="/TL-default"){
             oscTLtrack       = m.getArgAsFloat(0);
         }
-//        string address  = m.getAddress();
-//        
-//        //substract channel from adress:
-//        //   "/ch0/POWER" -> ch0
-//        string channelStr = address.substr(1,3);
-//        
-//        //use only channel 0
-//        if(channelStr!="ch0"){
-//            return;
-//        }
-//        
-//        //remove channel string from address to get the algorithm
-//        string algorithmStr =  m.getAddress();
-//        algorithmStr.erase(0, 5);//removes "/ch0/" (5 characters)
-//        
-//        
-//        if(algorithmStr == MTR_NAME_POWER){
-//            oscPower = m.getArgAsFloat(0);
-//        }
-//        else if(algorithmStr == MTR_NAME_PITCH_FREQ){
-//            oscFreq = m.getArgAsFloat(0);
-//        }
-//        else if(algorithmStr == MTR_NAME_PITCH_CONF){
-//            oscConfidence = m.getArgAsFloat(0);
-//        }
-//        else if(algorithmStr == MTR_NAME_PITCH_SALIENCE){
-//            oscSalience = m.getArgAsFloat(0);
-//        }
-//        else if(algorithmStr == MTR_NAME_HFC){
-//            oscHfc = m.getArgAsFloat(0);
-//        }
-//        else if(algorithmStr == MTR_NAME_CENTROID){
-//            oscCentroid = m.getArgAsFloat(0);
-//        }
-//        else if(algorithmStr == MTR_NAME_INHARMONICTY){
-//            oscInharm = m.getArgAsFloat(0);
-//        }
-//        else if(algorithmStr == MTR_NAME_SPEC_COMP){
-//            oscSpecComp = m.getArgAsFloat(0);
-//        }
-//        else if(algorithmStr == MTR_NAME_ONSETS){
-//            oscOnset = m.getArgAsInt32(0);
-//        }
-//        else if(m.getAddress() == "/ch1/pitch") {
-//            ch1.pitch      = m.getArgAsFloat(0);
-//            ch1.confidence = m.getArgAsFloat(1);
-//            ch1.salience   = m.getArgAsFloat(2);
-//        }
-//        else if(m.getAddress() == "/ch1/onsets"){
-//            ch1.onsets = m.getArgAsInt32(0);
-//        }
-//        else if(m.getAddress() == "/ch1/spectral"){
-//            ch1.hfc      = m.getArgAsFloat(0);
-//            ch1.centroid = m.getArgAsFloat(1);
-//            ch1.complx   = m.getArgAsFloat(2);
-//            ch1.inharmon = m.getArgAsFloat(3);
-//        }
-//        else if(m.getAddress() == "/ch2/intensity"){
-//            ch2.rms    = m.getArgAsFloat(0);
-//            ch2.energy = m.getArgAsFloat(1);
-//            ch2.power  = m.getArgAsFloat(2);
-//        }
-//        else if(m.getAddress() == "/ch2/pitch") {
-//            ch2.pitch      = m.getArgAsFloat(0);
-//            ch2.confidence = m.getArgAsFloat(1);
-//            ch2.salience   = m.getArgAsFloat(2);
-//        }
-//        else if(m.getAddress() == "/ch2/onsets"){
-//            ch2.onsets = m.getArgAsInt32(0);
-//        }
-//        else if(m.getAddress() == "/ch2/spectral"){
-//            ch2.hfc      = m.getArgAsFloat(0);
-//            ch2.centroid = m.getArgAsFloat(1);
-//            ch2.complx   = m.getArgAsFloat(2);
-//            ch2.inharmon = m.getArgAsFloat(3);
-//        }
-        
-        
-//        // unrecognized message: display on the bottom of the screen
-//        string msg_string;
-//        msg_string = m.getAddress();
-//        msg_string += ": ";
-//        for(int i = 0; i < m.getNumArgs(); i++){
-//            // get the argument type
-//            msg_string += m.getArgTypeName(i);
-//            msg_string += ":";
-//            // display the argument - make sure we get the right type
-//            if(m.getArgType(i) == OFXOSC_TYPE_INT32){
-//                msg_string += ofToString(m.getArgAsInt32(i));
-//            }
-//            else if(m.getArgType(i) == OFXOSC_TYPE_FLOAT){
-//                msg_string += ofToString(m.getArgAsFloat(i));
-//            }
-//            else if(m.getArgType(i) == OFXOSC_TYPE_STRING){
-//                msg_string += m.getArgAsString(i);
-//            }
-//            else{
-//                msg_string += "unknown";
-//            }
-//        }
-//        ofLogVerbose()<<"osc: "<<msg_string;
-        
-
 
     }
 
 
+}
+
+//--------------------------------------------------------------
+void ofApp::startAnimation(){
+    isAnimating=true;
+    ofLogNotice("Animation STARTED");
+}
+//--------------------------------------------------------------
+void ofApp::stopAnimation(){
+    frameCounter = 0;
+    lastFrameWithOnset = 0;
+    isAnimating = false;
+    ofLogNotice("Animation STOPED");
 }
 

@@ -6,11 +6,11 @@ void GuiManager::setup(){
     int _w = ofGetHeight();
     
     gui.setup("partSystem");
-    gui.add(gDistTreshold.setup("dist-treshold", 415.0, 0, 1000));
-    gui.add(gPartsNum.setup("groupPartsNum", 3, 2, 5));
-    gui.add(gXvelocity.setup("x-velocity", 425.0, 0.0, 500.0));
+    gui.add(gDistTreshold.setup("dist-treshold", 80.0, 0, 1000));
+    gui.add(gPartsNum.setup("groupPartsNum", 4, 2, 5));
+    gui.add(gXvelocity.setup("x-velocity", 800.0, 0.0, 1000.0));
     gui.add(gRadiusInit.setup("radius-init", 10, 1, 300));
-    gui.add(gRadiusVar.setup("radius-var", 0, 0, 200));
+    gui.add(gRadiusVar.setup("radius-var",200, 0, 200));
     gui.add(gAngleInit.setup("angle-init", 0.3, 0.1, 5.0));
     gui.add(gAngleVar.setup("angle-var", 0.0, 0.0, 0.2));
     //nz
@@ -18,7 +18,7 @@ void GuiManager::setup(){
     gui.add(gNzAngleFreq.setup("nz-Angle-Freq", 0.001, 0.0, 0.01));
     gui.add(gNzRadAmp.setup("nz-Radius-Amp", 2.0, 0.0, 5.0));
     gui.add(gNzRadFreq.setup("nz-Radius-Freq", 1.0, 0.0, 10.0));
-    gui.add(gNzXposAmp.setup("nz-Xpos-Amp", 200.0, 0.0, _w));
+    gui.add(gNzXposAmp.setup("nz-Xpos-Amp", 387.0, 0.0, _w));
     gui.add(gNzXposFreq.setup("nz-Xpos-Freq", 0.05, 0.0, 0.1));
 
 }

@@ -123,26 +123,28 @@ void ParticleGroup::draw(){
     
    
     
-//    for(int i=0; i<positions.size(); i++){
-//        //ofDrawBox(positions[i],_size);
-//        ofDrawSphere(positions[i], _size);
-//    }
-    
-    int numVertex = positions.size();
-    
-    GLfloat vertexes[numVertex * 3];//array of floats (numVertex *3) 3->x,y,z
-    int i=0;
-    for(float n=0; n<positions.size(); n++) {
-        ofVec3f vec			= positions[n];
-        vertexes[i*3]		= vec.x;
-        vertexes[(i*3)+1]   = vec.y;
-        vertexes[(i*3)+2]   = vec.z;
-        i++;
+    for(int i=0; i<positions.size(); i++){
+        //ofDrawBox(positions[i],_size);
+        ofDrawSphere(positions[i], _size);
     }
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, 0, vertexes);
-    ///glDrawArrays(GL_LINE_STRIP, 0, numVertex);
-    glDrawArrays(GL_LINE_LOOP, 0, numVertex);
+
+    //for lines--------
+    
+//    int numVertex = positions.size();
+//    
+//    GLfloat vertexes[numVertex * 3];//array of floats (numVertex *3) 3->x,y,z
+//    int i=0;
+//    for(float n=0; n<positions.size(); n++) {
+//        ofVec3f vec			= positions[n];
+//        vertexes[i*3]		= vec.x;
+//        vertexes[(i*3)+1]   = vec.y;
+//        vertexes[(i*3)+2]   = vec.z;
+//        i++;
+//    }
+//    glEnableClientState(GL_VERTEX_ARRAY);
+//    glVertexPointer(3, GL_FLOAT, 0, vertexes);
+//    ///glDrawArrays(GL_LINE_STRIP, 0, numVertex);
+//    glDrawArrays(GL_LINE_LOOP, 0, numVertex);
     
     
     ofPopStyle();
