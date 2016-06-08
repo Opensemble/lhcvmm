@@ -40,4 +40,5 @@ class ParticleGroup{
     ofVec3f _anchor;
     vector<ofVec3f> velocities;
     
+    int frameCounter;
 };

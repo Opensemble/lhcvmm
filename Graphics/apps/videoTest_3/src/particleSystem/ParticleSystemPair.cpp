@@ -226,7 +226,7 @@ void ParticleSystemPair::drawLineStructure(ParticleGroup *group1, ParticleGroup 
     ofFill();
     
     lineShader.begin();
-    lineShader.setUniform1f("thickness", 2.0);
+    lineShader.setUniform1f("thickness", 0.002*_w);
     
         //mesh.drawWireframe();
         int numVertex = mesh.getNumVertices();

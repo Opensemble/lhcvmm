@@ -26,8 +26,8 @@
 //--------------------------------
 //COLORS
 #define COLOR_SPHERE    ofColor::white
-#define COLOR_INSTANCED ofColor::orange
-#define COLOR_PARTICLES ofColor::orange
+#define COLOR_INSTANCED ofColor::white
+#define COLOR_PARTICLES ofColor::white
 
 #define MAX_LIGHT_X 1024
 #define MAX_LIGHT_Y 800

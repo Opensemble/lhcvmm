@@ -37,12 +37,13 @@ ParticleGroup::ParticleGroup(int partsNum,int x, int y, int w, int d, float radi
         velocities.push_back(vel);
     }
 
+    frameCounter = 0;
     
 }
 //-----------------------------------------
 void ParticleGroup::update(std::map<string, float>& data){
     
-    float time = (float)1/ofGetFrameRate();
+    float time = 0.03;
     
     
     float velocityX = data.at(KEY_X_VELOCITY);
@@ -64,14 +65,10 @@ void ParticleGroup::update(std::map<string, float>& data){
     _angle += time * _dir * _rotAngleInit + angleVar;
     float radiusAnchor =  (_w/2) - 100 ;
     
-    //_anchor.z += -1 * time * velocityZ;
-    //_anchor.x = _x + radiusAnchor * cos(_angle);
     
     _anchor.x += _dir * time * velocityX;
     
     _anchor.y = _y + radiusAnchor * sin(_angle);
-   // _anchor.z = _z + radiusAnchor * cos(_angle);
-
     
     float radiusParts =  _rotRadiusInit + radiusVar;
    
@@ -82,12 +79,11 @@ void ParticleGroup::update(std::map<string, float>& data){
     
         float thisAngle = _angle + ofDegToRad( (360.0/float(_partsNum)) * i);
         float thisRadius = radiusParts;
-        //float thisZpos = _anchor.z;
         float thisZpos = _anchor.x;
     
         //nz-------------------------
-        
-        float nzAngle = ofSignedNoise(ofGetElapsedTimef() * freq_nzAngle, i*0.1) * thisAngle * amp_nzAngle;
+        float elapsedTimeFramed = frameCounter * time;
+        float nzAngle = ofSignedNoise(elapsedTimeFramed * freq_nzAngle, i*0.1) * thisAngle * amp_nzAngle;
         thisAngle += nzAngle;
         
         float nzRadius = ofNoise(thisAngle * freq_nzRad) * radiusParts * amp_nzRad;
@@ -102,18 +98,16 @@ void ParticleGroup::update(std::map<string, float>& data){
         velocities[i].z = thisRadius * cos(thisAngle);
         velocities[i].y = thisRadius * sin(thisAngle);
        
-        //positions[i].x = _anchor.x + velocities[i].x;
         positions[i].z = _anchor.z + velocities[i].z;
         
         positions[i].y = _anchor.y + velocities[i].y;
-        //positions[i].z = thisZpos;
         positions[i].x = thisZpos;
         
     }
 
 
     
-  
+    frameCounter++;
     
 }
 //-----------------------------------------

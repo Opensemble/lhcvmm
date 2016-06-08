@@ -1,9 +1,6 @@
 #include "ofApp.h"
 
-
-
 //FIXME: esta dado vuelta con el post-processing? no me importa mucho...
-
 //TODO: make all animations frameNum dependants
 
 #pragma mark - Core Funcs
@@ -28,7 +25,7 @@ void ofApp::setup(){
     //renderer setup-------------------
     
     framesMaxNumber = totalFramesNum;
-    frameCounter = 0;
+    frameCounter = -1;
     isAnimating = false;
     ofLogVerbose()<<"ANIMATION INFO ---- ";
     
@@ -36,7 +33,11 @@ void ofApp::setup(){
     fisheye.setup(tVariableFisheye);
     fisheyeAmount = 0.0;
     
-    renderer.setup(FRAME_RATE, PNG_SEQUENCE, r1024);
+    //renderer.setup(FRAME_RATE, PNG_SEQUENCE, r256);///init resolution and mode
+    //renderer.setup(FRAME_RATE, PNG_SEQUENCE, r512);///init resolution and mode
+    //renderer.setup(FRAME_RATE, PNG_SEQUENCE, r1024);///init resolution and mode
+    //renderer.setup(FRAME_RATE, PNG_SEQUENCE, r2048);///init resolution and mode
+    renderer.setup(FRAME_RATE, PNG_SEQUENCE, r4096);///init resolution and mode
     
    
     verdana.load("fonts/verdana.ttf", renderer.getFboWidth()*0.04, true, true);
@@ -77,7 +78,7 @@ void ofApp::setup(){
     //----------------------------
     _center.set(fw*0.5, fh*0.5, 0.0);
     cam.disableMouseInput();
-    cam.setPosition(ofVec3f(_center.x, _center.y, 700.0));
+    cam.setPosition(ofVec3f(_center.x, _center.y, fw*0.7));
     cam.lookAt(_center);
     cam.setTarget(_center);
     
@@ -167,9 +168,9 @@ void ofApp::update(){
     postManager.updateValues();
     
     //light pos
-    light.setPosition(gLightPos->x * MAX_LIGHT_X,
-                      gLightPos->y * MAX_LIGHT_Y,
-                      gLightPos->z * MAX_LIGHT_Z );
+    light.setPosition(gLightPos->x * fw,
+                      gLightPos->y * 0.8*fw,
+                      0.05 * 0.8*fw );
     
     
 
@@ -295,21 +296,7 @@ void ofApp::keyPressed(int key){
             pair.addPartGroup(2);
             break;
             
-        //gui shows
-            
-//        case '1':
-//            bShowGuiInstanced = !bShowGuiInstanced;
-//            break;
-//        case '2':
-//            bShowGuiPair = !bShowGuiPair;
-//            break;
-//        case '3':
-//            bShowGuiCubeSphere = !bShowGuiCubeSphere;
-//            break;
-//            
-//        case 'r':
-//            resetCamera();
-//            break;
+        
         
             //start-stop Animation--------------------
         case ' ':
@@ -324,6 +311,7 @@ void ofApp::keyPressed(int key){
             if(!isAnimating)startAnimation();
             else stopAnimation();
             break;
+            //FIXME: change resolutions arent working, setups needed
             //change resolution-----------------------------
         case '1':
             if(renderer.getOutputResolution()!= r256){
@@ -332,6 +320,22 @@ void ofApp::keyPressed(int key){
                 drawFbo.clear();
                 drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
                 instanced.setLimits(ofVec3f(renderer.getFboWidth(), renderer.getFboHeight(), 100));
+                
+                fw = renderer.getFboWidth();
+                fh = renderer.getFboHeight();
+                
+                fboPost.clear();
+                fboPost.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboInstanced.clear();
+                fboInstanced.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboParticles.clear();
+                fboParticles.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboSphere.clear();
+                fboSphere.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+            
             }
             break;
         case '2':
@@ -341,6 +345,21 @@ void ofApp::keyPressed(int key){
                 drawFbo.clear();
                 drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
                 instanced.setLimits(ofVec3f(renderer.getFboWidth(), renderer.getFboHeight(), 100));
+                
+                fw = renderer.getFboWidth();
+                fh = renderer.getFboHeight();
+                
+                fboPost.clear();
+                fboPost.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboInstanced.clear();
+                fboInstanced.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboParticles.clear();
+                fboParticles.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboSphere.clear();
+                fboSphere.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
             }
             break;
         case '3':
@@ -350,6 +369,22 @@ void ofApp::keyPressed(int key){
                 drawFbo.clear();
                 drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
                 instanced.setLimits(ofVec3f(renderer.getFboWidth(), renderer.getFboHeight(), 100));
+                
+                fw = renderer.getFboWidth();
+                fh = renderer.getFboHeight();
+                
+                fboPost.clear();
+                fboPost.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                
+                fboInstanced.clear();
+                fboInstanced.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboParticles.clear();
+                fboParticles.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboSphere.clear();
+                fboSphere.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
             }
             break;
         case '4':
@@ -359,6 +394,21 @@ void ofApp::keyPressed(int key){
                 drawFbo.clear();
                 drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
                 instanced.setLimits(ofVec3f(renderer.getFboWidth(), renderer.getFboHeight(), 100));
+                
+                fw = renderer.getFboWidth();
+                fh = renderer.getFboHeight();
+                
+                fboPost.clear();
+                fboPost.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboInstanced.clear();
+                fboInstanced.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboParticles.clear();
+                fboParticles.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboSphere.clear();
+                fboSphere.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
             }
             break;
         case '5':
@@ -368,6 +418,22 @@ void ofApp::keyPressed(int key){
                 drawFbo.clear();
                 drawFbo.allocate(renderer.getFboWidth(), renderer.getFboHeight());
                 instanced.setLimits(ofVec3f(renderer.getFboWidth(), renderer.getFboHeight(), 100));
+                
+                fw = renderer.getFboWidth();
+                fh = renderer.getFboHeight();
+                
+                fboPost.clear();
+                fboPost.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboInstanced.clear();
+                fboInstanced.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboParticles.clear();
+                fboParticles.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+                
+                fboSphere.clear();
+                fboSphere.allocate(renderer.getFboWidth(), renderer.getFboHeight(), GL_RGBA);
+
             }
             break;
             
@@ -555,17 +621,8 @@ void ofApp::drawFboSphere(){
 #pragma mark - Updates
 //--------------------------------------------------------------
 void ofApp::updatePair(){
-    //??? mandarlo al particleSystemPair?
-    bool onset1, onset2;
-    float pow1, pow2;
-    float pitch1, pitch2;
-    float conf1, conf2;
     
-    
-    pow1 = pow2      = 0.8;
-    onset1 = onset2  = false;
-    pitch1 = pitch2  = 0.8;
-    conf1 = conf2    = 0.8;
+    int w = fw;
     
     guiPair.update();
     
@@ -574,53 +631,51 @@ void ofApp::updatePair(){
     
     oscData[KEY_DIST_TRESHOLD] = guiPair.gDistTreshold;///osc
     oscData[KEY_PARTS_NUM]     = guiPair.gPartsNum;
-    oscData[KEY_X_VELOCITY]    = guiPair.gXvelocity;
-    oscData[KEY_RADIUS_INIT]   = guiPair.gRadiusInit;
+    oscData[KEY_X_VELOCITY]    = guiPair.gXvelocity;///osc
+    //oscData[KEY_RADIUS_INIT]   = guiPair.gRadiusInit;
+    oscData[KEY_RADIUS_INIT]   = 0.009 * w;
     oscData[KEY_RADIUS_VAR]    = guiPair.gRadiusVar;///osc
     oscData[KEY_ANGLE_INIT]    = guiPair.gAngleInit;
     oscData[KEY_ANGLE_VAR]     = guiPair.gAngleVar;///osc
     //nz
     oscData[KEY_ANGLE_NZ_AMP]  = guiPair.gNzAngleAmp;///osc
     oscData[KEY_ANGLE_NZ_FREQ] = guiPair.gNzAngleFreq;
-    oscData[KEY_RADIUS_NZ_AMP] = guiPair.gNzRadAmp;///osc
+//    oscData[KEY_RADIUS_NZ_AMP] = guiPair.gNzRadAmp;///osc
+    oscData[KEY_RADIUS_NZ_AMP] = 0.002 * w;///osc
     oscData[KEY_RADIUS_NZ_FREQ]= guiPair.gNzRadFreq;
-    oscData[KEY_X_NZ_AMP]      = guiPair.gNzXposAmp;
+    oscData[KEY_X_NZ_AMP]      = guiPair.gNzXposAmp;///osc
     oscData[KEY_X_NZ_FREQ]     = guiPair.gNzXposFreq;
-    oscData[KEY_PART_SIZE]     = 4 + oscPower*4; ///osc
+    oscData[KEY_PART_SIZE]     = 10; ///osc
     
     if(gReceiveOSC){
         
         //oscData[KEY_DIST_TRESHOLD] = guiPair.gDistTreshold * oscCentroid * oscCentroid;
         //oscData[KEY_DIST_TRESHOLD] = 460 * oscCentroid * oscCentroid;
         if(oscHfc>0.5){
-            oscData[KEY_DIST_TRESHOLD] = 1000 * oscHfc;
+            oscData[KEY_DIST_TRESHOLD] = w * oscHfc;
         }
         
-        oscData[KEY_RADIUS_VAR]    = guiPair.gRadiusVar   * oscCentroid;
-        //oscData[KEY_RADIUS_VAR]    = 15 + 160 * 4   * oscCentroid * oscCentroid;
+//        oscData[KEY_RADIUS_VAR]    = guiPair.gRadiusVar   * oscCentroid;
+        oscData[KEY_RADIUS_VAR]    = 0.2*w   * oscCentroid;
         
         oscData[KEY_ANGLE_VAR]     = 0.025  *  oscSpecComp * oscSpecComp ;
         //oscData[KEY_ANGLE_VAR]     = 0.132 *  oscSpecComp * oscSpecComp ;
         
-        oscData[KEY_X_NZ_AMP]      =  guiPair.gNzXposAmp;
-       //oscData[KEY_X_NZ_AMP]      = 50 +630.0 * oscSpecComp;
+//        oscData[KEY_X_NZ_AMP]      =  guiPair.gNzXposAmp;
+        oscData[KEY_X_NZ_AMP]      =  0.38 * w;
         
-        oscData[KEY_X_VELOCITY]    = guiPair.gXvelocity*0.5 + guiPair.gXvelocity*oscCentroid;
+//        oscData[KEY_X_VELOCITY]    = guiPair.gXvelocity*0.5 + guiPair.gXvelocity*oscCentroid;
+        oscData[KEY_X_VELOCITY]    = 0.8*w *0.5 + 0.8*w *oscCentroid;
         
-
+        oscData[KEY_PART_SIZE]     = 0.004*w + oscPower*0.004*w;
     }
-
-    
-
 
     std::map<string, float> pairData_A = oscData;
     std::map<string, float> pairData_B = oscData;
-
-
     
-    //pair.setDistanceTreshold(guiPair.gDistTreshold);
-   pair.setDistanceTreshold(guiPair.gDistTreshold * oscPower * oscPower * 5);///fixme
-    
+
+//    pair.setDistanceTreshold(guiPair.gDistTreshol/d * oscPower * oscPower * 5);///fixme
+    pair.setDistanceTreshold(0.07*w * oscPower * oscPower * 5);
     
     pair.update(pairData_A, pairData_B);
     
@@ -691,7 +746,8 @@ void ofApp::updateInstanced(){
     instanced.setZnzRug(instanced.gNzZRug * MAX_NZ_RUG*w);
     
     if(gReceiveOSC){
-        instanced.setVelocity(oscPower * oscPower * 0.7 * MAX_VELOCITY);
+//        instanced.setVelocity(oscPower * oscPower * 0.7 * MAX_VELOCITY);//10
+        instanced.setVelocity(oscPower * oscPower * 0.7 * MAX_VELOCITY);//10
        
         instanced.setZnzAmp(oscCentroid*oscCentroid * 6 * MAX_NZ_AMP*w);
         
@@ -721,7 +777,7 @@ void ofApp::setupGui(){
     guiMain.add(gDoDrawSphere.setup("Draw Sphere", false));
     guiMain.add(gDoDrawParts.setup("Draw Parts", true));
     guiMain.add(gDoDrawDomeLimits.setup("Draw Dome Lim", true));
-    guiMain.add(gLightPos.setup("LighPos", ofVec3f(0.5), ofVec3f(0.0), ofVec3f(1.0)));
+    guiMain.add(gLightPos.setup("LighPos", ofVec3f(0.5), ofVec3f(0.0), ofVec3f(0.5)));
     guiMain.add(gUseCam.setup("useCam", true));
     guiMain.add(gAxis.setup("axis", true));
     guiMain.add(gUseLight.setup("useLight", true));
@@ -814,7 +870,7 @@ void ofApp::startAnimation(){
 }
 //--------------------------------------------------------------
 void ofApp::stopAnimation(){
-    frameCounter = 0;
+    frameCounter = -1;
     lastFrameWithOnset = 0;
     isAnimating = false;
     ofLogNotice("Animation STOPED");
