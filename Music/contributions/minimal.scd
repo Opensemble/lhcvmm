@@ -79,14 +79,12 @@ SynthDef(\bass,{arg out=0, freq=120,amp=1, noise=0, pan=0;
 
 });
 
-~opensemble.register(\attack_empty, [\attack, \empty],
-	{ arg suf;
-
-		//Synth(\SOSkick, [\mod_freq,3,\beater_noise_level,0.14,\amp,0.3]);
+~opensemble.registerRaw(\raw_test,
+	{ arg data;
+		data.postln;
 
 		Pmono(\hat,
-			\dur,Pxrand((1/8!8)++(1/16!4),suf.duration.round*2),
-			//\dur,Pxrand((1/6!8)++(1/16!4)++(1/3!2),suf.duration.round*2),
+			\dur,Pxrand((1/8!8)++(1/16!4),data[0]*2),
 			\trig,1,
 			\p,{rrand(-1,1)},
 			\a,0.1

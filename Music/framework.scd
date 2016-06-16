@@ -14,6 +14,7 @@ Server.default.boot;
 	var window;
 	var oscIndicator, onsetIndicator, continuantIndicator,terminationIndicator;
 	var functionList;
+	var rawFunc;
 
 	//-----------------------------------
 	// SOUND UNIT PHASE
@@ -90,15 +91,22 @@ Server.default.boot;
 				});
 			};
 		}, '/sound_unit').enable;
+		self.oscRaw = OSCdef(\raw_data, { |msg, time, addr, recvPort|
+				var data = msg[1..];
+				rawFunc.value(data);
+		}, '/raw_data').enable;
+
 	},
 	startListener:  {
 		|self|
 		self.osc.enable;
+		self.oscRaw.enable;
 		"Opensemble is listening OSC messages.".postln;
 	},
 	stopListener:  {
 		|self|
 		self.osc.disable;
+		self.oscRaw.disable;
 		"Opensemble stopped listening OSC messages.".postln;
 	},
 	register:  {
@@ -118,6 +126,16 @@ Server.default.boot;
 		self.dict.removeAt(key);
 		functionList.items = self.dict.keys.collect({|k| k.asString;}).asArray;
 		format("Function % unregistered\n", key);
+	},
+	registerRaw:  {
+		|self, key, func|
+		rawFunc = func;
+		format("Raw function % registered\n", key);
+	},
+	unregisterRaw:  {
+		|self, key|
+		rawFunc = nil;
+		format("Raw function % unregistered\n", key);
 	},
 	pick:  {
 		|self, event|
