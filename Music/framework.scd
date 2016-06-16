@@ -13,6 +13,7 @@ Server.default.boot;
 ~opensemble = {
 	var window;
 	var oscIndicator, onsetIndicator, continuantIndicator,terminationIndicator;
+	var functionList;
 
 	//-----------------------------------
 	// SOUND UNIT PHASE
@@ -108,12 +109,14 @@ Server.default.boot;
 		sup.register(key, keywords );
 		//todo: validate words
 		self.dict.add(key -> [keywords,sup]);
+		functionList.items = self.dict.keys.collect({|k| k.asString;}).asArray;
 		format("Function % registered\n", key);
 
 	},
 	unregister:  {
 		|self, key|
 		self.dict.removeAt(key);
+		functionList.items = self.dict.keys.collect({|k| k.asString;}).asArray;
 		format("Function % unregistered\n", key);
 	},
 	pick:  {
@@ -161,33 +164,44 @@ Server.default.boot;
 		Window.allWindows.do({|ww| if(ww.name=="Opensemble",ww.close);});
 		r = Window.availableBounds;
 		// set up a window on bottom right corner, right above server status
-		//window = Window(name:"Opensemble" ,border:false,bounds:Rect(r.width-200-18, r.top+3, 200, 80));
-		window = Window(name:"Opensemble" ,border:true,bounds:Rect(r.width-200-50, r.top+50, 200, 80));
-		window.alwaysOnTop = true;
+		//window = Window(name:"Opensemble" ,border:true,bounds:Rect(r.width-200-50, r.top+50, 200, 80));
+		window = Window(name:"Opensemble", bounds:Rect(r.width-400-50, r.top+80, 400, 400));
+		//window.alwaysOnTop = true;
+
 		window.background = Color.black.alpha = 0.6;
 
 
+		oscIndicator  = StaticText(window,20@20).background_(Color.grey);
+		onsetIndicator  = StaticText(window,20@20).background_(Color.grey);
+		continuantIndicator  = StaticText(window,20@20).background_(Color.grey);
+		terminationIndicator  = StaticText(window,20@20).background_(Color.grey);
 
-		t = StaticText.new(window,Rect(10,10,85,26)).string_("Opensemble:");
-		t.stringColor = Color.white;
-		oscIndicator  = StaticText.new(window,Rect(10,50,20,20));
-		onsetIndicator  = StaticText.new(window,Rect(110,50,20,20));
-		continuantIndicator  = StaticText.new(window,Rect(140,50,20,20));
-		terminationIndicator  = StaticText.new(window,Rect(170,50,20,20));
 
-		oscIndicator.background = Color.grey;
-		onsetIndicator.background = Color.grey;
-		continuantIndicator.background = Color.grey;
-		terminationIndicator.background = Color.grey;
+		functionList = ListView()
+		//.items_([ "SinOsc", "Saw", "LFSaw", "WhiteNoise", "PinkNoise" ]);
+		//.selection = 4;
+			.selectionMode_(\none);
+		//.colors = [Color.red, Color.blue];
 
-		Button(window, Rect(100, 10, 90, 26))
-		.states_([
-            ["Listening", Color.white, Color.green.alpha = 0.6;],
-            ["Idle...", Color.white, Color.red.alpha = 0.6;]
-        ])
-        .action_({ |b|
-			if(b.value==0, {self.startListener}, {self.stopListener});
-        });
+		window.layout = VLayout(
+				StaticText().string_("Registered Functions:").stringColor_(Color.white),
+				functionList,
+				HLayout(oscIndicator, onsetIndicator, continuantIndicator, terminationIndicator),
+				Button()
+				.states_([
+					["Listening", Color.white, Color.green.alpha = 0.6;],
+					["Idle...", Color.white, Color.red.alpha = 0.6;]
+				])
+				.action_({ |b|
+					if(b.value==0, {self.startListener}, {self.stopListener});
+				});
+
+		);
+
+
+
+
+
 	},
 	init:{
 		|self|
