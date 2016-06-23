@@ -2,6 +2,7 @@ import time
 import sys
 from OSC import  OSCClient, OSCClientError, OSCBundle, OSCMessage
 import argparse
+import json
 
 data_file = None
 tree = None
@@ -17,7 +18,6 @@ parser.add_argument('-l','--loop', help='Loop events sequence.', default=True, t
 parser.add_argument('--limit', help='Limit the amount of events to read.', type=int)
 
 args = parser.parse_args()
-
 
 # just some easy ansi colors printing: 'o' for ok, 'w' for warning, 'e' for error.
 def printc(t, c='o'):
@@ -36,9 +36,9 @@ def mapValue(value, leftMin, leftMax, rightMin, rightMax):
     # Convert the 0-1 range into a value in the right range.
     return rightMin + (valueScaled * rightSpan)
 
-def send_event():
+def send_event_old():
     spectral_densities = ['filled', 'packed', 'opaque','translucent','transparent','empty']
-    # fill blanks
+
     data = ['']*17*3
     #onset, continuant, termination
     data[0] = 'attack'
@@ -62,7 +62,42 @@ def send_event():
     bundle.append(msg)
     client.send(bundle)
 
+def send_event():
 
+    data = {}
+
+    data['pvxp_n'] = tree.pvxp_n
+    data['mu'] = tree.mu
+    data['met_phi'] = tree.met_phi
+    data['met_et'] = tree.met_et
+    #leptons
+    data['leps'] = []
+    for i in range(tree.lep_n):
+        lep = {}
+        lep['lep_pt'] = tree.lep_pt[i]
+        lep['lep_phi'] = tree.lep_phi[i]
+        lep['lep_eta'] = tree.lep_eta[i]
+        lep['lep_E'] = tree.lep_E[i]
+        data['leps'].append(lep)
+
+    #jets
+    data['jets'] = []
+    for i in range(tree.jet_n):
+        jet = {}
+        jet['jet_pt'] = tree.jet_pt[i]
+        jet['jet_phi'] = tree.jet_phi[i]
+        jet['jet_eta'] = tree.jet_eta[i]
+        jet['jet_E'] = tree.jet_E[i]
+        jet['jet_m'] = tree.jet_m[i]
+        data['jets'].append(jet)
+
+    json_data = json.dumps(data)
+
+    bundle = OSCBundle()
+    msg = OSCMessage("/raw_data")
+    msg.append(json_data)
+    bundle.append(msg)
+    client.send(bundle)
 
 
 

@@ -91,8 +91,9 @@ Server.default.boot;
 				});
 			};
 		}, '/sound_unit').enable;
+
 		self.oscRaw = OSCdef(\raw_data, { |msg, time, addr, recvPort|
-				var data = msg[1..];
+				var data = msg[1].asString.parseYAML;
 				rawFunc.value(data);
 		}, '/raw_data').enable;
 
@@ -114,7 +115,6 @@ Server.default.boot;
 		var sup = ();
 		sup.parent = sound_unit_phase;
 		sup.playEvent = func;
-		sup.register(key, keywords );
 		//todo: validate words
 		self.dict.add(key -> [keywords,sup]);
 		functionList.items = self.dict.keys.collect({|k| k.asString;}).asArray;
