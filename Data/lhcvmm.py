@@ -92,7 +92,7 @@ try:
 
     count = tree.GetEntriesFast()
     if args.count:
-        count = args.limit
+        count = args.count
     start_time=time.time()
 
     while 1:
