@@ -13,7 +13,7 @@ Server.default.boot;
 ~opensemble = {
 	var window;
 	var oscIndicator, onsetIndicator, continuantIndicator,terminationIndicator;
-	var functionList;
+	var functionList, rawFunctionIndicator;
 	var rawFunc;
 
 	//-----------------------------------
@@ -95,6 +95,11 @@ Server.default.boot;
 		self.oscRaw = OSCdef(\raw_data, { |msg, time, addr, recvPort|
 				var data = msg[1].asString.parseYAML;
 				rawFunc.value(data);
+				fork{
+					{oscIndicator.background_(Color.green);}.defer;
+					0.2.wait;
+					{oscIndicator.background_(Color.grey);}.defer;
+				};
 		}, '/raw_data').enable;
 
 	},
@@ -130,11 +135,13 @@ Server.default.boot;
 	registerRaw:  {
 		|self, key, func|
 		rawFunc = func;
+		rawFunctionIndicator.string_("Registered Raw Function: " + key);
 		format("Raw function % registered\n", key);
 	},
 	unregisterRaw:  {
 		|self, key|
 		rawFunc = nil;
+		rawFunctionIndicator.string_("No Raw Function registered");
 		format("Raw function % unregistered\n", key);
 	},
 	pick:  {
@@ -167,24 +174,23 @@ Server.default.boot;
 			sof.playEvent;
 		});
 	},
-	showGui:{
+	showUI:{
 		|self|
 		window.visible=true;
 	},
-	hideGui:{
+	hideUI:{
 		|self|
 		window.visible=false;
 	},
-	createGui:{
+	createUI:{
 		|self|
 		var r;
 		//ensure opensemble window is not already opened
 		Window.allWindows.do({|ww| if(ww.name=="Opensemble",ww.close);});
 		r = Window.availableBounds;
 		// set up a window on bottom right corner, right above server status
-		//window = Window(name:"Opensemble" ,border:true,bounds:Rect(r.width-200-50, r.top+50, 200, 80));
 		window = Window(name:"Opensemble", bounds:Rect(r.width-400-50, r.top+80, 400, 400));
-		//window.alwaysOnTop = true;
+		window.alwaysOnTop = true;
 
 		window.background = Color.black.alpha = 0.6;
 
@@ -193,7 +199,7 @@ Server.default.boot;
 		onsetIndicator  = StaticText(window,20@20).background_(Color.grey);
 		continuantIndicator  = StaticText(window,20@20).background_(Color.grey);
 		terminationIndicator  = StaticText(window,20@20).background_(Color.grey);
-
+		rawFunctionIndicator  = StaticText(window).stringColor_(Color.white).string_("No Raw Function registered");
 
 		functionList = ListView()
 		//.items_([ "SinOsc", "Saw", "LFSaw", "WhiteNoise", "PinkNoise" ]);
@@ -204,6 +210,7 @@ Server.default.boot;
 		window.layout = VLayout(
 				StaticText().string_("Registered Functions:").stringColor_(Color.white),
 				functionList,
+				rawFunctionIndicator,
 				HLayout(oscIndicator, onsetIndicator, continuantIndicator, terminationIndicator),
 				Button()
 				.states_([
@@ -224,8 +231,8 @@ Server.default.boot;
 	init:{
 		|self|
 		self.dict = Dictionary.new;
-		self.createGui;
-		self.showGui;
+		self.createUI;
+		self.showUI;
 		self.initListener;
 		self; // needed for method chaining
 	}

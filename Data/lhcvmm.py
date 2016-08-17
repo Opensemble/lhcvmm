@@ -1,8 +1,11 @@
+#!/usr/local/bin/python
+
 import time
 import sys
 from OSC import  OSCClient, OSCClientError, OSCBundle, OSCMessage
 import argparse
 import json
+import os
 
 data_file = None
 tree = None
@@ -11,11 +14,10 @@ parser = argparse.ArgumentParser(description='Process ATLAS data and streams thr
 parser.add_argument('-d','--datafile', help='Load events from csv.', default='data_files/data_Egamma_A.root')
 parser.add_argument('--host', help='OSC host.', default='127.0.0.1')
 parser.add_argument('--port', help='OSC port.', default=57120, type=int)
-parser.add_argument('-m','--messagename', help='OSC message name.', default='sound_unit')
 parser.add_argument('-r','--rate', help='Rate at which events will be read.', default=1.0, type=float)
 parser.add_argument('-l','--loop', help='Loop events sequence.', default=True, type=bool)
-#parser.add_argument('--offset', help='Offset of read data.', default=0, type=int)
-parser.add_argument('--limit', help='Limit the amount of events to read.', type=int)
+parser.add_argument('-o','--offset', help='Offset of read data.', default=0, type=int)
+parser.add_argument('-c','--count', help='Num of events to read.', type=int)
 
 args = parser.parse_args()
 
@@ -23,48 +25,13 @@ args = parser.parse_args()
 def printc(t, c='o'):
     print '\033[9' + {'o': '2m','w': '3m','e': '1m'}[c] + t + '\033[0m'
 
-def mapValue(value, leftMin, leftMax, rightMin, rightMax):
-    if value < leftMin:
-        return rightMin
-    if value > leftMax:
-        return rightMax
-    # Figure out how 'wide' each range is
-    leftSpan = leftMax - leftMin
-    rightSpan = rightMax - rightMin
-    # Convert the left range into a 0-1 range (float)
-    valueScaled = float(value - leftMin) / float(leftSpan)
-    # Convert the 0-1 range into a value in the right range.
-    return rightMin + (valueScaled * rightSpan)
-
-def send_event_old():
-    spectral_densities = ['filled', 'packed', 'opaque','translucent','transparent','empty']
-
-    data = ['']*17*3
-    #onset, continuant, termination
-    data[0] = 'attack'
-
-    #elegimos el de mayor momento transversal
-    i = [l for l in tree.lep_pt].index(max(tree.lep_pt))
-
-    #duration, based on momento transversal .. lep_pt
-    data[1] = mapValue(tree.lep_pt[i],0,100000,0.1,10)
-    #Spectrum types: electrones : inarmonico  ,  muones:  granular
-    data[10] = 'inharmonic' if tree.lep_type[i] == 11 else 'granular'
-    #Spectrum occupation: angulo
-    data[11] = 'center'
-    #Spectrum density: lepton energy .. lep_E
-    data[16] = spectral_densities[int(mapValue(tree.lep_E[i],0,100000,0,5))]
-
-    bundle = OSCBundle()
-    msg = OSCMessage("/"+args.messagename)
-    for d in data:
-        msg.append(d)
-    bundle.append(msg)
-    client.send(bundle)
-
-def send_event():
+def send_event( event_index, events_count,events_rate, elapsed_time):
 
     data = {}
+    data['event_index'] = event_index
+    data['events_count'] = events_count
+    data['events_rate'] = events_rate
+    data['elapsed_time'] = elapsed_time
 
     data['pvxp_n'] = tree.pvxp_n
     data['mu'] = tree.mu
@@ -109,48 +76,51 @@ try:
     client.connect((args.host, args.port))   # connect to SuperCollider
 
     # open test data file
-    data_file = TFile.Open(args.datafile, "read")
+    dir = os.path.dirname(__file__)
+    filename = os.path.join(dir, args.datafile)
+    data_file = TFile.Open(filename, "read")
     #gathers mini ttree
     tree = data_file.Get("mini")
 
     printc( "TTree 'mini' loaded from %s containing %s entries." % (args.datafile, tree.GetEntriesFast()),'o')
-    print "Limit events: %s." % args.limit
+    print "Events count: %s." % args.count
     print "Loop enabled: %s." % args.loop
+    print "Offset : %s." % args.offset
     print "Start Sending events every %s seconds." % args.rate
     print "Each * printed represents an event sent."
     print "Press Ctrl + C to terminate."
 
     count = tree.GetEntriesFast()
-    if args.limit and args.limit < count:
+    if args.count:
         count = args.limit
-    starttime=time.time()
+    start_time=time.time()
 
     while 1:
-        for i in range(0, count):
-            if(i%10==0):
-                # restart * printing every 10 events
-                sys.stdout.write('\r----------\r')
-
+        for i in range(args.offset, args.offset + count):
             # copy next entry into memory
             tree.GetEntry(i)
-            send_event()
+            elapsed_time = time.time()-start_time
+            send_event(i,count,args.rate,elapsed_time)
 
-            time_to_sleep = args.rate - ((time.time() - starttime) % args.rate)
-            sys.stdout.write('*')
+            #visual feedback
+            sys.stdout.write('\r' + '-' * (i%10) + '\033[92m' + '*' + '\033[0m' + '-' * (9 - i%10) + '{0:>10}'.format(i) )
             sys.stdout.flush()
+
+            #accurate sleeping
+            time_to_sleep = args.rate - ((time.time() - start_time) % args.rate)
             time.sleep(time_to_sleep)
 
         if not args.loop:
             break
 
 except OSCClientError:
-    printc( "\OSCClientError: Connection refused to %s on port %s." % args.host, args.port, 'e')
+    printc("\nOSCClientError: Connection refused to {0} on port {1}.".format(args.host, args.port), 'e')
 except KeyboardInterrupt:
     if data_file is not None:
         data_file.Close()
     print "\nProgram terminated."
 except ReferenceError:
-    printc( "Error: %s file not found. Data will be simulated." % args.datafile, 'e')
+    printc( "\nError: {0} file not found.".format(args.datafile), 'e')
     printc( "Download it from https://tripiana.web.cern.ch/tripiana/openensemble/ATLAS_data/data_Egamma_A.root\n", 'w')
 except AttributeError:
     printc( "Error: Expected TTree 'mini' in %s file.\n" % args.datafile, 'e')
@@ -158,7 +128,9 @@ except ImportError:
     printc( "Error: Unable to load ROOT.\n", 'e')
     printc( "Checkout https://github.com/Opensemble/lhcvmm/tree/master/Data#installing-root for further instructions.\n",'e')
 
-
+except:
+    print "Unexpected error:", sys.exc_info()[0]
+    raise
 
 
 '''
