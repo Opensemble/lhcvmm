@@ -101,11 +101,12 @@ try:
         for i in range(args.offset, args.offset + count):
             # copy next entry into memory
             tree.GetEntry(i)
-            elapsed_time = time.time()-start_time
-            send_event(i,count,args.rate,elapsed_time)
 
-            #calculate rate
+            #calculate rate and elapsed time
             rate = args.rate * ( 1 +  args.randomness * (0.5 - random.random()) * 2 )
+            elapsed_time = time.time()-start_time
+
+            send_event(i,count,rate,elapsed_time)
 
             #visual feedback
             sys.stdout.write('\r' + '-' * (i%10) + '\033[92m' + '*' + '\033[0m' + '-' * (9 - i%10))
