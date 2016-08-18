@@ -6,6 +6,7 @@ from OSC import  OSCClient, OSCClientError, OSCBundle, OSCMessage
 import argparse
 import json
 import os
+import random
 
 data_file = None
 tree = None
@@ -18,6 +19,7 @@ parser.add_argument('-r','--rate', help='Rate at which events will be read.', de
 parser.add_argument('-l','--loop', help='Loop events sequence.', default=True, type=bool)
 parser.add_argument('-o','--offset', help='Offset of read data.', default=0, type=int)
 parser.add_argument('-c','--count', help='Num of events to read.', type=int)
+parser.add_argument('--randomness', help='Randomizes the rate at which events are read.', default=0, type=float)
 
 args = parser.parse_args()
 
@@ -86,7 +88,7 @@ try:
     print "Events count: %s." % args.count
     print "Loop enabled: %s." % args.loop
     print "Offset : %s." % args.offset
-    print "Start Sending events every %s seconds." % args.rate
+    print "Sending events every %s seconds with %s of randomness." % (args.rate, args.randomness)
     print "Each * printed represents an event sent."
     print "Press Ctrl + C to terminate."
 
@@ -102,12 +104,16 @@ try:
             elapsed_time = time.time()-start_time
             send_event(i,count,args.rate,elapsed_time)
 
+            #calculate rate
+            rate = args.rate * ( 1 +  args.randomness * (0.5 - random.random()) * 2 )
+
             #visual feedback
-            sys.stdout.write('\r' + '-' * (i%10) + '\033[92m' + '*' + '\033[0m' + '-' * (9 - i%10) + '{0:>10}'.format(i) )
+            sys.stdout.write('\r' + '-' * (i%10) + '\033[92m' + '*' + '\033[0m' + '-' * (9 - i%10))
+            sys.stdout.write('     index:{0:>7}'.format(i) + '      rate: {0:>6.4f}'.format(rate) )
             sys.stdout.flush()
 
-            #accurate sleeping
-            time_to_sleep = args.rate - ((time.time() - start_time) % args.rate)
+            #accurate sleeping, but with randomness
+            time_to_sleep = rate - ((time.time() - start_time) % rate)
             time.sleep(time_to_sleep)
 
         if not args.loop:
