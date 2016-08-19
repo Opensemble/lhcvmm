@@ -12,89 +12,38 @@ Server.default.boot;
 
 ~opensemble = {
 	var window;
-	var oscIndicator, onsetIndicator, continuantIndicator,terminationIndicator;
-	var functionList, rawFunctionIndicator;
+	var oscIndicator;
+	var rawFunctionIndicator;
 	var rawFunc;
-
-	//-----------------------------------
-	// SOUND UNIT PHASE
-	//-----------------------------------
-	var sound_unit_phase = (
-		isOnset:	{
-			|self|
-			['departure','emergence','anacrusis','attack','upbeat','downbeat'].includes(self.function)
-		},
-		isContinuant:	{
-			|self|
-			['passage','transition','prolongation','maintenance','statement'].includes(self.function)
-		},
-		isTermination:	{
-			|self|
-			['arrival','disappearence','closure','release','resolution','plane'].includes(self.function)
-		},
-		// fills object with incoming OSC data
-		fill:	{
-			|self, data|
-			self.function = data[0];
-			self.duration = data[1];
-			self.unidirectional_motion = data[2];
-			self.reciprocal_motion = data[3];
-			self.cyclic_motion = data[4];
-			self.characteristic_motion = data[5];
-			self.texture_motion_relationship = data[6];
-			self.texture_motion_continuity = data[7];
-			self.texture_motion_periodic = data[8];
-			self.texture_motion_acceleration = data[9];
-			self.spectrum_type = data[10];
-			self.spectrum_occupation = data[11];
-			self.spectrum_plenitude = data[12];
-			self.spectrum_concentration = data[13];
-			self.spectrum_interstices = data[14];
-			self.spectrum_crossover = data[15];
-			self.spectrum_density = data[16];
-		}
-
-	);
 
 	(
 	initListener:  {
 		|self|
-		self.osc = OSCdef(\sound_unit, { |msg, time, addr, recvPort|
-			var onset, continuant, termination;
-			onset = msg[1..17] ;
-			continuant = msg[18..34] ;
-			termination = msg[35..51] ;
-			fork{
-				{oscIndicator.background_(Color.green);}.defer;
-				0.2.wait;
-				{oscIndicator.background_(Color.grey);}.defer;
-			};
+		self.osc = OSCdef(\raw_data, { |msg, time, addr, recvPort|
+				var data = msg[1].asString.parseYAML; //parsed data
+				var d = Dictionary.new;  //new dictionary
 
-			fork{
-				if(not(onset[0].asString.isEmpty),{
-					self.playEvent(onset);
-					{onsetIndicator.background_(Color.rand);}.defer;
-					onset[1].wait;
-					{onsetIndicator.background_(Color.grey);}.defer;
+				// iterate through data to do proper casting
+				data.keysValuesDo({|key, val|
+					if(val.isKindOf(Array),{
+						var items = Array.new;
+						val.do({ arg item;
+							// we only have one nested level
+							var d2 = Dictionary.new;
+							item.keysValuesDo({|k2,v2|
+								//cast keys as symbols and values as floats
+								d2.add(k2.asSymbol -> v2.asFloat);
+							});
+							items.add(d2);
+						});
+						d.add(key.asSymbol -> items);
+					},{
+						//cast keys as symbols and values as floats
+						d.add(key.asSymbol -> val.asFloat);
+					});
 				});
-				if(not(continuant[0].asString.isEmpty),{
-					self.playEvent(continuant);
-					{continuantIndicator.background_(Color.rand);}.defer;
-					continuant[1].wait;
-					{continuantIndicator.background_(Color.grey);}.defer;
-				});
-				if(not(termination[0].asString.isEmpty),{
-					self.playEvent(termination);
-					{terminationIndicator.background_(Color.rand);}.defer;
-					termination[1].wait;
-					{terminationIndicator.background_(Color.grey);}.defer;
-				});
-			};
-		}, '/sound_unit').enable;
 
-		self.oscRaw = OSCdef(\raw_data, { |msg, time, addr, recvPort|
-				var data = msg[1].asString.parseYAML;
-				rawFunc.value(data);
+				rawFunc.value(d);
 				fork{
 					{oscIndicator.background_(Color.green);}.defer;
 					0.2.wait;
@@ -106,73 +55,24 @@ Server.default.boot;
 	startListener:  {
 		|self|
 		self.osc.enable;
-		self.oscRaw.enable;
 		"Opensemble is listening OSC messages.".postln;
 	},
 	stopListener:  {
 		|self|
 		self.osc.disable;
-		self.oscRaw.disable;
 		"Opensemble stopped listening OSC messages.".postln;
-	},
-	register:  {
-		|self, key, keywords, func|
-		var sup = ();
-		sup.parent = sound_unit_phase;
-		sup.playEvent = func;
-		//todo: validate words
-		self.dict.add(key -> [keywords,sup]);
-		functionList.items = self.dict.keys.collect({|k| k.asString;}).asArray;
-		format("Function % registered\n", key);
-
-	},
-	unregister:  {
-		|self, key|
-		self.dict.removeAt(key);
-		functionList.items = self.dict.keys.collect({|k| k.asString;}).asArray;
-		format("Function % unregistered\n", key);
 	},
 	registerRaw:  {
 		|self, key, func|
 		rawFunc = func;
-		rawFunctionIndicator.string_("Registered Raw Function: " + key);
+		rawFunctionIndicator.string_("Registered: " + key);
 		format("Raw function % registered\n", key);
 	},
 	unregisterRaw:  {
 		|self, key|
 		rawFunc = nil;
-		rawFunctionIndicator.string_("No Raw Function registered");
+		rawFunctionIndicator.string_("No Function reg.");
 		format("Raw function % unregistered\n", key);
-	},
-	pick:  {
-		|self, event|
-		var wordsCount,best, sof=nil;
-
-		if(self.dict.isEmpty,{"No functions registered!".postln;},{
-			// pick best matching descriptor
-			// wich will be by now the one
-			// that matches more descriptive words
-			wordsCount = self.dict.collect({ | item, key |
-				item[0].count({ arg word; event.includes(word) });
-			});
-
-			//cant find a better way...
-			best = wordsCount.findKeyForValue(wordsCount.maxItem);
-			if(wordsCount[best]>0,{sof = self.dict[best][1];});
-			if(sof.isNil,{"No function matches ".post;event.postln;});
-		});
-
-		sof; //can return nil
-	},
-	playEvent:  {
-		|self, event|
-		var sof = self.pick(event);
-		if(sof.notNil,{
-			// fill raw osc data
-			sof.fill(event);
-			// now play the event
-			sof.playEvent;
-		});
 	},
 	showUI:{
 		|self|
@@ -189,29 +89,17 @@ Server.default.boot;
 		Window.allWindows.do({|ww| if(ww.name=="Opensemble",ww.close);});
 		r = Window.availableBounds;
 		// set up a window on bottom right corner, right above server status
-		window = Window(name:"Opensemble", bounds:Rect(r.width-400-50, r.top+80, 400, 400));
+		window = Window(name:"Opensemble", bounds:Rect(r.width-400-50, r.top+80, 400, 100));
 		window.alwaysOnTop = true;
 
 		window.background = Color.black.alpha = 0.6;
 
 
-		oscIndicator  = StaticText(window,20@20).background_(Color.grey);
-		onsetIndicator  = StaticText(window,20@20).background_(Color.grey);
-		continuantIndicator  = StaticText(window,20@20).background_(Color.grey);
-		terminationIndicator  = StaticText(window,20@20).background_(Color.grey);
-		rawFunctionIndicator  = StaticText(window).stringColor_(Color.white).string_("No Raw Function registered");
-
-		functionList = ListView()
-		//.items_([ "SinOsc", "Saw", "LFSaw", "WhiteNoise", "PinkNoise" ]);
-		//.selection = 4;
-			.selectionMode_(\none);
-		//.colors = [Color.red, Color.blue];
+		oscIndicator  = StaticText(window).background_(Color.grey);
+		rawFunctionIndicator  = StaticText(window).stringColor_(Color.white).string_("No Function reg.");
 
 		window.layout = VLayout(
-				StaticText().string_("Registered Functions:").stringColor_(Color.white),
-				functionList,
-				rawFunctionIndicator,
-				HLayout(oscIndicator, onsetIndicator, continuantIndicator, terminationIndicator),
+				HLayout(oscIndicator, rawFunctionIndicator),
 				Button()
 				.states_([
 					["Listening", Color.white, Color.green.alpha = 0.6;],
@@ -223,14 +111,9 @@ Server.default.boot;
 
 		);
 
-
-
-
-
 	},
 	init:{
 		|self|
-		self.dict = Dictionary.new;
 		self.createUI;
 		self.showUI;
 		self.initListener;

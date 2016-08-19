@@ -32,13 +32,13 @@ SynthDef(\bass,{arg out=0, freq=120,amp=1, noise=0, pan=0;
 ~opensemble.registerRaw(\raw_test,
 	{ arg dict;
 
-	if((dict.at("leps").size > 0),{
-		dict.at("leps").do({ arg lep;
 
+	if((dict.at(\leps).size > 0),{
+		dict.at(\leps).do({ arg lep;
 			Pmono(\hat,
 				\dur,Pxrand((1/8!8)++(1/16!4),5),
 				\p,{rrand(-1,1)},
-				\a,lep.at("lep_E").asFloat.linlin(10000, 300000, 0.05, 0.6)
+				\a,lep.at(\lep_E).linlin(10000, 300000, 0.05, 0.6)
 			).play;
 
 
@@ -59,21 +59,16 @@ SynthDef(\bass,{arg out=0, freq=120,amp=1, noise=0, pan=0;
 	});
 
 
-	if((dict.at("jets").size > 0),{
-		dict.at("jets").do({ arg jet;
+	if((dict.at(\jets).size > 0),{
+		dict.at(\jets).do({ arg jet;
 			Pmono(\bass,
 				\dur,Pxrand((1/4!8)++(1/8!4),4),
 				\freq, 150,
 				\noise, {[-1,-0.5,0,0.25,0.5,0.75,1].choose},
 				\pan,{rrand(-1,1)},
-				\amp,jet.at("jet_E").asFloat.linlin(50000, 300000, 0.1, 1)
+				\amp,jet.at(\jet_E).linlin(50000, 300000, 0.1, 1)
 
 			).play;
-			//jet.keys.postln;
-			//jet.at("jet_phi").postln;
-			//jet.at("jet_eta").postln;
-			//jet.at("jet_pt").postln;
-			//jet.at("jet_m").postln;
 		});
 
 	});
@@ -86,6 +81,9 @@ SynthDef(\bass,{arg out=0, freq=120,amp=1, noise=0, pan=0;
 // uncomment to unregister this function
 //~opensemble.unregisterRaw(\raw_test);
 
+
+// annoyed by that Opensemble window?? uncomment the following line
+//~opensemble.hideUI;
 
 
 )
