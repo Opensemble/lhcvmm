@@ -6,10 +6,8 @@
 #include "ofxGui.h"
 #include "ofxOsc.h"
 #include "EventStream.h"
+#include "OscMultiClient.h"
 
-#define HOST "localhost"
-#define PORT 57120
-#define NUM_MSG_STRINGS 20
 
 class ofApp : public ofBaseApp{
 	private:
@@ -17,18 +15,10 @@ class ofApp : public ofBaseApp{
 
 		ofxPanel gui;
 		EventStream eventStreams[eventStreamsCount];
-		ofxOscReceiver receiver;
-
-		int current_msg_string;
-		string msg_strings[NUM_MSG_STRINGS];
-		float timers[NUM_MSG_STRINGS];
+        OscMultiClient oscMultiClient;
 
 		// data files
 		vector<Datafile> dataFiles;
-
-		void processIncomingMessages();
-		static void sendMessage(string);
-
 
 	public:
 

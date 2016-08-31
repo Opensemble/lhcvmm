@@ -9,6 +9,7 @@
 #include "ofMath.h"
 #include <TFile.h>
 #include <TTree.h>
+#include "OscMultiClient.h"
 
 
 struct Datafile {
@@ -47,7 +48,7 @@ class EventStream : public ofThread {
   int events_count;
 
 	// data file browser
-	vector<Datafile> dataFiles;
+	vector<Datafile> *dataFiles;
 	ofParameter<int> dataFileIndex;
   ofParameter<string> fileToAdd;
 
@@ -56,22 +57,26 @@ class EventStream : public ofThread {
   ofParameter<bool> loop;
   ofParameter<int> offset;
   ofParameter<int> count;
-    int channel;
   void dataFileIndexChanged(int &);
   void enabledChanged(bool &);
   void loadTTree();
 
-  void (*sendMessageCallback)(string);
+    OscMultiClient *oscMultiClient;
 
 public:
   EventStream();
 	~EventStream();
   void threadedFunction();
 
-  void setup(vector<Datafile>, void (*callback)(string), int channel);
+  void setup(vector<Datafile>*,  OscMultiClient *oscMultiClient, int channel);
   void update();
   ofParameterGroup parameters;
   ofParameter<bool> enabled;
+    float currentEventTime;
+    float nextEventTime;
+    int currentEventIndex;
+    int channel;
+
 
 };
 #endif /* defined(__EventStream__) */

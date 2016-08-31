@@ -1,50 +1,54 @@
 #include "ofApp.h"
 
-static ofxOscSender sender;
-
-
 //--------------------------------------------------------------
 void ofApp::setup(){
-  ofBackground(0,0,0);
 
-  string path = "data_files/";
-  ofDirectory dir(path);
-  //only show png files
-  dir.allowExt("root");
-  //populate the directory object
-  dir.listDir();
+    oscMultiClient.setup();
+    
+    ofBackground(0,0,0);
+    // Fixed framerate, enough for this app
+    ofSetFrameRate(20);
+    
+    string path = "data_files/";
+    ofDirectory dir(path);
+    //only show png files
+    dir.allowExt("root");
+    //populate the directory object
+    dir.listDir();
 
-  //go through and print out all the paths
-  for(int i = 0; i < dir.size(); i++){
-    dataFiles.push_back({dir.getName(i),dir.getAbsolutePath() + "/" + dir.getName(i)});
-  }
+    //break if no datafiles
+    if(dir.size()==0)
+        return;
+    
+    
+    //ofLog(OF_LOG_NOTICE) << dir.size();
 
-
-  //receiver.setup(PORT);
-  sender.setup(HOST, PORT);
-
-
-  // Fixed framerate
-  ofSetFrameRate(10);
-
-  gui.setup();
-
-  //adds gui
-  for(int i=0;i< eventStreamsCount;i++){
-    eventStreams[i].setup(dataFiles, &ofApp::sendMessage, i+1);
-    gui.add(eventStreams[i].parameters);
-  }
-
-  for(int i=0;i< gui.getControlNames().size();i++){
-
-    ofxGuiGroup* group = dynamic_cast<ofxGuiGroup*>(gui.getControl(i));
-    if (group){
-      bool enabled = group->getToggle("enabled");
-      //ofLog(OF_LOG_NOTICE) << enabled;
-      group->minimize();
+    //go through and print out all the paths
+    for(int i = 0; i < dir.size(); i++){
+        dataFiles.push_back({dir.getName(i),dir.getAbsolutePath() + "/" + dir.getName(i)});
     }
 
-  }
+
+
+
+    gui.setup();
+
+    //adds gui
+    for(int i=0;i< eventStreamsCount;i++){
+        eventStreams[i].setup(&dataFiles, &oscMultiClient, i+1);
+        gui.add(eventStreams[i].parameters);
+    }
+
+    for(int i=0;i< gui.getControlNames().size();i++){
+
+        ofxGuiGroup* group = dynamic_cast<ofxGuiGroup*>(gui.getControl(i));
+        if (group){
+            bool enabled = group->getToggle("enabled");
+            //ofLog(OF_LOG_NOTICE) << enabled;
+            group->minimize();
+        }
+
+    }
 
 
 
@@ -52,80 +56,67 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    oscMultiClient.update();
 }
 
-
-
-
-//--------------------------------------------------------------
-void ofApp::processIncomingMessages(){
-
-	// hide old messages
-	for(int i = 0; i < NUM_MSG_STRINGS; i++){
-		if(timers[i] < ofGetElapsedTimef()){
-			msg_strings[i] = "";
-		}
-	}
-
-	// check for waiting messages
-	while(receiver.hasWaitingMessages()){
-		// get the next message
-		ofxOscMessage m;
-		receiver.getNextMessage(m);
-
-		// check for mouse moved message
-		if(m.getAddress() == "/mouse/position"){
-			// both the arguments are int32's
-			mouseX = m.getArgAsInt32(0);
-			mouseY = m.getArgAsInt32(1);
-		}
-		else{
-			// unrecognized message: display on the bottom of the screen
-			string msg_string;
-			msg_string = m.getAddress();
-			msg_string += ": ";
-			for(int i = 0; i < m.getNumArgs(); i++){
-				// get the argument type
-				msg_string += m.getArgTypeName(i);
-				msg_string += ":";
-				// display the argument - make sure we get the right type
-				if(m.getArgType(i) == OFXOSC_TYPE_INT32){
-					msg_string += ofToString(m.getArgAsInt32(i));
-				}
-				else if(m.getArgType(i) == OFXOSC_TYPE_FLOAT){
-					msg_string += ofToString(m.getArgAsFloat(i));
-				}
-				else if(m.getArgType(i) == OFXOSC_TYPE_STRING){
-					msg_string += m.getArgAsString(i);
-				}
-				else{
-					msg_string += "unknown";
-				}
-			}
-			// add to the list of strings to display
-			msg_strings[current_msg_string] = msg_string;
-			timers[current_msg_string] = ofGetElapsedTimef() + 5.0f;
-			current_msg_string = (current_msg_string + 1) % NUM_MSG_STRINGS;
-			// clear the next line
-			msg_strings[current_msg_string] = "";
-		}
-
-	}
-}
-
-void ofApp::sendMessage(string jsonMessage){
-
-  ofxOscMessage m;
-  m.setAddress("/raw_data");
-  m.addStringArg(jsonMessage);
-  sender.sendMessage(m, false);
-}
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-  //ofDrawBitmapString("helllo you sexy bitch " + std::to_string(eventStreamsCount), 300, 300);
-  gui.draw();
+    
+    //warns if no dataset were found
+    if(dataFiles.size()==0){
+        string msg = "No dataset found on ./data_files folder.\n\n";
+        msg +="Download it from:\n\n";
+        msg +="https://tripiana.web.cern.ch/tripiana/openensemble/ATLAS_data/data_Egamma_A.root\n\n";
+        msg +="And restart program.\n";
+        ofDrawBitmapString(msg, 100, 100);
+        
+        //dont render anything else
+        return;
+    }
+  
+    //draws gui
+    gui.draw();
+    
+    //draws connections visual feedback
+    if(oscMultiClient.clients.size()==0){
+        
+        ofSetColor(200,0,0);
+        string msg = "No clients connected.\n\n";
+        msg +="Send a \"/subscribe\" OSC message to ";;
+        msg +=ofToString(OscMultiClient::RECEIVE_PORT) + " port.\n\n";
+        msg +="You will be receiving then \"/raw_data\" OSC messages.\n";
+        ofDrawBitmapString(msg, 440, 50);
+    }else{
+        ofSetColor(0,200,0);
+        string msg = "Clients connected:\n\n";
+        for (int i= 0;i<oscMultiClient.clients.size();i++){
+            msg += oscMultiClient.clients[i].hostname;
+            msg += " on port "  + ofToString(oscMultiClient.clients[i].port) + "\n";
+        }
+        ofDrawBitmapString(msg, 440, 50);
+    }
+    
+    //draws streams visual feedback
+    for(int i=0;i< eventStreamsCount;i++){
+        
+        ofSetColor(200);
+        ofDrawBitmapString("Stream #"+ofToString(eventStreams[i].channel), 250, 15+20 +i*30);
+        if(eventStreams[i].enabled){
+            ofDrawBitmapString(ofToString(eventStreams[i].currentEventIndex), 380, 15+20 +i*30);
+         
+            float color = ofMap(ofGetElapsedTimef(), eventStreams[i].currentEventTime, eventStreams[i].nextEventTime, 20.0f, 220.0f);
+
+            ofSetColor(20, color, 20);
+
+        }else{
+            ofSetColor(150,0,0);
+        }
+        
+        ofDrawRectangle(340, 20 +i*30, 20, 20);
+        
+        
+    }
 
 }
 

@@ -1,15 +1,15 @@
 
 #include "EventStream.h"
 
-void EventStream::setup(vector<Datafile> dataFiles, void (*callback)(string), int channel){
+void EventStream::setup(vector<Datafile> *dataFiles, OscMultiClient *oscMultiClient, int channel){
     this->channel = channel;
-  sendMessageCallback = callback;
-  this->dataFiles = dataFiles;
-  parameters.setName("Event stream #" + std::to_string(channel));
+    this->oscMultiClient = oscMultiClient;
+    this->dataFiles = dataFiles;
+    parameters.setName("Event stream #" + std::to_string(channel));
   
     
-  parameters.add(dataFileIndex.set("select file",0,0,dataFiles.size()-1));
-  parameters.add(fileToAdd.set("file", dataFiles[dataFileIndex].name));
+  parameters.add(dataFileIndex.set("select file",0,0,(*dataFiles).size()-1));
+  parameters.add(fileToAdd.set("file", (*dataFiles)[dataFileIndex].name));
 
   parameters.add(enabled.set("enabled", false));
   parameters.add(rate.set("rate", 1.0f, 0.1f, 5.0f));
@@ -27,7 +27,7 @@ void EventStream::update(){
 }
 
 void EventStream::dataFileIndexChanged(int & val){
-  fileToAdd = dataFiles[dataFileIndex].name;
+  fileToAdd = (*dataFiles)[dataFileIndex].name;
   enabled = false; //when file is changed, it must be manually re-enabled
 }
 
@@ -49,7 +49,7 @@ void EventStream::enabledChanged(bool & val){
 }
 
 void EventStream::loadTTree(){
-  data_file = TFile::Open(dataFiles[dataFileIndex].path.c_str());
+  data_file = TFile::Open((*dataFiles)[dataFileIndex].path.c_str());
   tree = (TTree*)data_file->Get("mini");
   events_count = tree->GetEntriesFast();
 
@@ -79,8 +79,6 @@ void EventStream::loadTTree(){
 
 
 EventStream::EventStream(){
-	//startThread();
-  //  lastFrameMarker=0;
 }
 
 EventStream::~EventStream(){
@@ -93,25 +91,27 @@ void EventStream::threadedFunction() {
     float startTime = ofGetElapsedTimef();
   while(1) {
 
-    for(int i = offset;i< (offset + count); i++){
+    for(currentEventIndex = offset;currentEventIndex< (offset + count); currentEventIndex++){
       if(!isThreadRunning())
         return;
 
 
 
       // copy next entry into memory
-      tree->GetEntry(i);
+      tree->GetEntry(currentEventIndex);
 
       //calculate rate and elapsed time
       float r = rate * ( 1.0f +  randomness * ofRandomf() );
+        currentEventTime= ofGetElapsedTimef();
+        nextEventTime = currentEventTime+r;
 
       stringstream json;
       json << "{";
       json << "\"channel\":" << channel << ",";
-      json << "\"event_index\":" << i << ",";
+      json << "\"event_index\":" << currentEventIndex << ",";
       json << "\"events_count\":" << count << ",";
       json << "\"events_rate\":" << rate << ",";
-      json << "\"elapsed_time\":" << (ofGetElapsedTimef()-startTime) << ",";
+      json << "\"elapsed_time\":" << (currentEventTime-startTime) << ",";
 
       json << "\"pvxp_n\":" << data.pvxp_n << ",";
       json << "\"mu\":" << data.mu << ",";
@@ -150,8 +150,8 @@ void EventStream::threadedFunction() {
       json << "}";
 
 
-      (*sendMessageCallback)(json.str());
-
+      oscMultiClient->sendMessage(json.str());
+        
       //send_event(i,count,rate,elapsed_time)
       //ofLog(OF_LOG_NOTICE) << r;
       sleep(r*1000);
