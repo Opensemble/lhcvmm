@@ -21,6 +21,8 @@ public:
     };
     void setLastFrameMarker(int frameNum){lastFrameMarker=frameNum;}
     int getlastFrameMarker(){return lastFrameMarker;}
+    
+    int frameNumOffset;
 
 private:
 	ofPixels pixels;

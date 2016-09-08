@@ -40,7 +40,7 @@ void ImageSaverThread::threadedFunction(){
 	while(channel.receive(p)){
 		//pixels.setFromPixels(p,1024,768,OF_PIXELS_RGB);
         pixels.setFromPixels(p, width, heigth, OF_PIXELS_RGB);
-		ofSaveImage(pixels,"pngSequences/"+ofToString(ofGetFrameNum()-lastFrameMarker)+".png");
+		ofSaveImage(pixels,"pngSequences/"+ofToString( ofGetFrameNum()-lastFrameMarker+frameNumOffset )+".png");
 		channelReady.send(true);
 	}
 }

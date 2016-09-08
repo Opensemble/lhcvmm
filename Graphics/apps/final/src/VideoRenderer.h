@@ -54,6 +54,9 @@ class VideoRenderer{
     
         int getLastFrameMarker(){return saverThread.getlastFrameMarker();}
     
+    
+        int frameNumOffset; ///tweak for fixing rendering bug
+    
     private:
     
         bool            bIsRecording;
@@ -76,6 +79,6 @@ class VideoRenderer{
         string fileName;
         string fileExt;
         
-
+    
 
 };

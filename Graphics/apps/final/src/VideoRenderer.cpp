@@ -99,6 +99,8 @@ void VideoRenderer::startRecording(){
     bIsRecording = true;
     
     saverThread.setLastFrameMarker(ofGetFrameNum());
+    saverThread.frameNumOffset = frameNumOffset;
+    
     
     if(currentRecMode == MOV_FILE){
         if(!vidRecorder.isInitialized()) {

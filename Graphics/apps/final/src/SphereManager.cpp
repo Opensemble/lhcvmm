@@ -95,9 +95,9 @@ void SphereManager::setupGui(){
     //1024
     ///gui.add(zPosGui.setup( "Z pos", -800.0, -2000.0, 2000.0));
     //2048
-    ///gui.add(zPosGui.setup( "Z pos", 100.0, -2000.0, 2000.0));
+    ///gui.add(zPosGui.setup( "Z pos", 0.0, -2000.0, 2000.0));
     //4096
-    gui.add(zPosGui.setup( "Z pos", 1600.0, -2000.0, 2000.0));
+    gui.add(zPosGui.setup( "Z pos", 1500.0, -2000.0, 2000.0));
 }
 //----------------------------------
 void SphereManager::drawGui(){

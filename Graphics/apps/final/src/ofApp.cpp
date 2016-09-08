@@ -1,9 +1,14 @@
 #include "ofApp.h"
 
-//FIXME: esta dado vuelta con el post-processing? no me importa mucho...
-//TODO: make all animations frameNum dependants
+/*
+ Para renderizar:
+ 1- SphereManager setupGui() -> zPos
+ 2- setup()->renderer.setup()
+ 3- update()->receiveOsc()
+ */
 
 #pragma mark - Core Funcs
+int _startingFrameNum = 2359;
 //--------------------------------------------------------------
 void ofApp::setup(){
     
@@ -25,7 +30,7 @@ void ofApp::setup(){
     //renderer setup-------------------
     
     framesMaxNumber = totalFramesNum;
-    frameCounter = -1;
+    frameCounter = _startingFrameNum;
  
     isAnimating = false;
     ofLogVerbose()<<"ANIMATION INFO ---- ";
@@ -40,7 +45,8 @@ void ofApp::setup(){
     //renderer.setup(FRAME_RATE, PNG_SEQUENCE, r2048);///init resolution and mode
     renderer.setup(FRAME_RATE, PNG_SEQUENCE, r4096);///init resolution and mode
     
-   
+    renderer.frameNumOffset = _startingFrameNum;
+    
     verdana.load("fonts/verdana.ttf", renderer.getFboWidth()*0.04, true, true);
     
     //----
@@ -135,8 +141,8 @@ void ofApp::update(){
     //!!! Osc
     if(gReceiveOSC){
         //receiveOsc();
-        //updateOscFromDataFile(frameCounter);
-        updateOscFromDataFile(gFramePlayer);
+        updateOscFromDataFile(frameCounter);
+        //updateOscFromDataFile(gFramePlayer);
     }else{
         
     }
@@ -267,12 +273,12 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     
     switch (key){
-        case 'a':
-            pair.addPartGroup(1);
-            break;
-        case 'k':
-            pair.addPartGroup(2);
-            break;
+//        case 'a':
+//            pair.addPartGroup(1);
+//            break;
+//        case 'k':
+//            pair.addPartGroup(2);
+//            break;
             
         
         
@@ -632,9 +638,7 @@ void ofApp::receiveOsc(){
             oscInstValue1 = m.getArgAsFloat(0);//power
             oscInstValue2 = m.getArgAsFloat(6);//specComp
         }
-//        else if(m.getAddress()=="/TL-default"){
-//            //oscTLtrack       = m.getArgAsFloat(0);
-//        }
+
         
     }
     
@@ -675,7 +679,7 @@ void ofApp::setupGui(){
     guiMain.add(gDoDrawSphere.setup("Draw Sphere", true));
     guiMain.add(gDoDrawParts.setup("Draw Parts", true));
     guiMain.add(gDoDrawDomeLimits.setup("Draw Dome Lim", false));
-    guiMain.add(gLightPos.setup("LighPos", ofVec3f(0.5), ofVec3f(0.0), ofVec3f(1.0)));
+    guiMain.add(gLightPos.setup("LighPos", ofVec3f(0.5, 0.5, 0.65), ofVec3f(0.0), ofVec3f(1.0)));
     guiMain.add(gUseCam.setup("useCam", true));
     guiMain.add(gAxis.setup("axis", true));
     guiMain.add(gUseLight.setup("useLight", true));
@@ -688,7 +692,7 @@ void ofApp::setupGui(){
     guiPair.setup();
     guiPair.gui.setPosition(200, 0);
 
-
+    
 }
 
 //--------------------------------------------------------------
@@ -716,7 +720,7 @@ void ofApp::startAnimation(){
 }
 //--------------------------------------------------------------
 void ofApp::stopAnimation(){
-    frameCounter = -1;
+    frameCounter = _startingFrameNum;
     lastFrameWithOnset = 0;
     isAnimating = false;
     ofLogNotice("Animation STOPED");

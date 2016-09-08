@@ -4,6 +4,7 @@
 /apps/**/obj/*
 /apps/**/bin/*
 !/apps/**/bin/data
+/apps/**/bin/data/pngSequences
 
 #mov files renders
 *.mov

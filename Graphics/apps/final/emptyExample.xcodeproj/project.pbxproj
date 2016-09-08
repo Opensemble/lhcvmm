@@ -27,7 +27,6 @@
 		B324AC6C1D074B15004FA416 /* ImageSaverThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC681D074B15004FA416 /* ImageSaverThread.cpp */; };
 		B324AC6D1D074B15004FA416 /* VideoRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC6A1D074B15004FA416 /* VideoRenderer.cpp */; };
 		B324AC761D074B40004FA416 /* ofxFisheye.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC741D074B40004FA416 /* ofxFisheye.cpp */; };
-		B324AC7B1D074B43004FA416 /* ofxVideoRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B324AC791D074B43004FA416 /* ofxVideoRecorder.cpp */; };
 		B33B22691D007ABA0020B9D8 /* SphereManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33B22671D007ABA0020B9D8 /* SphereManager.cpp */; };
 		B33B22991D00906B0020B9D8 /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33B22721D00906B0020B9D8 /* ofxOscBundle.cpp */; };
 		B33B229A1D00906B0020B9D8 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33B22741D00906B0020B9D8 /* ofxOscMessage.cpp */; };
@@ -42,6 +41,7 @@
 		B33B22A31D00906B0020B9D8 /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33B22951D00906B0020B9D8 /* OscReceivedElements.cpp */; };
 		B33B22A41D00906B0020B9D8 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33B22971D00906B0020B9D8 /* OscTypes.cpp */; };
 		B3667D781CBBF86600A225F9 /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3667D631CBBF46A00A225F9 /* openFrameworksDebug.a */; };
+		B3D5521E1D80801F00110BA5 /* ofxVideoRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D5521C1D80801F00110BA5 /* ofxVideoRecorder.cpp */; };
 		B3FC962B1CFF3EC3002C5374 /* PostProcessingManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FC96291CFF3EC3002C5374 /* PostProcessingManager.cpp */; };
 		B3FC96611CFF3EDF002C5374 /* BleachBypassPass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FC962E1CFF3EDF002C5374 /* BleachBypassPass.cpp */; };
 		B3FC96621CFF3EDF002C5374 /* BloomPass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FC96301CFF3EDF002C5374 /* BloomPass.cpp */; };
@@ -145,8 +145,6 @@
 		B324AC731D074B40004FA416 /* fxVariableFisheye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxVariableFisheye.h; sourceTree = "<group>"; };
 		B324AC741D074B40004FA416 /* ofxFisheye.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFisheye.cpp; sourceTree = "<group>"; };
 		B324AC751D074B40004FA416 /* ofxFisheye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxFisheye.h; sourceTree = "<group>"; };
-		B324AC791D074B43004FA416 /* ofxVideoRecorder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxVideoRecorder.cpp; sourceTree = "<group>"; };
-		B324AC7A1D074B43004FA416 /* ofxVideoRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxVideoRecorder.h; sourceTree = "<group>"; };
 		B33B22661D0074280020B9D8 /* instanced.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced.vert; path = bin/data/shadersGL2/instanced.vert; sourceTree = "<group>"; };
 		B33B22671D007ABA0020B9D8 /* SphereManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SphereManager.cpp; sourceTree = "<group>"; };
 		B33B22681D007ABA0020B9D8 /* SphereManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SphereManager.h; sourceTree = "<group>"; };
@@ -184,6 +182,8 @@
 		B33B22981D00906B0020B9D8 /* OscTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OscTypes.h; sourceTree = "<group>"; };
 		B3667D5D1CBBF43C00A225F9 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = "<group>"; };
 		B3667D5E1CBBF46A00A225F9 /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = "<group>"; };
+		B3D5521C1D80801F00110BA5 /* ofxVideoRecorder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxVideoRecorder.cpp; sourceTree = "<group>"; };
+		B3D5521D1D80801F00110BA5 /* ofxVideoRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxVideoRecorder.h; sourceTree = "<group>"; };
 		B3FC95B01CFF137E002C5374 /* DisplacementSphereMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisplacementSphereMesh.h; path = cubeMesh/DisplacementSphereMesh.h; sourceTree = "<group>"; };
 		B3FC96291CFF3EC3002C5374 /* PostProcessingManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PostProcessingManager.cpp; sourceTree = "<group>"; };
 		B3FC962A1CFF3EC3002C5374 /* PostProcessingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostProcessingManager.h; sourceTree = "<group>"; };
@@ -386,24 +386,6 @@
 			path = ../../addons/ofxFisheye/src;
 			sourceTree = "<group>";
 		};
-		B324AC771D074B43004FA416 /* ofxVideoRecorder */ = {
-			isa = PBXGroup;
-			children = (
-				B324AC781D074B43004FA416 /* src */,
-			);
-			name = ofxVideoRecorder;
-			sourceTree = "<group>";
-		};
-		B324AC781D074B43004FA416 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				B324AC791D074B43004FA416 /* ofxVideoRecorder.cpp */,
-				B324AC7A1D074B43004FA416 /* ofxVideoRecorder.h */,
-			);
-			name = src;
-			path = ../../addons/ofxVideoRecorder/src;
-			sourceTree = "<group>";
-		};
 		B33B22651D0074170020B9D8 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -527,6 +509,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		B3D5521A1D80801F00110BA5 /* ofxVideoRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				B3D5521B1D80801F00110BA5 /* src */,
+			);
+			name = ofxVideoRecorder;
+			sourceTree = "<group>";
+		};
+		B3D5521B1D80801F00110BA5 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B3D5521C1D80801F00110BA5 /* ofxVideoRecorder.cpp */,
+				B3D5521D1D80801F00110BA5 /* ofxVideoRecorder.h */,
+			);
+			name = src;
+			path = ../../addons/ofxVideoRecorder/src;
+			sourceTree = "<group>";
+		};
 		B3FC962C1CFF3EDF002C5374 /* ofxPostProcessing */ = {
 			isa = PBXGroup;
 			children = (
@@ -602,7 +602,7 @@
 				B33B226E1D00906B0020B9D8 /* ofxOsc */,
 				B324AC5A1D07487F004FA416 /* ofxXmlSettings */,
 				B324AC6F1D074B40004FA416 /* ofxFisheye */,
-				B324AC771D074B43004FA416 /* ofxVideoRecorder */,
+				B3D5521A1D80801F00110BA5 /* ofxVideoRecorder */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -742,7 +742,7 @@
 				B30E4B2A1CFDE5EA001DB62F /* ParticleGroup.cpp in Sources */,
 				B33B22A21D00906B0020B9D8 /* OscPrintReceivedElements.cpp in Sources */,
 				B324AC661D07487F004FA416 /* tinyxmlparser.cpp in Sources */,
-				B324AC7B1D074B43004FA416 /* ofxVideoRecorder.cpp in Sources */,
+				B3D5521E1D80801F00110BA5 /* ofxVideoRecorder.cpp in Sources */,
 				B3FC96661CFF3EDF002C5374 /* DofPass.cpp in Sources */,
 				B33B22691D007ABA0020B9D8 /* SphereManager.cpp in Sources */,
 				B3FC96621CFF3EDF002C5374 /* BloomPass.cpp in Sources */,

@@ -1,4 +1,5 @@
 .DS_Store
 Data/data_files/root_v5.34.36.win32.vc10.exe
 Data/data_files/smalley.csv
+!Graphics/.gitignore/
 *.csv
